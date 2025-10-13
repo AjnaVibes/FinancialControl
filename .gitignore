@@ -1,0 +1,17 @@
+# Archivos de entorno (no deben subirse)
+.env
+.env.*
+!.env.example
+
+# Dependencias
+node_modules/
+
+# Builds y logs
+.next/
+dist/
+out/
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

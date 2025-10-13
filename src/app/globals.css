@@ -1,0 +1,258 @@
+/* src/app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   VARIABLES CSS PARA LIGHT/DARK MODE
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Colores corporativos - Light Mode */
+    --color-primary: 229 62 62;        /* #E53E3E */
+    --color-primary-hover: 197 48 48;  /* #C53030 */
+    --color-primary-light: 254 215 215; /* #FED7D7 */
+    
+    /* Backgrounds */
+    --color-background: 255 255 255;           /* Blanco */
+    --color-background-secondary: 249 250 251; /* Gris muy claro */
+    --color-background-tertiary: 243 244 246;  /* Gris claro */
+    
+    /* Foreground (texto) */
+    --color-foreground: 17 24 39;      /* Casi negro */
+    --color-foreground-muted: 107 114 128; /* Gris medio */
+    
+    /* Bordes */
+    --color-border: 229 231 235;       /* Gris claro */
+    --color-border-hover: 209 213 219; /* Gris medio */
+    
+    /* Estados */
+    --color-success: 16 185 129;
+    --color-warning: 245 158 11;
+    --color-error: 239 68 68;
+    --color-info: 59 130 246;
+    
+    /* Sombras */
+    --shadow-color: 0 0 0;
+    
+    /* Sidebar */
+    --sidebar-width: 256px;
+    --sidebar-collapsed-width: 72px;
+  }
+
+  /* Dark Mode */
+  .dark {
+    /* Backgrounds oscuros */
+    --color-background: 3 7 18;                /* Casi negro */
+    --color-background-secondary: 17 24 39;    /* Gris oscuro */
+    --color-background-tertiary: 31 41 55;     /* Gris medio oscuro */
+    
+    /* Foreground (texto) claro */
+    --color-foreground: 249 250 251;           /* Casi blanco */
+    --color-foreground-muted: 156 163 175;     /* Gris claro */
+    
+    /* Bordes oscuros */
+    --color-border: 55 65 81;                  /* Gris oscuro */
+    --color-border-hover: 75 85 99;            /* Gris medio oscuro */
+    
+    /* Primary mantiene el rojo pero más brillante */
+    --color-primary: 248 113 113;              /* Rojo más claro para dark */
+    --color-primary-hover: 239 68 68;
+    --color-primary-light: 127 29 29;
+  }
+
+  /* ============================================
+     ESTILOS BASE
+     ============================================ */
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+
+  /* Selección de texto */
+  ::selection {
+    @apply bg-primary-200 text-primary-900;
+  }
+
+  .dark ::selection {
+    @apply bg-primary-900 text-primary-100;
+  }
+}
+
+/* ============================================
+   COMPONENTES REUTILIZABLES
+   ============================================ */
+
+@layer components {
+  /* Botón primario */
+  .btn-primary {
+    @apply bg-primary-500 text-white hover:bg-primary-600 
+           focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           px-4 py-2 rounded-lg font-medium transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Botón secundario */
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300
+           dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
+           px-4 py-2 rounded-lg font-medium transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Botón outline */
+  .btn-outline {
+    @apply border-2 border-primary-500 text-primary-500 
+           hover:bg-primary-50 dark:hover:bg-primary-900
+           px-4 py-2 rounded-lg font-medium transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Card con sombra y hover */
+  .card {
+    @apply bg-white dark:bg-gray-800 
+           rounded-lg shadow-md 
+           border border-gray-200 dark:border-gray-700
+           transition-all duration-300
+           hover:shadow-lg;
+  }
+
+  /* Input */
+  .input {
+    @apply w-full px-3 py-2 
+           border border-gray-300 dark:border-gray-600
+           bg-white dark:bg-gray-800
+           text-gray-900 dark:text-gray-100
+           rounded-lg
+           focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 
+           rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800 
+           dark:bg-green-900 dark:text-green-200;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800
+           dark:bg-yellow-900 dark:text-yellow-200;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-800
+           dark:bg-red-900 dark:text-red-200;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-800
+           dark:bg-blue-900 dark:text-blue-200;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    @apply fixed left-0 top-0 h-full
+           bg-white dark:bg-gray-900
+           border-r border-gray-200 dark:border-gray-800
+           transition-all duration-300 ease-in-out
+           shadow-lg z-20;
+  }
+
+  .sidebar-expanded {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar-collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  /* Content area con sidebar */
+  .main-content {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .main-content-expanded {
+    margin-left: var(--sidebar-width);
+  }
+
+  .main-content-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+}
+
+/* ============================================
+   UTILIDADES PERSONALIZADAS
+   ============================================ */
+
+@layer utilities {
+  /* Gradientes corporativos */
+  .gradient-primary {
+    background: linear-gradient(135deg, #E53E3E 0%, #C53030 100%);
+  }
+
+  .gradient-dark {
+    background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply backdrop-blur-md bg-white/80 dark:bg-gray-900/80;
+  }
+
+  /* Animación de carga */
+  .loading {
+    @apply animate-pulse;
+  }
+
+  /* Truncar texto */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsive container */
+  .container-responsive {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+}

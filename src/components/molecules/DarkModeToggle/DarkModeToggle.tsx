@@ -6,27 +6,22 @@ import { IconButton } from '@/components/atoms/IconButton';
 
 export function DarkModeToggle() {
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Cargar preferencia guardada
+  // Evitar hydration mismatch
   useEffect(() => {
+    setMounted(true);
     const theme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const shouldBeDark = theme === 'dark' || (!theme && prefersDark);
-    setIsDark(shouldBeDark);
-    
-    if (shouldBeDark) {
+    const isDarkMode = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setIsDark(isDarkMode);
+    if (isDarkMode) {
       document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDark;
-    setIsDark(newDarkMode);
-    
-    if (newDarkMode) {
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    if (!isDark) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
@@ -35,17 +30,21 @@ export function DarkModeToggle() {
     }
   };
 
+  // No renderizar hasta que esté montado
+  if (!mounted) {
+    return <div className="w-10 h-10" />;
+  }
+
   return (
     <IconButton
-      onClick={toggleDarkMode}
+      onClick={toggleTheme}
       variant="ghost"
       aria-label="Toggle dark mode"
-      title={isDark ? 'Modo claro' : 'Modo oscuro'}
     >
       {isDark ? (
-        <Sun className="w-5 h-5" />
+        <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
       ) : (
-        <Moon className="w-5 h-5" />
+        <Moon className="w-5 h-5 text-gray-600" />
       )}
     </IconButton>
   );

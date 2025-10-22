@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function UserMenu() {
@@ -19,120 +19,114 @@ export function UserMenu() {
         setIsOpen(false);
       }
     }
-    
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
 
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     await signOut({ callbackUrl: '/login' });
   };
 
-  const handleProfileClick = () => {
-    router.push('/dashboard/profile');
-    setIsOpen(false);
-  };
-
-  const handleSettingsClick = () => {
-    router.push('/dashboard/settings');
-    setIsOpen(false);
-  };
-
-  if (!session?.user) {
-    return null;
-  }
+  const userName = session?.user?.name || 'Usuario';
+  const userEmail = session?.user?.email || 'usuario@ejemplo.com';
+  const userImage = session?.user?.image;
+  const userRole = (session?.user as any)?.role || 'Usuario';
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Botón de usuario */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
       >
         {/* Avatar */}
-        <div className="relative">
-          {session.user.image ? (
-            <img 
-              src={session.user.image} 
-              alt={session.user.name || ''} 
-              className="w-8 h-8 rounded-full object-cover"
+        <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden">
+          {userImage ? (
+            <img
+              src={userImage}
+              alt={userName}
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">
-                {session.user.name?.charAt(0).toUpperCase() || 'U'}
-              </span>
-            </div>
+            userName.charAt(0).toUpperCase()
           )}
         </div>
 
-        {/* Info del usuario (oculto en móvil) */}
-        <div className="hidden md:block text-left">
-          <p className="text-sm font-medium text-gray-900 dark:text-white">
-            {session.user.name}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {session.user.email}
-          </p>
+        {/* User Info - Hidden on mobile */}
+        <div className="hidden lg:block text-left">
+          <div className="text-sm font-medium text-gray-800 dark:text-white">
+            {userName}
+          </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {userRole}
+          </div>
         </div>
 
-        <ChevronDown className={cn(
-          "w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform hidden md:block",
-          isOpen && "transform rotate-180"
-        )} />
+        <ChevronDown
+          className={cn(
+            'w-4 h-4 text-gray-600 dark:text-gray-400 hidden lg:block transition-transform',
+            isOpen && 'transform rotate-180'
+          )}
+        />
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden">
-          {/* Info de usuario (visible en dropdown móvil) */}
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 md:hidden">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">
-              {session.user.name}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-              {session.user.email}
-            </p>
+        <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden">
+          {/* User Info Header */}
+          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="font-medium text-gray-800 dark:text-white">
+              {userName}
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {userEmail}
+            </div>
+            <div className="flex items-center gap-1 mt-2">
+              <Shield className="w-3 h-3 text-gray-400" />
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {userRole}
+              </span>
+            </div>
           </div>
 
-          {/* Opciones del menú */}
-          <div className="py-1">
+          {/* Menu Items */}
+          <div className="py-2">
             <button
-              onClick={handleProfileClick}
-              className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              onClick={() => {
+                router.push('/dashboard/perfil');
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-300"
             >
-              <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-              <span className="text-sm text-gray-900 dark:text-white">
-                Mi Perfil
-              </span>
+              <User className="w-4 h-4" />
+              Mi Perfil
             </button>
 
             <button
-              onClick={handleSettingsClick}
-              className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              onClick={() => {
+                router.push('/dashboard/configuracion');
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-300"
             >
-              <Settings className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-              <span className="text-sm text-gray-900 dark:text-white">
-                Configuración
-              </span>
+              <Settings className="w-4 h-4" />
+              Configuración
             </button>
           </div>
 
-          {/* Cerrar sesión */}
-          <div className="border-t border-gray-200 dark:border-gray-700 py-1">
+          {/* Logout */}
+          <div className="border-t border-gray-200 dark:border-gray-700 py-2">
             <button
-              onClick={handleSignOut}
-              className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-600 dark:text-red-400"
+              onClick={handleLogout}
+              className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-red-600 dark:text-red-400"
             >
               <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">
-                Cerrar Sesión
-              </span>
+              Cerrar Sesión
             </button>
           </div>
         </div>

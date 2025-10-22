@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Check, X } from 'lucide-react';
+import { Bell, X, Check, Trash2 } from 'lucide-react';
 import { IconButton } from '@/components/atoms/IconButton';
-import { NotificationBadge } from '@/components/atoms/Badge';
 import { cn } from '@/lib/utils';
 
 interface Notification {
@@ -22,16 +21,16 @@ interface NotificationMenuProps {
   onDelete?: (id: string) => void;
 }
 
-export function NotificationMenu({ 
+export function NotificationMenu({
   notifications = [],
   onMarkAsRead,
   onMarkAllAsRead,
-  onDelete
+  onDelete,
 }: NotificationMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
-  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Cerrar dropdown al hacer click fuera
   useEffect(() => {
@@ -40,117 +39,134 @@ export function NotificationMenu({
         setIsOpen(false);
       }
     }
-    
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
 
-  const getNotificationColor = (type: Notification['type']) => {
-    const colors = {
-      info: 'border-l-blue-500 bg-blue-50 dark:bg-blue-900/10',
-      warning: 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/10',
-      success: 'border-l-green-500 bg-green-50 dark:bg-green-900/10',
-      error: 'border-l-red-500 bg-red-50 dark:bg-red-900/10'
+  const getTypeStyles = (type: Notification['type']) => {
+    const styles = {
+      info: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+      warning: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
+      success: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+      error: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
     };
-    return colors[type];
+    return styles[type];
   };
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Botón de notificaciones */}
-      <div className="relative">
-        <IconButton
-          onClick={() => setIsOpen(!isOpen)}
-          variant="ghost"
-          aria-label="Notificaciones"
-        >
-          <Bell className="w-5 h-5" />
-        </IconButton>
+      <IconButton
+        onClick={() => setIsOpen(!isOpen)}
+        variant="ghost"
+        className="relative"
+      >
+        <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         {unreadCount > 0 && (
-          <NotificationBadge count={unreadCount} />
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
         )}
-      </div>
+      </IconButton>
 
-      {/* Dropdown de notificaciones */}
+      {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 overflow-hidden">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-              Notificaciones {unreadCount > 0 && `(${unreadCount})`}
-            </h3>
-            {unreadCount > 0 && (
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-white">
+                Notificaciones
+              </h3>
+              {unreadCount > 0 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {unreadCount} sin leer
+                </p>
+              )}
+            </div>
+            {unreadCount > 0 && onMarkAllAsRead && (
               <button
                 onClick={onMarkAllAsRead}
-                className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Marcar todas como leídas
               </button>
             )}
           </div>
 
-          {/* Lista de notificaciones */}
-          <div className="max-h-96 overflow-y-auto">
+          {/* Notifications List */}
+          <div className="max-h-[400px] overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center">
-                <Bell className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No tienes notificaciones
-                </p>
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                No tienes notificaciones
               </div>
             ) : (
-              notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={cn(
-                    "border-b border-gray-100 dark:border-gray-700 last:border-b-0 border-l-4",
-                    getNotificationColor(notification.type),
-                    !notification.read && "font-medium"
-                  )}
-                >
-                  <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div className="flex items-start justify-between gap-2">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={cn(
+                      'p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors',
+                      !notification.read && 'border-l-4',
+                      getTypeStyles(notification.type)
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900 dark:text-white mb-1">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm">
                           {notification.title}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                           {notification.time}
                         </p>
                       </div>
-                      
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        {!notification.read && (
-                          <button
-                            onClick={() => onMarkAsRead?.(notification.id)}
-                            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1">
+                        {!notification.read && onMarkAsRead && (
+                          <IconButton
+                            onClick={() => onMarkAsRead(notification.id)}
+                            variant="ghost"
+                            size="sm"
                             title="Marcar como leída"
                           >
-                            <Check className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                          </button>
+                            <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                          </IconButton>
                         )}
-                        <button
-                          onClick={() => onDelete?.(notification.id)}
-                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-                          title="Eliminar"
-                        >
-                          <X className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                        </button>
+                        {onDelete && (
+                          <IconButton
+                            onClick={() => onDelete(notification.id)}
+                            variant="ghost"
+                            size="sm"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                          </IconButton>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
+
+          {/* Footer */}
+          {notifications.length > 0 && (
+            <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <button className="w-full text-sm text-blue-600 dark:text-blue-400 hover:underline text-center">
+                Ver todas las notificaciones
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -20,8 +20,7 @@ export function StatCard({
   color = 'blue',
   description,
 }: StatCardProps) {
-  // Mapeo de colores estáticos (Tailwind necesita las clases completas)
-  const colorClasses = {
+  const colors = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
     purple: 'bg-purple-500',
@@ -58,7 +57,12 @@ export function StatCard({
             </div>
           )}
         </div>
-        <div className={cn('w-12 h-12 rounded-lg flex items-center justify-center', colorClasses[color])}>
+        <div
+          className={cn(
+            'w-12 h-12 rounded-lg flex items-center justify-center',
+            colors[color]
+          )}
+        >
           <Icon className="w-6 h-6 text-white" />
         </div>
       </div>

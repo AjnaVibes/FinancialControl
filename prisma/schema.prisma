@@ -3,39 +3,32 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-// ==========================================
-// SISTEMA Y AUTENTICACIÓN
-// ==========================================
-
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  name          String?
-  image         String?
-  emailVerified DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  isActive      Boolean  @default(true)
-
-  currentCompanyId  String?
-
-  accounts      Account[]
-  sessions      Session[]
-  roleId        String?
-  role          Role?    @relation(fields: [roleId], references: [id])
-
-  currentCompany    Company?      @relation("CurrentCompany", fields: [currentCompanyId], references: [id])
-  companies         UserCompany[]
+  id               String        @id @default(cuid())
+  email            String        @unique
+  name             String?
+  image            String?
+  emailVerified    DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  isActive         Boolean       @default(true)
+  roleId           String?
+  currentCompanyId String?
+  accounts         Account[]
+  sessions         Session[]
+  companies        UserCompany[]
+  currentCompany   Company?      @relation("CurrentCompany", fields: [currentCompanyId], references: [id])
+  role             Role?         @relation(fields: [roleId], references: [id])
 
   @@index([email])
   @@index([roleId])
-  @@map("users")
   @@index([currentCompanyId])
+  @@map("users")
 }
 
 model Account {
@@ -51,8 +44,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -80,27 +72,25 @@ model VerificationToken {
 }
 
 model Role {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  displayName String
-  description String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  users       User[]
-  permissions RolePermission[]
+  id            String           @id @default(cuid())
+  name          String           @unique
+  displayName   String
+  description   String?          @db.Text
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  permissions   RolePermission[]
   userCompanies UserCompany[]
+  users         User[]
 
   @@map("roles")
 }
 
 model Permission {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   resource    String
   action      String
   description String?
-  createdAt   DateTime @default(now())
-
+  createdAt   DateTime         @default(now())
   roles       RolePermission[]
 
   @@unique([resource, action])
@@ -110,12 +100,12 @@ model Permission {
 model RolePermission {
   roleId       String
   permissionId String
-  createdAt    DateTime @default(now())
-
-  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   @@id([roleId, permissionId])
+  @@index([permissionId], map: "role_permissions_permissionId_fkey")
   @@map("role_permissions")
 }
 
@@ -139,138 +129,108 @@ model SyncLog {
 }
 
 model SyncConfig {
-  id              String   @id @default(cuid())
-  source          String   @unique
-  isEnabled       Boolean  @default(true)
-  intervalMinutes Int      @default(30)
+  id              String    @id @default(cuid())
+  source          String    @unique
+  isEnabled       Boolean   @default(true)
+  intervalMinutes Int       @default(30)
   lastSyncAt      DateTime?
   nextSyncAt      DateTime?
-  errorCount      Int      @default(0)
-  lastError       String?  @db.Text
+  errorCount      Int       @default(0)
+  lastError       String?   @db.Text
   webhookUrl      String?
   webhookSecret   String?
   config          Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@map("sync_config")
 }
-// -----------------------------------------------------------------------------------------------------------------
-
-
-
-// ============================================
-// TABLA: CLIENTS (Sistema de Ventas)
-// ============================================
 
 model Client {
-  id                        Int       @id @default(autoincrement())
-  name                      String?   @db.Text
-  birthday                  DateTime?
-  email                     String?   @db.VarChar(255)
-  address                   String?   @db.Text
-  birthplace                String?   @db.Text
-  curp                      String?   @db.VarChar(255)
-  electorKey                String?   @map("elector_key") @db.Text
-  mobile                    String?   @db.Text
-  phone                     String?   @db.Text
-  fLastname                 String?   @map("f_lastname") @db.Text
-  mLastname                 String?   @map("m_lastname") @db.Text
-  state                     String?   @db.Text
-  maritalStatus             Int?      @map("marital_status")
-  maritalRegistry           Int?      @map("marital_registry")
-  street                    String?   @db.Text
-  interiorNumber            String?   @map("interior_number") @db.Text
-  externalNumber            String?   @map("external_number") @db.Text
-  suburb                    String?   @db.Text
-  postalCode                String?   @map("postal_code") @db.Text
-  municipality              String?   @db.Text
-  near                      String?   @db.Text
-  
-  // Datos de la empresa
-  companyName               String?   @map("company_name") @db.Text
-  companyStreet             String?   @map("company_street") @db.Text
-  companyExternalNumber     String?   @map("company_external_number") @db.Text
-  companyInteriorNumber     String?   @map("company_interior_number") @db.Text
-  companySuburb             String?   @map("company_suburb") @db.Text
-  companyPostalCode         String?   @map("company_postal_code") @db.Text
-  companyPhone              String?   @map("company_phone") @db.Text
-  companyMunicipality       String?   @map("company_municipality") @db.Text
-  companyState              String?   @map("company_state") @db.Text
-  companyNear               String?   @map("company_near") @db.Text
-  companyMobile             String?   @map("company_mobile") @db.Text
-  job                       String?   @db.Text
-  antiquity                 String?   @db.Text
-  monthlyIncome             BigInt?   @map("monthly_income")
-  additionalIncome          BigInt?   @map("additional_income")
-  fixedCosts                Int?      @map("fixed_costs")
-  bank                      String?   @db.Text
-  gender                    String?   @db.Text
-  affiliationNumber         String?   @map("affiliation_number") @db.Text
-  rfc                       String?   @db.Text
-  isRented                  String?   @map("is_rented") @db.Text
-  timeRented                String?   @map("time_rented") @db.Text
-  monthlyRent               Int?      @map("monthly_rent")
-  birthState                String?   @map("birth_state") @db.Text
-  isForeign                 Boolean?  @map("is_foreign")
-  createdBy                 Int?      @map("created_by")
-  workForeign               Boolean?  @map("work_foreign")
-  companyRfc                String?   @map("company_rfc") @db.Text
-  businessName              String?   @map("business_name") @db.Text
-  adquisition               String?   @db.Text
-  companyBussiness          String?   @map("company_bussiness") @db.Text
-  maritalRegimen            Int?      @map("marital_regimen")
-  workingTimeStart          DateTime? @map("working_time_start") @db.Time
-  workingTimeEnd            DateTime? @map("working_time_end") @db.Time
-  location                  String?   @db.Text
-  credit                    String?   @db.Text
-  creditType                String?   @map("credit_type") @db.Text
-  passport                  String?   @db.Text
-  ineNumber                 String?   @map("ine_number") @db.Text
-  user                      Int?
-  
-  // Timestamps
-  createdAt                 DateTime? @map("created_at")
-  updatedAt                 DateTime? @map("updated_at")
-  
-  // Campos adicionales
-  companyBusiness           String?   @map("company_business") @db.VarChar(255)
-  beneficiary               Int?
-  completionDate            DateTime? @map("completion_date")
-  clientStatus              Int?      @map("client_status")
-  idmex                     String?   @db.VarChar(255)
-  whatsappNumberId          String?   @map("whatsapp_number_id") @db.VarChar(255)
-  whatsappRecipientNumber   String?   @map("whatsapp_recipient_number") @db.VarChar(255)
-  messengerConversationId   String?   @map("messenger_conversation_id") @db.VarChar(255)
-  messengerRecipientId      String?   @map("messenger_recipient_id") @db.VarChar(255)
-  campaing                  Int?
-  externalId                String?   @map("external_id") @db.VarChar(255)
-  campaignFormDate          DateTime? @map("campaign_form_date")
-  instagramId               String?   @map("instagram_id") @db.VarChar(255)
-  lastContact               DateTime? @map("last_contact")
-  changePhaseDate           DateTime? @map("change_phase_date")
-  lastPhipipelinePhase      String?   @map("last_phipeline_phase") @db.VarChar(255)
-  assignedAt                DateTime? @map("assigned_at")
-  movePhaseBy               Int?      @map("move_phase_by")
-  nationality               String?   @db.VarChar(255)
-  
-  // ============================================
-  // RELACIONES CON OTRAS TABLAS
-  // ============================================
-  
-  // Relaciones con catálogos
-  maritalStatusRel    MaritalStatus?    @relation("ClientMaritalStatus", fields: [maritalStatus], references: [id])
-  maritalRegistryRel  MaritalRegistry?  @relation("ClientMaritalRegistry", fields: [maritalRegistry], references: [id])
-  maritalRegimenRel   MaritalRegimen?   @relation("ClientMaritalRegimen", fields: [maritalRegimen], references: [id])
-  clientStatusRel     ClientStatus?     @relation("ClientStatus", fields: [clientStatus], references: [id])
-  beneficiaryRel      Beneficiary?      @relation("ClientBeneficiary", fields: [beneficiary], references: [id])
-  
-  // Relaciones con otras entidades
-  clientReferences    ClientReference[] @relation("ClientReferences")
-  quotations          Quotation[]       @relation("QuotationClient")
-  transactions        Transaction[]     @relation("TransactionClient")
-  
-  @@map("clients")
+  id                      Int       @id @default(autoincrement())
+  name                    String?   @db.Text
+  birthday                DateTime?
+  email                   String?   @db.VarChar(255)
+  address                 String?   @db.Text
+  birthplace              String?   @db.Text
+  curp                    String?   @db.VarChar(255)
+  electorKey              String?   @map("elector_key") @db.Text
+  mobile                  String?   @db.Text
+  phone                   String?   @db.Text
+  fLastname               String?   @map("f_lastname") @db.Text
+  mLastname               String?   @map("m_lastname") @db.Text
+  state                   String?   @db.Text
+  maritalStatus           Int?      @map("marital_status")
+  maritalRegistry         Int?      @map("marital_registry")
+  street                  String?   @db.Text
+  interiorNumber          String?   @map("interior_number") @db.Text
+  externalNumber          String?   @map("external_number") @db.Text
+  suburb                  String?   @db.Text
+  postalCode              String?   @map("postal_code") @db.Text
+  municipality            String?   @db.Text
+  near                    String?   @db.Text
+  companyName             String?   @map("company_name") @db.Text
+  companyStreet           String?   @map("company_street") @db.Text
+  companyExternalNumber   String?   @map("company_external_number") @db.Text
+  companyInteriorNumber   String?   @map("company_interior_number") @db.Text
+  companySuburb           String?   @map("company_suburb") @db.Text
+  companyPostalCode       String?   @map("company_postal_code") @db.Text
+  companyPhone            String?   @map("company_phone") @db.Text
+  companyMunicipality     String?   @map("company_municipality") @db.Text
+  companyState            String?   @map("company_state") @db.Text
+  companyNear             String?   @map("company_near") @db.Text
+  companyMobile           String?   @map("company_mobile") @db.Text
+  job                     String?   @db.Text
+  antiquity               String?   @db.Text
+  monthlyIncome           BigInt?   @map("monthly_income")
+  additionalIncome        BigInt?   @map("additional_income")
+  fixedCosts              Int?      @map("fixed_costs")
+  bank                    String?   @db.Text
+  gender                  String?   @db.Text
+  affiliationNumber       String?   @map("affiliation_number") @db.Text
+  rfc                     String?   @db.Text
+  isRented                String?   @map("is_rented") @db.Text
+  timeRented              String?   @map("time_rented") @db.Text
+  monthlyRent             Int?      @map("monthly_rent")
+  birthState              String?   @map("birth_state") @db.Text
+  isForeign               Boolean?  @map("is_foreign")
+  createdBy               Int?      @map("created_by")
+  workForeign             Boolean?  @map("work_foreign")
+  companyRfc              String?   @map("company_rfc") @db.Text
+  businessName            String?   @map("business_name") @db.Text
+  adquisition             String?   @db.Text
+  companyBussiness        String?   @map("company_bussiness") @db.Text
+  maritalRegimen          Int?      @map("marital_regimen")
+  workingTimeStart        DateTime? @map("working_time_start") @db.Time(0)
+  workingTimeEnd          DateTime? @map("working_time_end") @db.Time(0)
+  location                String?   @db.Text
+  credit                  String?   @db.Text
+  creditType              String?   @map("credit_type") @db.Text
+  passport                String?   @db.Text
+  ineNumber               String?   @map("ine_number") @db.Text
+  user                    Int?
+  createdAt               DateTime? @map("created_at")
+  updatedAt               DateTime? @map("updated_at")
+  companyBusiness         String?   @map("company_business") @db.VarChar(255)
+  beneficiary             Int?
+  completionDate          DateTime? @map("completion_date")
+  clientStatus            Int?      @map("client_status")
+  idmex                   String?   @db.VarChar(255)
+  whatsappNumberId        String?   @map("whatsapp_number_id") @db.VarChar(255)
+  whatsappRecipientNumber String?   @map("whatsapp_recipient_number") @db.VarChar(255)
+  messengerConversationId String?   @map("messenger_conversation_id") @db.VarChar(255)
+  messengerRecipientId    String?   @map("messenger_recipient_id") @db.VarChar(255)
+  campaing                Int?
+  externalId              String?   @map("external_id") @db.VarChar(255)
+  campaignFormDate        DateTime? @map("campaign_form_date")
+  instagramId             String?   @map("instagram_id") @db.VarChar(255)
+  lastContact             DateTime? @map("last_contact")
+  changePhaseDate         DateTime? @map("change_phase_date")
+  lastPhipipelinePhase    String?   @map("last_phipeline_phase") @db.VarChar(255)
+  assignedAt              DateTime? @map("assigned_at")
+  movePhaseBy             Int?      @map("move_phase_by")
+  nationality             String?   @db.VarChar(255)
+
   @@index([email])
   @@index([curp])
   @@index([createdAt])
@@ -280,35 +240,31 @@ model Client {
   @@index([maritalRegistry])
   @@index([maritalRegimen])
   @@index([beneficiary])
+  @@map("clients")
 }
 
-// ============================================
-// MÓDULO: SINCRONIZACIÓN
-// ============================================
-
 model WebhookConfig {
-  id              String    @id @default(cuid())
-  tabla           String    @unique
+  id              String           @id @default(cuid())
+  tabla           String           @unique
   nombre          String
   categoria       String
   icono           String?
   color           String
-  isEnabled       Boolean   @default(true)
+  isEnabled       Boolean          @default(true)
   webhookUrl      String?
   webhookSecret   String?
-  intervalMinutes Int       @default(30)
+  intervalMinutes Int              @default(30)
   lastSyncAt      DateTime?
   nextSyncAt      DateTime?
-  totalSyncs      Int       @default(0)
-  successSyncs    Int       @default(0)
-  errorSyncs      Int       @default(0)
-  lastError       String?   @db.Text
+  totalSyncs      Int              @default(0)
+  successSyncs    Int              @default(0)
+  errorSyncs      Int              @default(0)
+  lastError       String?          @db.Text
   metadata        Json?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   logs            WebhookSyncLog[]
-  
+
   @@index([categoria])
   @@index([isEnabled])
   @@map("webhook_configs")
@@ -317,8 +273,6 @@ model WebhookConfig {
 model WebhookSyncLog {
   id               String        @id @default(cuid())
   configId         String
-  config           WebhookConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
-  
   status           String
   action           String
   recordsReceived  Int           @default(0)
@@ -326,91 +280,64 @@ model WebhookSyncLog {
   recordsUpdated   Int           @default(0)
   recordsDuplicate Int           @default(0)
   recordsErrors    Int           @default(0)
-  
   duration         Int?
   errorMessage     String?       @db.Text
   requestPayload   Json?
   responseData     Json?
-  
   createdAt        DateTime      @default(now())
-  
+  config           WebhookConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
   @@index([configId])
   @@index([status])
   @@index([createdAt])
   @@map("webhook_sync_logs")
 }
-// ============================================
-// SISTEMA MULTIEMPRESA
-// ============================================
-// AGREGAR ESTOS MODELOS AL SCHEMA EXISTENTE
 
-// ============================================
-// TABLA: COMPANIES (Empresas del sistema)
-// ============================================
 model Company {
-  id            String   @id @default(cuid())
-  name          String   @unique
-  slug          String   @unique
-  displayName   String
-  logo          String?
-  primaryColor  String   @default("#E53E3E")
-  filterValue   String?
-  filterMode    String   @default("equals")
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  // Relaciones
-  users             UserCompany[]
-  currentForUsers   User[]        @relation("CurrentCompany")  
-  
-  @@map("companies")
+  id              String        @id @default(cuid())
+  name            String        @unique
+  slug            String        @unique
+  displayName     String
+  logo            String?
+  primaryColor    String        @default("#E53E3E")
+  filterValue     String?
+  filterMode      String        @default("equals")
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  users           UserCompany[]
+  currentForUsers User[]        @relation("CurrentCompany")
+
   @@index([slug])
   @@index([isActive])
+  @@map("companies")
 }
 
-// ============================================
-// TABLA: USER_COMPANIES (Relación Usuario-Empresa)
-// ============================================
 model UserCompany {
-  id          String   @id @default(cuid())
-  userId      String
-  companyId   String
-  
-  // Permisos específicos por empresa (opcional)
-  roleId      String?  // Puede tener diferente rol en cada empresa
-  
-  // Control de acceso
-  canAccess   Boolean  @default(true)
-  
-  // Timestamps
-  assignedAt  DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relaciones
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  role        Role?    @relation(fields: [roleId], references: [id])
-  
+  id         String   @id @default(cuid())
+  userId     String
+  companyId  String
+  roleId     String?
+  canAccess  Boolean  @default(true)
+  assignedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role       Role?    @relation(fields: [roleId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, companyId])
-  @@map("user_companies")
   @@index([userId])
   @@index([companyId])
+  @@index([roleId], map: "user_companies_roleId_fkey")
+  @@map("user_companies")
 }
-
-// ============================================
-// TABLAS RAMP - CATÁLOGOS BASE
-// ============================================
 
 model MaritalStatus {
   id        Int       @id @default(autoincrement())
   name      String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clients   Client[]  @relation("ClientMaritalStatus")
-  
+
   @@map("marital_statuses")
 }
 
@@ -419,10 +346,7 @@ model MaritalRegistry {
   name      String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clients   Client[]  @relation("ClientMaritalRegistry")
-  
+
   @@map("marital_registries")
 }
 
@@ -431,10 +355,7 @@ model MaritalRegimen {
   name      String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clients   Client[]  @relation("ClientMaritalRegimen")
-  
+
   @@map("marital_regimen")
 }
 
@@ -445,12 +366,9 @@ model ClientStatus {
   key       String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clients   Client[]  @relation("ClientStatus")
-  
-  @@map("client_statuses")
+
   @@index([key])
+  @@map("client_statuses")
 }
 
 model ProjectStatus {
@@ -458,10 +376,7 @@ model ProjectStatus {
   name      String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  projects  Project[]
-  
+
   @@map("project_statuses")
 }
 
@@ -470,10 +385,7 @@ model PhaseStatus {
   name      String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  phases    Phase[]
-  
+
   @@map("phase_statuses")
 }
 
@@ -483,154 +395,134 @@ model QuotationStatus {
   color     String?   @db.VarChar(255)
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  quotations Quotation[]
-  
+
   @@map("quotation_statuses")
 }
 
 model PromiseType {
-  id          Int       @id @default(autoincrement())
-  name        String?   @db.VarChar(255)
-  hidden      Boolean?  @db.TinyInt
-  createdAt   DateTime? @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  promissories Promissory[]
-  
+  id        Int       @id @default(autoincrement())
+  name      String?   @db.VarChar(255)
+  hidden    Boolean?
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   @@map("promise_types")
 }
 
-// ============================================
-// TABLAS RAMP - AGENCIAS Y COORDINADORES
-// ============================================
+model TransactionStatus {
+  id        Int       @id @default(autoincrement())
+  name      String?   @db.VarChar(255)
+  color     String?   @db.VarChar(255)
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("transaction_statuses")
+}
+
+model Operate {
+  id          Int       @id @default(autoincrement())
+  name        String?   @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  color       String?   @db.VarChar(255)
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("operates")
+}
 
 model Agency {
-  id                    Int       @id @default(autoincrement())
-  name                  String?   @db.VarChar(255)
-  responsable           String?   @db.VarChar(255)
-  email                 String?   @db.VarChar(255)
-  mobile                String?   @db.VarChar(255)
-  phone                 String?   @db.VarChar(255)
-  address               String?   @db.VarChar(255)
-  composedCommission    Int?      @map("composed_commission")
-  coordinator           Int?
-  createdAt             DateTime? @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  commAccountStatement  Int?      @map("comm_account_statement")
-  user                  Int?
-  isBroker              Boolean?  @map("is_broker") @db.TinyInt
-  
-  // Relations
-  agents              Agent[]
-  coordinatorRel      Coordinator? @relation("AgencyCoordinator", fields: [coordinator], references: [id])
-  coordinators        Coordinator[] @relation("CoordinatorAgency")
-  movementMethods     MovementMethod[]
-  quotations          Quotation[]
-  
-  @@map("agencies")
+  id                   Int       @id @default(autoincrement())
+  name                 String?   @db.VarChar(255)
+  responsable          String?   @db.VarChar(255)
+  email                String?   @db.VarChar(255)
+  mobile               String?   @db.VarChar(255)
+  phone                String?   @db.VarChar(255)
+  address              String?   @db.VarChar(255)
+  composedCommission   Int?      @map("composed_commission")
+  coordinator          Int?
+  createdAt            DateTime? @default(now()) @map("created_at")
+  updatedAt            DateTime? @updatedAt @map("updated_at")
+  commAccountStatement Int?      @map("comm_account_statement")
+  user                 Int?
+  isBroker             Boolean?  @map("is_broker")
+
   @@index([coordinator])
+  @@map("agencies")
 }
 
 model Coordinator {
-  id                    Int       @id @default(autoincrement())
-  name                  String?   @db.VarChar(255)
-  fLastname             String?   @map("f_lastname") @db.VarChar(255)
-  mLastname             String?   @map("m_lastname") @db.VarChar(255)
-  email                 String?   @db.VarChar(255)
-  mobile                String?   @db.VarChar(255)
-  agency                Int?
-  createdAt             DateTime? @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  commAccountStatement  Int?      @map("comm_account_statement")
-  
-  // Relations
-  agencyRel  Agency?  @relation("CoordinatorAgency", fields: [agency], references: [id])
-  agencies   Agency[] @relation("AgencyCoordinator")
-  agents     Agent[]
-  
-  @@map("coordinators")
+  id                   Int       @id @default(autoincrement())
+  name                 String?   @db.VarChar(255)
+  fLastname            String?   @map("f_lastname") @db.VarChar(255)
+  mLastname            String?   @map("m_lastname") @db.VarChar(255)
+  email                String?   @db.VarChar(255)
+  mobile               String?   @db.VarChar(255)
+  agency               Int?
+  createdAt            DateTime? @default(now()) @map("created_at")
+  updatedAt            DateTime? @updatedAt @map("updated_at")
+  commAccountStatement Int?      @map("comm_account_statement")
+
   @@index([agency])
+  @@map("coordinators")
 }
 
 model Agent {
-  id                        Int       @id @default(autoincrement())
-  name                      String?   @db.VarChar(255)
-  email                     String?   @db.VarChar(255)
-  mobile                    String?   @db.VarChar(255)
-  phone                     String?   @db.VarChar(255)
-  address                   String?   @db.VarChar(255)
-  agency                    Int?
-  composedCommission        Int?      @map("composed_commission")
-  user                      Int?
-  coordinator               Int?
-  canReservate              String?   @map("can_reservate") @db.Text
-  lastSession               DateTime? @map("last_session")
-  createdAt                 DateTime? @default(now()) @map("created_at")
-  updatedAt                 DateTime? @updatedAt @map("updated_at")
-  commAccountStatement      Int?      @map("comm_account_statement")
-  isBroker                  Boolean?  @map("is_broker") @db.TinyInt
-  isGoogleCalendarSynced    Boolean?  @map("is_google_calendar_synced") @db.TinyInt
-  isGoogleMailSynced        Boolean?  @map("is_google_mail_synced") @db.TinyInt
-  googleUserEmail           String?   @map("google_user_email") @db.VarChar(255)
-  googleAccessToken         String?   @map("google_access_token") @db.LongText
-  googleRefreshToken        String?   @map("google_refresh_token") @db.LongText
-  
-  // Relations
-  agencyRel      Agency?      @relation(fields: [agency], references: [id])
-  coordinatorRel Coordinator? @relation(fields: [coordinator], references: [id])
-  quotations     Quotation[]
-  
-  @@map("agents")
+  id                     Int       @id @default(autoincrement())
+  name                   String?   @db.VarChar(255)
+  email                  String?   @db.VarChar(255)
+  mobile                 String?   @db.VarChar(255)
+  phone                  String?   @db.VarChar(255)
+  address                String?   @db.VarChar(255)
+  agency                 Int?
+  composedCommission     Int?      @map("composed_commission")
+  user                   Int?
+  coordinator            Int?
+  canReservate           String?   @map("can_reservate") @db.Text
+  lastSession            DateTime? @map("last_session")
+  createdAt              DateTime? @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  commAccountStatement   Int?      @map("comm_account_statement")
+  isBroker               Boolean?  @map("is_broker")
+  isGoogleCalendarSynced Boolean?  @map("is_google_calendar_synced")
+  isGoogleMailSynced     Boolean?  @map("is_google_mail_synced")
+  googleUserEmail        String?   @map("google_user_email") @db.VarChar(255)
+  googleAccessToken      String?   @map("google_access_token") @db.LongText
+  googleRefreshToken     String?   @map("google_refresh_token") @db.LongText
+
   @@index([agency])
   @@index([coordinator])
+  @@map("agents")
 }
 
-// ============================================
-// TABLAS RAMP - CLIENTES RELACIONADAS
-// ============================================
-
 model Beneficiary {
-  id                   Int       @id @default(autoincrement())
-  name                 String?   @db.VarChar(255)
-  mLastname            String?   @map("m_lastname") @db.VarChar(255)
-  fLastname            String?   @map("f_lastname") @db.VarChar(255)
-  identificationType   String?   @map("identification_type") @db.VarChar(255)
-  identification       String?   @db.VarChar(255)
-  relation             String?   @db.VarChar(255)
-  client               Int?
-  createdAt            DateTime? @default(now()) @map("created_at")
-  updatedAt            DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clients Client[] @relation("ClientBeneficiary")
-  
-  @@map("beneficiaries")
+  id                 Int       @id @default(autoincrement())
+  name               String?   @db.VarChar(255)
+  mLastname          String?   @map("m_lastname") @db.VarChar(255)
+  fLastname          String?   @map("f_lastname") @db.VarChar(255)
+  identificationType String?   @map("identification_type") @db.VarChar(255)
+  identification     String?   @db.VarChar(255)
+  relation           String?   @db.VarChar(255)
+  client             Int?
+  createdAt          DateTime? @default(now()) @map("created_at")
+  updatedAt          DateTime? @updatedAt @map("updated_at")
+
   @@index([client])
+  @@map("beneficiaries")
 }
 
 model ClientReference {
-  id         Int       @id @default(autoincrement())
-  name       String?   @db.VarChar(255)
-  phone      String?   @db.VarChar(255)
-  fLastname  String?   @map("f_lastname") @db.VarChar(255)
-  mLastname  String?   @map("m_lastname") @db.VarChar(255)
-  client     Int?
-  createdAt  DateTime? @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  clientRel Client? @relation("ClientReferences", fields: [client], references: [id])
-  
-  @@map("client_references")
-  @@index([client])
-}
+  id        Int       @id @default(autoincrement())
+  name      String?   @db.VarChar(255)
+  phone     String?   @db.VarChar(255)
+  fLastname String?   @map("f_lastname") @db.VarChar(255)
+  mLastname String?   @map("m_lastname") @db.VarChar(255)
+  client    Int?
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
-// ============================================
-// TABLAS RAMP - DESARROLLADORES Y PROYECTOS
-// ============================================
+  @@index([client])
+  @@map("client_references")
+}
 
 model Developer {
   id            Int       @id @default(autoincrement())
@@ -647,86 +539,65 @@ model Developer {
   bankReference Int?      @map("bank_reference")
   createdAt     DateTime? @default(now()) @map("created_at")
   updatedAt     DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  subDevelopers SubDeveloper[]
-  
+
   @@map("developers")
 }
 
 model SubDeveloper {
-  id            Int       @id @default(autoincrement())
-  name          String?   @db.VarChar(255)
-  businessName  String?   @map("business_name") @db.VarChar(255)
-  website       String?   @db.VarChar(255)
-  phone         String?   @db.VarChar(255)
-  cellphone     String?   @db.VarChar(255)
-  facebook      String?   @db.VarChar(255)
-  instagram     String?   @db.VarChar(255)
-  address       String?   @db.LongText
-  user          Int?
-  developer     Int?
-  project       Int?
-  createdAt     DateTime? @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  developerRel Developer? @relation(fields: [developer], references: [id])
-  projectRel   Project?   @relation(fields: [project], references: [id])
-  
-  @@map("sub_developers")
+  id           Int       @id @default(autoincrement())
+  name         String?   @db.VarChar(255)
+  businessName String?   @map("business_name") @db.VarChar(255)
+  website      String?   @db.VarChar(255)
+  phone        String?   @db.VarChar(255)
+  cellphone    String?   @db.VarChar(255)
+  facebook     String?   @db.VarChar(255)
+  instagram    String?   @db.VarChar(255)
+  address      String?   @db.LongText
+  user         Int?
+  developer    Int?
+  project      Int?
+  createdAt    DateTime? @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
   @@index([developer])
   @@index([project])
+  @@map("sub_developers")
 }
 
 model Project {
-  id                      Int       @id @default(autoincrement())
-  name                    String?   @db.VarChar(255)
-  address                 String?   @db.VarChar(255)
-  surface                 Decimal?  @db.Decimal(10, 2)
-  projectStatus           Int?      @map("project_status")
-  imageId                 Int?      @map("image_id")
-  projectFile             Int?      @map("project_file")
-  configuration           Int?
-  penalty                 Int?
-  history                 String?   @db.Text
-  projectId               Int?      @map("project_id")
-  currency                String?   @db.Text
-  signature               String?   @db.VarChar(255)
-  depositAccount          String?   @map("deposit_account") @db.VarChar(255)
-  businessName            String?   @map("business_name") @db.VarChar(255)
-  deletedAt               DateTime? @map("deleted_at")
-  developmentDescription  String?   @map("development_description") @db.Text
-  createdAt               DateTime? @default(now()) @map("created_at")
-  updatedAt               DateTime? @updatedAt @map("updated_at")
-  broker                  Int?
-  website                 String?   @db.VarChar(255)
-  deed                    String?   @db.VarChar(255)
-  deedNumber              String?   @map("deed_number") @db.VarChar(255)
-  notaryName              String?   @map("notary_name") @db.VarChar(255)
-  notaryNumber            String?   @map("notary_number") @db.VarChar(255)
-  notaryState             String?   @map("notary_state") @db.VarChar(255)
-  signatureMail           String?   @map("signature_mail") @db.VarChar(255)
-  date                    DateTime?
-  mbroker                 Int?
-  mapType                 String?   @map("map_type") @db.VarChar(255)
-  
-  // Relations
-  projectStatusRel ProjectStatus?  @relation(fields: [projectStatus], references: [id])
-  facades          Facade[]
-  phases           Phase[]
-  subDevelopers    SubDeveloper[]
-  subPrototypes    SubPrototype[]
-  prototypes       Prototype[]
-  units            Unit[]
-  quotations       Quotation[]
-  references       Reference[]
-  transactions     Transaction[]
-  deposits         Deposit[]
-  paymentMethods   PaymentMethod[]
-  
-  @@map("projects")
+  id                     Int       @id @default(autoincrement())
+  name                   String?   @db.VarChar(255)
+  address                String?   @db.VarChar(255)
+  surface                Decimal?  @db.Decimal(10, 2)
+  projectStatus          Int?      @map("project_status")
+  imageId                Int?      @map("image_id")
+  projectFile            Int?      @map("project_file")
+  configuration          Int?
+  penalty                Int?
+  history                String?   @db.Text
+  projectId              Int?      @map("project_id")
+  currency               String?   @db.Text
+  signature              String?   @db.VarChar(255)
+  depositAccount         String?   @map("deposit_account") @db.VarChar(255)
+  businessName           String?   @map("business_name") @db.VarChar(255)
+  deletedAt              DateTime? @map("deleted_at")
+  developmentDescription String?   @map("development_description") @db.Text
+  createdAt              DateTime? @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  broker                 Int?
+  website                String?   @db.VarChar(255)
+  deed                   String?   @db.VarChar(255)
+  deedNumber             String?   @map("deed_number") @db.VarChar(255)
+  notaryName             String?   @map("notary_name") @db.VarChar(255)
+  notaryNumber           String?   @map("notary_number") @db.VarChar(255)
+  notaryState            String?   @map("notary_state") @db.VarChar(255)
+  signatureMail          String?   @map("signature_mail") @db.VarChar(255)
+  date                   DateTime?
+  mbroker                Int?
+  mapType                String?   @map("map_type") @db.VarChar(255)
+
   @@index([projectStatus])
+  @@map("projects")
 }
 
 model Facade {
@@ -737,245 +608,190 @@ model Facade {
   description String?   @db.Text
   createdAt   DateTime? @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  projectRel Project? @relation(fields: [project], references: [id])
-  units      Unit[]
-  
-  @@map("facades")
+
   @@index([project])
+  @@map("facades")
 }
 
 model Phase {
-  id           Int       @id @default(autoincrement())
-  name         String?   @db.VarChar(255)
-  startDate    DateTime? @map("start_date")
-  deadline     DateTime?
-  project      Int?
-  phaseStatus  Int?      @map("phase_status")
-  variation    Float?
-  createdAt    DateTime? @default(now()) @map("created_at")
-  updatedAt    DateTime? @updatedAt @map("updated_at")
-  airtable     String?   @db.VarChar(255)
-  
-  // Relations
-  projectRel     Project?     @relation(fields: [project], references: [id])
-  phaseStatusRel PhaseStatus? @relation(fields: [phaseStatus], references: [id])
-  units          Unit[]
-  
-  @@map("phases")
+  id          Int       @id @default(autoincrement())
+  name        String?   @db.VarChar(255)
+  startDate   DateTime? @map("start_date")
+  deadline    DateTime?
+  project     Int?
+  phaseStatus Int?      @map("phase_status")
+  variation   Float?
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  airtable    String?   @db.VarChar(255)
+
   @@index([project])
   @@index([phaseStatus])
+  @@map("phases")
 }
 
-// ============================================
-// TABLAS RAMP - PROTOTIPOS Y UNIDADES
-// ============================================
-
 model Prototype {
-  id           Int       @id @default(autoincrement())
-  name         String?   @db.VarChar(255)
-  maxUnits     Int?      @map("max_units")
-  project      Int?
-  housingType  Int?      @map("housing_type")
-  createdAt    DateTime? @default(now()) @map("created_at")
-  updatedAt    DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  projectRel    Project?       @relation(fields: [project], references: [id])
-  subPrototypes SubPrototype[]
-  units         Unit[]
-  quotations    Quotation[]
-  transactions  Transaction[]
-  
-  @@map("prototipes") // Manteniendo el typo original de la BD
+  id          Int       @id @default(autoincrement())
+  name        String?   @db.VarChar(255)
+  maxUnits    Int?      @map("max_units")
+  project     Int?
+  housingType Int?      @map("housing_type")
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
   @@index([project])
+  @@map("prototipes")
 }
 
 model SubPrototype {
-  id                           Int       @id @default(autoincrement())
-  prototype                    Int?
-  project                      Int?
-  name                         String?   @db.VarChar(255)
-  price                        Decimal?  @db.Decimal(10, 2)
-  aside                        Decimal?  @db.Decimal(10, 2)
-  specifications               String?   @db.Text
-  commercialDescription        String?   @map("commercial_description") @db.Text
-  construction                 Decimal?  @db.Decimal(10, 2)
-  bedrooms                     Int?
-  bathrooms                    Int?
-  halfBathrooms                Int?      @map("half_bathrooms")
-  lounge                       Int?
-  dinningRoom                  Int?      @map("dinning_room")
-  studio                       Int?
-  flexRoom                     Int?      @map("flex_room")
-  parking                      Int?
-  cellar                       Int?
-  washing                      Int?
-  specificationsFinishes       String?   @map("specifications_finishes") @db.Text
-  specificationsCeiling        String?   @map("specifications_ceiling") @db.Text
-  specificationsSmithy         String?   @map("specifications_smithy") @db.Text
-  specificationsFurniture      String?   @map("specifications_furniture") @db.LongText
-  specificationsInstallations  String?   @map("specifications_installations") @db.Text
-  specificationsPainting       String?   @map("specifications_painting") @db.Text
-  specificationsEquipment      String?   @map("specifications_equipment") @db.Text
-  penalty                      Int?
-  rooftopNumber                Float?    @map("rooftop_number")
-  rooftopArea                  Float?    @map("rooftop_area")
-  parkingArea                  Float?    @map("parking_area")
-  createdAt                    DateTime? @default(now()) @map("created_at")
-  updatedAt                    DateTime? @updatedAt @map("updated_at")
-  prototipe                    Int?
-  
-  // Relations
-  prototypeRel Prototype?    @relation(fields: [prototype], references: [id])
-  projectRel   Project?      @relation(fields: [project], references: [id])
-  units        Unit[]
-  quotations   Quotation[]
-  transactions Transaction[]
-  
-  @@map("sub_prototypes")
+  id                          Int       @id @default(autoincrement())
+  prototype                   Int?
+  project                     Int?
+  name                        String?   @db.VarChar(255)
+  price                       Decimal?  @db.Decimal(10, 2)
+  aside                       Decimal?  @db.Decimal(10, 2)
+  specifications              String?   @db.Text
+  commercialDescription       String?   @map("commercial_description") @db.Text
+  construction                Decimal?  @db.Decimal(10, 2)
+  bedrooms                    Int?
+  bathrooms                   Int?
+  halfBathrooms               Int?      @map("half_bathrooms")
+  lounge                      Int?
+  dinningRoom                 Int?      @map("dinning_room")
+  studio                      Int?
+  flexRoom                    Int?      @map("flex_room")
+  parking                     Int?
+  cellar                      Int?
+  washing                     Int?
+  specificationsFinishes      String?   @map("specifications_finishes") @db.Text
+  specificationsCeiling       String?   @map("specifications_ceiling") @db.Text
+  specificationsSmithy        String?   @map("specifications_smithy") @db.Text
+  specificationsFurniture     String?   @map("specifications_furniture") @db.LongText
+  specificationsInstallations String?   @map("specifications_installations") @db.Text
+  specificationsPainting      String?   @map("specifications_painting") @db.Text
+  specificationsEquipment     String?   @map("specifications_equipment") @db.Text
+  penalty                     Int?
+  rooftopNumber               Float?    @map("rooftop_number")
+  rooftopArea                 Float?    @map("rooftop_area")
+  parkingArea                 Float?    @map("parking_area")
+  createdAt                   DateTime? @default(now()) @map("created_at")
+  updatedAt                   DateTime? @updatedAt @map("updated_at")
+  prototipe                   Int?
+
   @@index([prototype])
   @@index([project])
+  @@map("sub_prototypes")
 }
 
 model Unit {
-  id                  Int       @id @default(autoincrement())
-  prototype           Int?
-  phase               Int?
-  cuv                 String?   @db.VarChar(255)
-  street              String?   @db.VarChar(255)
-  surface             Float?
-  floors              Int?
-  surplusMt2          Float?    @map("surplus_mt2")
-  project             Int?
-  price               Decimal?  @db.Decimal(10, 2)
-  condominiumSet      Int?      @map("condominium_set")
-  location            Int?
-  housingId           String?   @map("housing_id") @db.VarChar(255)
-  buildingPhase       Int?      @map("building_phase")
-  officialNumber      String?   @map("official_number") @db.VarChar(255)
-  interiorNumber      String?   @map("interior_number") @db.VarChar(255)
-  facade              Int?
-  lot                 Int?
-  square              Int?
-  subPrototype        Int?      @map("sub_prototype")
-  subcondominiumSet   Int?      @map("subcondominium_set")
-  housingNumber       String?   @map("housing_number") @db.VarChar(255)
-  currency            String?   @db.Text
-  bridge              Int?
-  building            Int?
-  amenities           Int?
-  qualityChecklist    Int?      @map("quality_checklist")
-  postsaleChecklist   Int?      @map("postsale_checklist")
-  warrantyChecklist   Int?      @map("warranty_checklist")
-  createdAt           DateTime? @default(now()) @map("created_at")
-  updatedAt           DateTime? @updatedAt @map("updated_at")
-  ocpgChecklist       Int?      @map("ocpg_checklist")
-  prototipe           Int?
-  
-  // Relations
-  prototypeRel    Prototype?    @relation(fields: [prototype], references: [id])
-  phaseRel        Phase?        @relation(fields: [phase], references: [id])
-  projectRel      Project?      @relation(fields: [project], references: [id])
-  facadeRel       Facade?       @relation(fields: [facade], references: [id])
-  subPrototypeRel SubPrototype? @relation(fields: [subPrototype], references: [id])
-  quotations      Quotation[]
-  transactions    Transaction[]
-  
-  @@map("units")
+  id                Int       @id @default(autoincrement())
+  prototype         Int?
+  phase             Int?
+  cuv               String?   @db.VarChar(255)
+  street            String?   @db.VarChar(255)
+  surface           Float?
+  floors            Int?
+  surplusMt2        Float?    @map("surplus_mt2")
+  project           Int?
+  price             Decimal?  @db.Decimal(10, 2)
+  condominiumSet    Int?      @map("condominium_set")
+  location          Int?
+  housingId         String?   @map("housing_id") @db.VarChar(255)
+  buildingPhase     Int?      @map("building_phase")
+  officialNumber    String?   @map("official_number") @db.VarChar(255)
+  interiorNumber    String?   @map("interior_number") @db.VarChar(255)
+  facade            Int?
+  lot               Int?
+  square            Int?
+  subPrototype      Int?      @map("sub_prototype")
+  subcondominiumSet Int?      @map("subcondominium_set")
+  housingNumber     String?   @map("housing_number") @db.VarChar(255)
+  currency          String?   @db.Text
+  bridge            Int?
+  building          Int?
+  amenities         Int?
+  qualityChecklist  Int?      @map("quality_checklist")
+  postsaleChecklist Int?      @map("postsale_checklist")
+  warrantyChecklist Int?      @map("warranty_checklist")
+  createdAt         DateTime? @default(now()) @map("created_at")
+  updatedAt         DateTime? @updatedAt @map("updated_at")
+  ocpgChecklist     Int?      @map("ocpg_checklist")
+  prototipe         Int?
+
   @@index([prototype])
   @@index([phase])
   @@index([project])
   @@index([facade])
   @@index([subPrototype])
+  @@map("units")
 }
 
-// ============================================
-// TABLAS RAMP - COTIZACIONES
-// ============================================
-
 model Quotation {
-  id                        Int       @id @default(autoincrement())
-  unit                      Int?
-  subPrototype              Int?      @map("sub_prototype")
-  prototype                 Int?
-  project                   Int?
-  discount                  Int?
-  deed                      Int?
-  paymentMethod             Int?      @map("payment_method")
-  subPaymentMethod          Int?      @map("sub_payment_method")
-  agent                     Int?
-  client                    Int?
-  items                     String?   @db.Text
-  agency                    Int?
-  quotationStatus           Int?      @map("quotation_status")
-  paymentEntity             Int?      @map("payment_entity")
-  createdAt                 DateTime? @default(now()) @map("created_at")
-  updatedAt                 DateTime? @updatedAt @map("updated_at")
-  deposit                   Decimal?  @db.Decimal(10, 2)
-  transaction               Int?      @unique
-  total                     Decimal?  @db.Decimal(10, 2)
-  subtotal                  Decimal?  @db.Decimal(10, 2)
-  depositTotal              Decimal?  @map("deposit_total") @db.Decimal(10, 2)
-  executive                 Int?
-  complete                  Boolean?  @db.TinyInt
-  send                      Boolean?  @db.TinyInt
-  costTotal                 Decimal?  @map("cost_total") @db.Decimal(10, 2)
-  surplusPriceTotal         Decimal?  @map("surplus_price_total") @db.Decimal(10, 2)
-  packageTotal              Decimal?  @map("package_total") @db.Decimal(10, 2)
-  deedTotal                 Decimal?  @map("deed_total") @db.Decimal(10, 2)
-  currency                  String?   @db.VarChar(10)
-  exchangeRate              String?   @map("exchange_rate") @db.VarChar(10)
-  rateType                  Decimal?  @map("rate_type") @db.Decimal(10, 2)
-  notes                     String?   @db.VarChar(255)
-  monex                     Int?
-  firstCredit               Float?    @map("first_credit")
-  secondCredit              Float?    @map("second_credit")
-  coSubPaymentMethod        Int?      @map("co_sub_payment_method")
-  coPaymentEntity           Int?      @map("co_payment_entity")
-  surplusPrice              Float?    @map("surplus_price")
-  user                      Int?
-  asideDeposit              Float?    @map("aside_deposit")
-  additionalCost            Float?    @map("additional_cost")
-  minDeposit                Float?    @map("min_deposit")
-  minDepositTotal           Float?    @map("min_deposit_total")
-  paymentDate               DateTime? @map("payment_date")
-  discountTotal             Float?    @map("discount_total")
-  reservation               Int?
-  safeCostTotal             Float?    @map("safe_cost_total")
-  asideDeposits             String?   @map("aside_deposits") @db.Text
-  version                   String?   @db.VarChar(255)
-  createdBy                 Int?      @map("created_by")
-  isCoacredited             Boolean?  @map("is_coacredited") @db.TinyInt
-  commissionable            Boolean?  @db.TinyInt
-  verificationDate          DateTime? @map("verification_date")
-  quotationSentDate         DateTime? @map("quotation_sent_date")
-  monexReferenceSentDate    DateTime? @map("monex_reference_sent_date")
-  airtable                  String?   @db.VarChar(255)
-  isDeedInformative         Boolean?  @map("is_deed_informative") @db.TinyInt
-  prototipe                 Int?
-  broker                    Int?
-  coordinator               Int?
-  referencial               Int?
-  referencialAssign         String?   @map("referencial_assign") @db.VarChar(255)
-  mbroker                   Int?
-  
-  // Relations
-  unitRel             Unit?            @relation(fields: [unit], references: [id])
-  subPrototypeRel     SubPrototype?    @relation(fields: [subPrototype], references: [id])
-  prototypeRel        Prototype?       @relation(fields: [prototype], references: [id])
-  projectRel          Project?         @relation(fields: [project], references: [id])
-  agencyRel           Agency?          @relation(fields: [agency], references: [id])
-  agentRel            Agent?           @relation(fields: [agent], references: [id])
-  paymentMethodRel    PaymentMethod?   @relation(fields: [paymentMethod], references: [id])
-  paymentEntityRel    PaymentEntity?   @relation(fields: [paymentEntity], references: [id])
-  clientRel           Client?          @relation("QuotationClient", fields: [client], references: [id])
-  quotationStatusRel  QuotationStatus? @relation(fields: [quotationStatus], references: [id])
-  transactionRel      Transaction?     @relation(fields: [transaction], references: [id])
-  references          Reference[]
-  
-  @@map("quotations")
+  id                     Int       @id @default(autoincrement())
+  unit                   Int?
+  subPrototype           Int?      @map("sub_prototype")
+  prototype              Int?
+  project                Int?
+  discount               Int?
+  deed                   Int?
+  paymentMethod          Int?      @map("payment_method")
+  subPaymentMethod       Int?      @map("sub_payment_method")
+  agent                  Int?
+  client                 Int?
+  items                  String?   @db.Text
+  agency                 Int?
+  quotationStatus        Int?      @map("quotation_status")
+  paymentEntity          Int?      @map("payment_entity")
+  createdAt              DateTime? @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  deposit                Decimal?  @db.Decimal(10, 2)
+  transaction            Int?      @unique
+  total                  Decimal?  @db.Decimal(10, 2)
+  subtotal               Decimal?  @db.Decimal(10, 2)
+  depositTotal           Decimal?  @map("deposit_total") @db.Decimal(10, 2)
+  executive              Int?
+  complete               Boolean?
+  send                   Boolean?
+  costTotal              Decimal?  @map("cost_total") @db.Decimal(10, 2)
+  surplusPriceTotal      Decimal?  @map("surplus_price_total") @db.Decimal(10, 2)
+  packageTotal           Decimal?  @map("package_total") @db.Decimal(10, 2)
+  deedTotal              Decimal?  @map("deed_total") @db.Decimal(10, 2)
+  currency               String?   @db.VarChar(10)
+  exchangeRate           String?   @map("exchange_rate") @db.VarChar(10)
+  rateType               Decimal?  @map("rate_type") @db.Decimal(10, 2)
+  notes                  String?   @db.VarChar(255)
+  monex                  Int?
+  firstCredit            Float?    @map("first_credit")
+  secondCredit           Float?    @map("second_credit")
+  coSubPaymentMethod     Int?      @map("co_sub_payment_method")
+  coPaymentEntity        Int?      @map("co_payment_entity")
+  surplusPrice           Float?    @map("surplus_price")
+  user                   Int?
+  asideDeposit           Float?    @map("aside_deposit")
+  additionalCost         Float?    @map("additional_cost")
+  minDeposit             Float?    @map("min_deposit")
+  minDepositTotal        Float?    @map("min_deposit_total")
+  paymentDate            DateTime? @map("payment_date")
+  discountTotal          Float?    @map("discount_total")
+  reservation            Int?
+  safeCostTotal          Float?    @map("safe_cost_total")
+  asideDeposits          String?   @map("aside_deposits") @db.Text
+  version                String?   @db.VarChar(255)
+  createdBy              Int?      @map("created_by")
+  isCoacredited          Boolean?  @map("is_coacredited")
+  commissionable         Boolean?
+  verificationDate       DateTime? @map("verification_date")
+  quotationSentDate      DateTime? @map("quotation_sent_date")
+  monexReferenceSentDate DateTime? @map("monex_reference_sent_date")
+  airtable               String?   @db.VarChar(255)
+  isDeedInformative      Boolean?  @map("is_deed_informative")
+  prototipe              Int?
+  broker                 Int?
+  coordinator            Int?
+  referencial            Int?
+  referencialAssign      String?   @map("referencial_assign") @db.VarChar(255)
+  mbroker                Int?
+
   @@index([unit])
   @@index([subPrototype])
   @@index([prototype])
@@ -984,259 +800,198 @@ model Quotation {
   @@index([agent])
   @@index([client])
   @@index([transaction])
+  @@map("quotations")
 }
 
-// ============================================
-// TABLAS RAMP - TRANSACCIONES Y PAGOS
-// ============================================
-
 model Transaction {
-  id                     Int       @id @default(autoincrement())
-  transactionId          String?   @map("transaction_id") @db.VarChar(255)
-  commissionPhase        Int?      @map("commission_phase")
-  closingDate            DateTime? @map("closing_date")
-  unit                   Int?
-  client                 Int?
-  totalDebt              Decimal?  @map("total_debt") @db.Decimal(10, 2)
-  payments               Decimal?  @db.Decimal(10, 2)
-  balance                Decimal?  @db.Decimal(10, 2)
-  balanceDue             Decimal?  @map("balance_due") @db.Decimal(10, 2)
-  phoneVerification      Boolean?  @map("phone_verification") @db.TinyInt
-  paymentMethod          Int?      @map("payment_method")
-  subPaymentMethod       Int?      @map("sub_payment_method")
-  paymentEntity          Int?      @map("payment_entity")
-  commissionsInDebt      Decimal?  @map("commissions_in_debt") @db.Decimal(10, 2)
-  project                Int?
-  commissionStage        Int?      @map("commission_stage")
-  transactionStatus      Int?      @map("transaction_status")
-  quotation              Int?
-  prototype              Int?
-  subPrototype           Int?      @map("sub_prototype")
-  interview              Int?
-  creditTotal            Float?    @map("credit_total")
-  toAuthorize            Int?      @map("to_authorize")
-  signed                 Int?
-  operate                Int?
-  closeDate              DateTime? @map("close_date")
-  lastContactDate        DateTime? @map("last_contact_date")
-  nextContactDate        DateTime? @map("next_contact_date")
-  isDocumentComplete     Boolean?  @map("is_document_complete") @db.TinyInt
-  docuementesComplete    DateTime? @map("docuementes_complete")
-  userKeys               Int?      @map("user_keys")
-  keysDate               DateTime? @map("keys_date")
-  keysComment            String?   @map("keys_comment") @db.Text
-  createdAt              DateTime? @default(now()) @map("created_at")
-  updatedAt              DateTime? @updatedAt @map("updated_at")
-  fisicalPerson          Boolean?  @map("fisical_person") @db.TinyInt
-  prototipe              Int?
-  calculatedCommisions   String?   @map("calculated_commisions") @db.LongText
-  
-  // Relations
-  unitRel          Unit?          @relation(fields: [unit], references: [id])
-  clientRel        Client?        @relation("TransactionClient", fields: [client], references: [id])
-  paymentEntityRel PaymentEntity? @relation(fields: [paymentEntity], references: [id])
-  paymentMethodRel PaymentMethod? @relation(fields: [paymentMethod], references: [id])
-  projectRel       Project?       @relation(fields: [project], references: [id])
-  prototypeRel     Prototype?     @relation(fields: [prototype], references: [id])
-  subPrototypeRel  SubPrototype?  @relation(fields: [subPrototype], references: [id])
-  quotationRel     Quotation?     
-  promissories     Promissory[]
-  movements        Movement[]
-  
-  @@map("transactions")
+  id                   Int       @id @default(autoincrement())
+  transactionId        String?   @map("transaction_id") @db.VarChar(255)
+  commissionPhase      Int?      @map("commission_phase")
+  closingDate          DateTime? @map("closing_date")
+  unit                 Int?
+  client               Int?
+  totalDebt            Decimal?  @map("total_debt") @db.Decimal(10, 2)
+  payments             Decimal?  @db.Decimal(10, 2)
+  balance              Decimal?  @db.Decimal(10, 2)
+  balanceDue           Decimal?  @map("balance_due") @db.Decimal(10, 2)
+  phoneVerification    Boolean?  @map("phone_verification")
+  paymentMethod        Int?      @map("payment_method")
+  subPaymentMethod     Int?      @map("sub_payment_method")
+  paymentEntity        Int?      @map("payment_entity")
+  commissionsInDebt    Decimal?  @map("commissions_in_debt") @db.Decimal(10, 2)
+  project              Int?
+  commissionStage      Int?      @map("commission_stage")
+  transactionStatus    Int?      @map("transaction_status")
+  quotation            Int?
+  prototype            Int?
+  subPrototype         Int?      @map("sub_prototype")
+  interview            Int?
+  creditTotal          Float?    @map("credit_total")
+  toAuthorize          Int?      @map("to_authorize")
+  signed               Int?
+  operate              Int?      @map("operate")
+  closeDate            DateTime? @map("close_date")
+  lastContactDate      DateTime? @map("last_contact_date")
+  nextContactDate      DateTime? @map("next_contact_date")
+  isDocumentComplete   Boolean?  @map("is_document_complete")
+  docuementesComplete  DateTime? @map("docuementes_complete")
+  userKeys             Int?      @map("user_keys")
+  keysDate             DateTime? @map("keys_date")
+  keysComment          String?   @map("keys_comment") @db.Text
+  createdAt            DateTime? @default(now()) @map("created_at")
+  updatedAt            DateTime? @updatedAt @map("updated_at")
+  fisicalPerson        Boolean?  @map("fisical_person")
+  prototipe            Int?
+  calculatedCommisions String?   @map("calculated_commisions") @db.LongText
+
   @@index([unit])
   @@index([client])
   @@index([project])
   @@index([quotation])
+  @@index([operate])
+  @@map("transactions")
 }
 
 model Movement {
-  id                    Int       @id @default(autoincrement())
-  name                  String?   @db.VarChar(255)
-  amount                Decimal?  @db.Decimal(10, 2)
-  authorizationKey      String?   @map("authorization_key") @db.VarChar(255)
-  movementId            String?   @map("movement_id") @db.VarChar(255)
-  paymentDate           DateTime? @map("payment_date")
-  comments              String?   @db.Text
-  paymentStatus         String?   @map("payment_status") @db.Text
-  verified              String?   @db.Text
-  createdAt             DateTime? @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  transaction           Int?
-  bank                  String?   @db.VarChar(255)
-  accountHolder         String?   @map("account_holder") @db.VarChar(255)
-  receivingAccount      String?   @map("receiving_account") @db.VarChar(255)
-  issuingAccount        String?   @map("issuing_account") @db.VarChar(255)
-  paymentMethod         String?   @map("payment_method") @db.VarChar(255)
-  sourceMethod          String?   @map("source_method") @db.VarChar(255)
-  canceled              Boolean?  @db.TinyInt
-  countable             Boolean?  @db.TinyInt
-  isCredit              Boolean?  @map("is_credit") @db.TinyInt
-  movementType          String?   @map("movement_type") @db.Text
-  type                  Int?
-  createdBy             String?   @map("created_by") @db.VarChar(255)
-  sent                  Boolean?  @db.TinyInt
-  speiPaymentId         String?   @map("spei_payment_id") @db.VarChar(255)
-  voucherUrl            String?   @map("voucher_url") @db.VarChar(255)
-  statusPaymentOnline   String?   @map("status_payment_online") @db.VarChar(255)
-  clabeSpei             String?   @map("clabe_spei") @db.VarChar(255)
-  amountSpei            Decimal?  @map("amount_spei") @db.Decimal(10, 2)
-  expirationSpei        DateTime? @map("expiration_spei")
-  payment               Decimal?  @db.Decimal(10, 2)
-  changeType            Decimal?  @map("change_type") @db.Decimal(10, 2)
-  currency              String?   @db.VarChar(255)
-  convertedCurrency     String?   @map("converted_currency") @db.VarChar(255)
-  affectedType          Int?      @map("affected_type")
-  
-  // Relations
-  transactionRel Transaction? @relation(fields: [transaction], references: [id])
-  
-  @@map("movements")
+  id                  Int       @id @default(autoincrement())
+  name                String?   @db.VarChar(255)
+  amount              Decimal?  @db.Decimal(10, 2)
+  authorizationKey    String?   @map("authorization_key") @db.VarChar(255)
+  movementId          String?   @map("movement_id") @db.VarChar(255)
+  paymentDate         DateTime? @map("payment_date")
+  comments            String?   @db.Text
+  paymentStatus       String?   @map("payment_status") @db.Text
+  verified            String?   @db.Text
+  createdAt           DateTime? @default(now()) @map("created_at")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
+  transaction         Int?
+  bank                String?   @db.VarChar(255)
+  accountHolder       String?   @map("account_holder") @db.VarChar(255)
+  receivingAccount    String?   @map("receiving_account") @db.VarChar(255)
+  issuingAccount      String?   @map("issuing_account") @db.VarChar(255)
+  paymentMethod       String?   @map("payment_method") @db.VarChar(255)
+  sourceMethod        String?   @map("source_method") @db.VarChar(255)
+  canceled            Boolean?
+  countable           Boolean?
+  isCredit            Boolean?  @map("is_credit")
+  movementType        String?   @map("movement_type") @db.Text
+  type                Int?
+  createdBy           String?   @map("created_by") @db.VarChar(255)
+  sent                Boolean?
+  speiPaymentId       String?   @map("spei_payment_id") @db.VarChar(255)
+  voucherUrl          String?   @map("voucher_url") @db.VarChar(255)
+  statusPaymentOnline String?   @map("status_payment_online") @db.VarChar(255)
+  clabeSpei           String?   @map("clabe_spei") @db.VarChar(255)
+  amountSpei          Decimal?  @map("amount_spei") @db.Decimal(10, 2)
+  expirationSpei      DateTime? @map("expiration_spei")
+  payment             Decimal?  @db.Decimal(10, 2)
+  changeType          Decimal?  @map("change_type") @db.Decimal(10, 2)
+  currency            String?   @db.VarChar(255)
+  convertedCurrency   String?   @map("converted_currency") @db.VarChar(255)
+  affectedType        Int?      @map("affected_type")
+
   @@index([transaction])
+  @@map("movements")
 }
 
 model Promissory {
-  id                   Int       @id @default(autoincrement())
-  transaction          Int?
-  promissories         String?   @db.Text
-  createdAt            DateTime? @default(now()) @map("created_at")
-  updatedAt            DateTime? @updatedAt @map("updated_at")
-  amount               Float?
-  number               Int?
-  dueDate              DateTime? @map("due_date")
-  signatureDate        DateTime? @map("signature_date")
-  isPaid               Boolean?  @db.TinyInt
-  speiPaymentId        String?   @map("spei_payment_id") @db.VarChar(255)
-  voucherUrl           String?   @map("voucher_url") @db.VarChar(255)
-  statusPaymentOnline  String?   @map("status_payment_online") @db.VarChar(255)
-  clabeSpei            String?   @map("clabe_spei") @db.VarChar(255)
-  amountSpei           Decimal?  @map("amount_spei") @db.Decimal(10, 2)
-  expirationSpei       DateTime? @map("expiration_spei")
-  isCreditPromisse     Boolean?  @map("is_credit_promisse") @db.TinyInt
-  type                 Int?
-  
-  // Relations
-  transactionRel  Transaction?  @relation(fields: [transaction], references: [id])
-  promiseTypeRel  PromiseType?  @relation(fields: [type], references: [id])
-  
-  @@map("promissories")
+  id                  Int       @id @default(autoincrement())
+  transaction         Int?
+  promissories        String?   @db.Text
+  createdAt           DateTime? @default(now()) @map("created_at")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
+  amount              Float?
+  number              Int?
+  dueDate             DateTime? @map("due_date")
+  signatureDate       DateTime? @map("signature_date")
+  isPaid              Boolean?
+  speiPaymentId       String?   @map("spei_payment_id") @db.VarChar(255)
+  voucherUrl          String?   @map("voucher_url") @db.VarChar(255)
+  statusPaymentOnline String?   @map("status_payment_online") @db.VarChar(255)
+  clabeSpei           String?   @map("clabe_spei") @db.VarChar(255)
+  amountSpei          Decimal?  @map("amount_spei") @db.Decimal(10, 2)
+  expirationSpei      DateTime? @map("expiration_spei")
+  isCreditPromisse    Boolean?  @map("is_credit_promisse")
+  type                Int?
+
   @@index([transaction])
   @@index([type])
+  @@map("promissories")
 }
 
 model PaymentMethod {
-  id         Int       @id @default(autoincrement())
-  name       String?   @db.VarChar(255)
-  project    Int?
-  createdAt  DateTime? @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  projectRel      Project?        @relation(fields: [project], references: [id])
-  paymentEntities PaymentEntity[]
-  quotations      Quotation[]
-  transactions    Transaction[]
-  
-  @@map("payment_methods")
+  id        Int       @id @default(autoincrement())
+  name      String?   @db.VarChar(255)
+  project   Int?
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   @@index([project])
+  @@map("payment_methods")
 }
 
 model PaymentEntity {
-  id                Int       @id @default(autoincrement())
-  name              String?   @db.VarChar(255)
-  project           Int?
-  subPaymentMethod  Int?      @map("sub_payment_method")
-  paymentMethod     Int?      @map("payment_method")
-  createdAt         DateTime? @default(now()) @map("created_at")
-  updatedAt         DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  paymentMethodRel PaymentMethod? @relation(fields: [paymentMethod], references: [id])
-  quotations       Quotation[]
-  transactions     Transaction[]
-  
-  @@map("payment_entities")
+  id               Int       @id @default(autoincrement())
+  name             String?   @db.VarChar(255)
+  project          Int?
+  subPaymentMethod Int?      @map("sub_payment_method")
+  paymentMethod    Int?      @map("payment_method")
+  createdAt        DateTime? @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+
   @@index([paymentMethod])
+  @@map("payment_entities")
 }
 
 model Reference {
-  id                Int       @id @default(autoincrement())
-  reference         String?   @db.VarChar(255)
-  project           Int?
-  category          String?   @db.Text
-  date              DateTime?
-  rfc               String?   @db.VarChar(255)
-  email             String?   @db.VarChar(255)
-  identifier        String?   @db.VarChar(255)
-  depositor         String?   @db.VarChar(255)
-  quotation         Int?
-  used              Boolean?  @db.TinyInt
-  createdAt         DateTime? @default(now()) @map("created_at")
-  updatedAt         DateTime? @updatedAt @map("updated_at")
-  referencePayment  Int?      @map("reference_payment")
-  
-  // Relations
-  projectRel   Project?   @relation(fields: [project], references: [id])
-  quotationRel Quotation? @relation(fields: [quotation], references: [id])
-  
-  @@map("references")
+  id               Int       @id @default(autoincrement())
+  reference        String?   @db.VarChar(255)
+  project          Int?
+  category         String?   @db.Text
+  date             DateTime?
+  rfc              String?   @db.VarChar(255)
+  email            String?   @db.VarChar(255)
+  identifier       String?   @db.VarChar(255)
+  depositor        String?   @db.VarChar(255)
+  quotation        Int?
+  used             Boolean?
+  createdAt        DateTime? @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+  referencePayment Int?      @map("reference_payment")
+
   @@index([project])
   @@index([quotation])
+  @@map("references")
 }
 
-// ============================================
-// TABLAS RAMP - OTRAS
-// ============================================
-
 model Deposit {
-  id              Int       @id @default(autoincrement())
-  name            String?   @db.VarChar(255)
-  description     String?   @db.Text
-  costPercentage  Float?    @map("cost_percentage")
-  project         Int?
-  asideAmount     Float?    @map("aside_amount")
-  squareLot       String?   @map("square_lot") @db.Text
-  penalty         Float?
-  createdAt       DateTime? @default(now()) @map("created_at")
-  updatedAt       DateTime? @updatedAt @map("updated_at")
-  
-  // Relations
-  projectRel Project? @relation(fields: [project], references: [id])
-  
-  @@map("deposits")
+  id             Int       @id @default(autoincrement())
+  name           String?   @db.VarChar(255)
+  description    String?   @db.Text
+  costPercentage Float?    @map("cost_percentage")
+  project        Int?
+  asideAmount    Float?    @map("aside_amount")
+  squareLot      String?   @map("square_lot") @db.Text
+  penalty        Float?
+  createdAt      DateTime? @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+
   @@index([project])
+  @@map("deposits")
 }
 
 model MovementMethod {
-  id                    Int       @id @default(autoincrement())
-  name                  String?   @db.VarChar(255)
-  fLastname             String?   @map("f_lastname") @db.VarChar(255)
-  mLastname             String?   @map("m_lastname") @db.VarChar(255)
-  email                 String?   @db.VarChar(255)
-  mobile                String?   @db.VarChar(255)
-  agency                Int?
-  createdAt             DateTime? @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  commAccountStatement  Int?      @map("comm_account_statement")
-  
-  // Relations
-  agencyRel Agency? @relation(fields: [agency], references: [id])
-  
-  @@map("movement_methods")
+  id                   Int       @id @default(autoincrement())
+  name                 String?   @db.VarChar(255)
+  fLastname            String?   @map("f_lastname") @db.VarChar(255)
+  mLastname            String?   @map("m_lastname") @db.VarChar(255)
+  email                String?   @db.VarChar(255)
+  mobile               String?   @db.VarChar(255)
+  agency               Int?
+  createdAt            DateTime? @default(now()) @map("created_at")
+  updatedAt            DateTime? @updatedAt @map("updated_at")
+  commAccountStatement Int?      @map("comm_account_statement")
+
   @@index([agency])
+  @@map("movement_methods")
 }
-
-// ============================================
-// ACTUALIZAR EL MODELO CLIENT EXISTENTE
-// ============================================
-// Agregar estas relaciones al final del modelo Client existente:
-
-// Relations para Client (agregar a tu modelo Client existente)
-// maritalStatusRel    MaritalStatus?    @relation("ClientMaritalStatus", fields: [maritalStatus], references: [id])
-// maritalRegistryRel  MaritalRegistry?  @relation("ClientMaritalRegistry", fields: [maritalRegistry], references: [id])
-// maritalRegimenRel   MaritalRegimen?   @relation("ClientMaritalRegimen", fields: [maritalRegimen], references: [id])
-// clientStatusRel     ClientStatus?     @relation("ClientStatus", fields: [clientStatus], references: [id])
-// beneficiaryRel      Beneficiary?      @relation("ClientBeneficiary", fields: [beneficiary], references: [id])
-// clientReferences    ClientReference[] @relation("ClientReferences")
-// quotations          Quotation[]       @relation("QuotationClient")
-// transactions        Transaction[]     @relation("TransactionClient")

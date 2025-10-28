@@ -11,11 +11,13 @@ import {
   Building2,
   Settings,
   Users,
-  BarChart3
+  BarChart3,
+  Receipt  // 👈 NUEVO: Ícono para Pagarés
 } from 'lucide-react';
 import { Logo } from '@/components/atoms/Logo';
 import { Divider } from '@/components/atoms/Divider';
 import { cn } from '@/lib/utils';
+
 
 interface MenuItem {
   id: string;
@@ -69,6 +71,14 @@ const menuSections: MenuSection[] = [
         icon: Building2,
         href: '/dashboard/proyectos'
       },
+      // 👇 NUEVO: Entrada de Pagarés
+      {
+        id: 'pagares',
+        label: 'Pagarés',
+        icon: Receipt,
+        href: '/dashboard/pagares'
+      },
+      // 👆 FIN NUEVO
       {
         id: 'reportes',
         label: 'Reportes',

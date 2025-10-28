@@ -1,5 +1,5 @@
 // src/services/sync/directSyncService.ts
-// VERSIÓN MEJORADA CON MANEJO ROBUSTO DE FECHAS Y UNIQUE CONSTRAINTS
+// VERSIÓN MEJORADA CON MANEJO ROBUSTO DE FECHAS
 
 import { ventasDb } from '@/lib/ventasDb';
 import { prisma } from '@/lib/prisma';
@@ -115,60 +115,32 @@ class DirectSyncService {
             }
           }
 
-          // Usar upsert para quotations que tiene unique constraint en transaction
+          // Verificar si existe
           const primaryKeyField = config.primaryKey || 'id';
           const primaryKeyValue = mappedData[primaryKeyField];
+          
+          const existing = await (prismaModel as any).findUnique({
+            where: { [primaryKeyField]: primaryKeyValue }
+          });
 
-          if (tableName === 'quotations' && mappedData.transaction != null) {
-            // Para quotations con transaction único, usar upsert
-            const { id, ...dataWithoutId } = mappedData;
-            
-            const upsertResult = await (prismaModel as any).upsert({
-              where: { transaction: mappedData.transaction },
-              create: dataWithoutId,
-              update: dataWithoutId
-            });
-            
-            // Determinar si fue insert o update comparando con el registro anterior
-            const wasExisting = await (prismaModel as any).count({
-              where: { 
-                transaction: mappedData.transaction,
-                updatedAt: { lt: new Date() }
-              }
-            });
-            
-            if (upsertResult.id === primaryKeyValue) {
+          if (existing) {
+            // Actualizar si cambió
+            const existingHash = this.createHash(existing);
+            if (existingHash !== recordHash) {
+              await (prismaModel as any).update({
+                where: { [primaryKeyField]: primaryKeyValue },
+                data: mappedData
+              });
               result.recordsUpdated++;
             } else {
-              result.recordsInserted++;
+              result.recordsSkipped++;
             }
           } else {
-            // Para otras tablas, usar el flujo normal
-            const existing = await (prismaModel as any).findUnique({
-              where: { [primaryKeyField]: primaryKeyValue }
+            // Insertar nuevo
+            await (prismaModel as any).create({
+              data: mappedData
             });
-
-            if (existing) {
-              // Actualizar si cambió
-              const existingHash = this.createHash(existing);
-              if (existingHash !== recordHash) {
-                const { [primaryKeyField]: _, ...updateData } = mappedData;
-                await (prismaModel as any).update({
-                  where: { [primaryKeyField]: primaryKeyValue },
-                  data: updateData
-                });
-                result.recordsUpdated++;
-              } else {
-                result.recordsSkipped++;
-              }
-            } else {
-              // Insertar nuevo
-              const { [primaryKeyField]: _, ...createData } = mappedData;
-              await (prismaModel as any).create({
-                data: createData
-              });
-              result.recordsInserted++;
-            }
+            result.recordsInserted++;
           }
 
         } catch (error: any) {
@@ -249,36 +221,68 @@ class DirectSyncService {
 
     const mapped: any = {};
 
-    // Procesar cada campo del registro
+    // Procesar cada campo
     for (const [key, value] of Object.entries(record)) {
-      // Convertir el nombre del campo a camelCase
       const camelKey = snakeToCamel(key);
       
-      // Si el valor es null, mantenerlo como null
-      if (value === null) {
+      // Manejar valores NULL
+      if (value === null || value === undefined) {
         mapped[camelKey] = null;
         continue;
       }
 
-      // Manejar fechas
-      if (key.includes('date') || key.includes('at') || key === 'birthday') {
-        mapped[camelKey] = toSafeDate(value);
+      // 🔧 MANEJO ROBUSTO DE FECHAS (SOLUCIÓN DEFINITIVA)
+      const isDateField = key.endsWith('_at') || key.endsWith('_date') || 
+                          key === 'birthday' || key === 'deadline';
+      
+      if (isDateField) {
+        // Caso 1: Ya es un Date object
+        if (value instanceof Date) {
+          mapped[camelKey] = isNaN(value.getTime()) ? null : value;
+        }
+        // Caso 2: Es un string de fecha (formato MySQL: "2020-12-18 19:03:31" o ISO)
+        else if (typeof value === 'string') {
+          const dateValue = new Date(value);
+          mapped[camelKey] = isNaN(dateValue.getTime()) ? null : dateValue;
+        }
+        // Caso 3: Es un timestamp numérico
+        else if (typeof value === 'number') {
+          const dateValue = new Date(value);
+          mapped[camelKey] = isNaN(dateValue.getTime()) ? null : dateValue;
+        }
+        // Caso 4: Cualquier otro tipo, intentar convertir
+        else {
+          const dateValue = toSafeDate(value);
+          mapped[camelKey] = dateValue;
+        }
         continue;
       }
 
-      // Manejar campos booleanos (tinyint(1) en MySQL)
-      if (booleanFields.includes(key) || booleanFields.includes(camelKey)) {
+      // 🔧 MANEJO DE BOOLEANOS
+      if (booleanFields.includes(key)) {
         mapped[camelKey] = value === 1 || value === '1' || value === true;
         continue;
       }
 
-      // Manejar BigInt para IDs y referencias
-      if (typeof value === 'bigint') {
-        mapped[camelKey] = this.handleBigInt(tableName, key, value);
+      // 🔧 MANEJO DE CAMPOS DE TIEMPO (time_start, time_end)
+      if (key.endsWith('_time_start') || key.endsWith('_time_end')) {
+        mapped[camelKey] = value;
         continue;
       }
 
-      // Valor regular
+      // 🔧 MANEJO DE BIGINT
+      if (typeof value === 'bigint') {
+        mapped[camelKey] = this.handleBigInt(tableName, camelKey, value);
+        continue;
+      }
+
+      // 🔧 MANEJO DE STRINGS NUMÉRICOS GRANDES (posibles BigInt)
+      if (typeof value === 'string' && /^\d{10,}$/.test(value)) {
+        mapped[camelKey] = this.handleBigInt(tableName, camelKey, BigInt(value));
+        continue;
+      }
+
+      // Valor por defecto
       mapped[camelKey] = value;
     }
 
@@ -289,14 +293,9 @@ class DirectSyncService {
   }
 
   /**
-   * Manejar conversión de BigInt según contexto
+   * Manejar campos BigInt según la tabla
    */
   private handleBigInt(tableName: string, fieldName: string, value: bigint): any {
-    // Promissories: el campo 'promissories' puede ser BigInt pero debe ser String
-    if (tableName === 'promissories' && fieldName === 'promissories') {
-      return value.toString();
-    }
-    
     // Referencias: el campo 'reference' debe ser String
     if (tableName === 'references' && (fieldName === 'reference' || fieldName === 'referencia')) {
       return value.toString();
@@ -449,24 +448,6 @@ class DirectSyncService {
           mapped.movementId = String(record.movement_id);
         }
         break;
-        
-      case 'transactions':
-        // Asegurar conversión booleana de isDocumentComplete
-        if (record.is_document_complete !== undefined && record.is_document_complete !== null) {
-          mapped.isDocumentComplete = record.is_document_complete === 1 || record.is_document_complete === '1' || record.is_document_complete === true;
-        }
-        if (mapped.isDocumentComplete !== undefined && typeof mapped.isDocumentComplete !== 'boolean') {
-          mapped.isDocumentComplete = mapped.isDocumentComplete === 1 || mapped.isDocumentComplete === '1' || mapped.isDocumentComplete === true;
-        }
-        // Asegurar phoneVerification también es Boolean
-        if (record.phone_verification !== undefined && record.phone_verification !== null) {
-          mapped.phoneVerification = record.phone_verification === 1 || record.phone_verification === '1' || record.phone_verification === true;
-        }
-        // Asegurar fisicalPerson es Boolean
-        if (record.fisical_person !== undefined && record.fisical_person !== null) {
-          mapped.fisicalPerson = record.fisical_person === 1 || record.fisical_person === '1' || record.fisical_person === true;
-        }
-        break;
       
       case 'developers':
       case 'projects':
@@ -519,16 +500,13 @@ class DirectSyncService {
       throw new Error(`Configuración no encontrada para tabla: ${tableName}`);
     }
 
-    // CORRECCIÓN: Obtener config de sync-tables.config.ts
-    const tableConfig = getTableConfig(tableName);
-    
     const metadata = webhookConfig.metadata as any || {};
     
     return {
       tableName,
-      primaryKey: metadata.primaryKey || tableConfig?.primaryKey || 'id',
-      timestampField: metadata.timestampField || tableConfig?.timestampField || 'updated_at',
-      batchSize: metadata.batchSize || tableConfig?.batchSize || 1000000
+      primaryKey: metadata.primaryKey || 'id',
+      timestampField: metadata.timestampField || 'updated_at',
+      batchSize: metadata.batchSize || 1000
     };
   }
 

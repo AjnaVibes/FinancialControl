@@ -1,5 +1,5 @@
 // src/services/sync/directSyncService.ts
-// VERSIÓN MEJORADA CON MANEJO ROBUSTO DE FECHAS Y UNIQUE CONSTRAINTS
+// VERSIÓN MEJORADA CON MANEJO DE ERRORES ESPECÍFICOS
 
 import { ventasDb } from '@/lib/ventasDb';
 import { prisma } from '@/lib/prisma';
@@ -26,15 +26,9 @@ interface SyncResult {
   message?: string;
 }
 
-// Helper mejorado para convertir fechas de manera segura
+// Helper para convertir fechas de manera segura
 function toSafeDate(value: any): Date | null {
   if (!value) return null;
-  
-  // Si ya es un Date válido, devolverlo directamente
-  if (value instanceof Date) {
-    return isNaN(value.getTime()) ? null : value;
-  }
-  
   try {
     const date = new Date(value);
     return isNaN(date.getTime()) ? null : date;
@@ -80,7 +74,7 @@ class DirectSyncService {
       }
       
       query += ` ORDER BY \`${config.primaryKey || 'id'}\``;
-      query += ` LIMIT ${config.batchSize || 1000000}`;
+      query += ` LIMIT ${config.batchSize || 1000}`;
 
       // Ejecutar consulta
       const records = await ventasDb.query(query, params);
@@ -115,60 +109,32 @@ class DirectSyncService {
             }
           }
 
-          // Usar upsert para quotations que tiene unique constraint en transaction
+          // Verificar si existe
           const primaryKeyField = config.primaryKey || 'id';
           const primaryKeyValue = mappedData[primaryKeyField];
+          
+          const existing = await (prismaModel as any).findUnique({
+            where: { [primaryKeyField]: primaryKeyValue }
+          });
 
-          if (tableName === 'quotations' && mappedData.transaction != null) {
-            // Para quotations con transaction único, usar upsert
-            const { id, ...dataWithoutId } = mappedData;
-            
-            const upsertResult = await (prismaModel as any).upsert({
-              where: { transaction: mappedData.transaction },
-              create: dataWithoutId,
-              update: dataWithoutId
-            });
-            
-            // Determinar si fue insert o update comparando con el registro anterior
-            const wasExisting = await (prismaModel as any).count({
-              where: { 
-                transaction: mappedData.transaction,
-                updatedAt: { lt: new Date() }
-              }
-            });
-            
-            if (upsertResult.id === primaryKeyValue) {
+          if (existing) {
+            // Actualizar si cambió
+            const existingHash = this.createHash(existing);
+            if (existingHash !== recordHash) {
+              await (prismaModel as any).update({
+                where: { [primaryKeyField]: primaryKeyValue },
+                data: mappedData
+              });
               result.recordsUpdated++;
             } else {
-              result.recordsInserted++;
+              result.recordsSkipped++;
             }
           } else {
-            // Para otras tablas, usar el flujo normal
-            const existing = await (prismaModel as any).findUnique({
-              where: { [primaryKeyField]: primaryKeyValue }
+            // Insertar nuevo
+            await (prismaModel as any).create({
+              data: mappedData
             });
-
-            if (existing) {
-              // Actualizar si cambió
-              const existingHash = this.createHash(existing);
-              if (existingHash !== recordHash) {
-                const { [primaryKeyField]: _, ...updateData } = mappedData;
-                await (prismaModel as any).update({
-                  where: { [primaryKeyField]: primaryKeyValue },
-                  data: updateData
-                });
-                result.recordsUpdated++;
-              } else {
-                result.recordsSkipped++;
-              }
-            } else {
-              // Insertar nuevo
-              const { [primaryKeyField]: _, ...createData } = mappedData;
-              await (prismaModel as any).create({
-                data: createData
-              });
-              result.recordsInserted++;
-            }
+            result.recordsInserted++;
           }
 
         } catch (error: any) {
@@ -223,7 +189,7 @@ class DirectSyncService {
   }
 
   /**
-   * Mapear registro de MySQL a formato Prisma - MEJORADO CON MANEJO ROBUSTO DE FECHAS
+   * Mapear registro de MySQL a formato Prisma - MEJORADO
    */
   private async mapRecordToPrisma(tableName: string, record: any): Promise<any> {
     // Lista expandida de campos booleanos en todas las tablas
@@ -237,7 +203,7 @@ class DirectSyncService {
       // Campos específicos de promissories
       'isPaid', 'is_paid', 'isCreditPromisse', 'is_credit_promisse',
       // Campos de agents
-      'can_reservate', 'is_active', 'has_access', 'is_broker', 'isBroker',
+      'can_reservate', 'is_active', 'has_access',
       // Campos de otras tablas
       'is_complete', 'is_verified', 'is_approved'
     ];
@@ -249,37 +215,38 @@ class DirectSyncService {
 
     const mapped: any = {};
 
-    // Procesar cada campo del registro
+    // Procesar cada campo
     for (const [key, value] of Object.entries(record)) {
-      // Convertir el nombre del campo a camelCase
       const camelKey = snakeToCamel(key);
       
-      // Si el valor es null, mantenerlo como null
-      if (value === null) {
+      // Manejar valores NULL
+      if (value === null || value === undefined) {
         mapped[camelKey] = null;
         continue;
       }
 
-      // Manejar fechas
-      if (key.includes('date') || key.includes('at') || key === 'birthday') {
-        mapped[camelKey] = toSafeDate(value);
-        continue;
-      }
-
-      // Manejar campos booleanos (tinyint(1) en MySQL)
+      // Conversiones por tipo de campo
       if (booleanFields.includes(key) || booleanFields.includes(camelKey)) {
+        // Convertir tinyint/number a boolean
         mapped[camelKey] = value === 1 || value === '1' || value === true;
-        continue;
-      }
-
-      // Manejar BigInt para IDs y referencias
-      if (typeof value === 'bigint') {
+      } else if (key.endsWith('_at') || key.endsWith('_date') || 
+                 key === 'birthday' || key === 'deadline' || key === 'due_date' || 
+                 key === 'signature_date' || key === 'closing_date' || key === 'expiration_spei') {
+        // Campos de fecha
+        mapped[camelKey] = toSafeDate(value);
+      } else if (key.endsWith('_time_start') || key.endsWith('_time_end')) {
+        // Campos de tiempo
+        mapped[camelKey] = value;
+      } else if (typeof value === 'bigint') {
+        // Manejar BigInt según el campo y tabla
         mapped[camelKey] = this.handleBigInt(tableName, key, value);
-        continue;
+      } else if (typeof value === 'string' && /^\d{15,}$/.test(value)) {
+        // String con muchos dígitos que podría ser BigInt
+        mapped[camelKey] = this.handleBigInt(tableName, key, BigInt(value));
+      } else {
+        // Valor tal cual
+        mapped[camelKey] = value;
       }
-
-      // Valor regular
-      mapped[camelKey] = value;
     }
 
     // Aplicar transformaciones específicas por tabla
@@ -289,26 +256,11 @@ class DirectSyncService {
   }
 
   /**
-   * Manejar conversión de BigInt según contexto
+   * Manejar valores BigInt según el contexto
    */
   private handleBigInt(tableName: string, fieldName: string, value: bigint): any {
-    // Promissories: el campo 'promissories' puede ser BigInt pero debe ser String
-    if (tableName === 'promissories' && fieldName === 'promissories') {
-      return value.toString();
-    }
-    
     // Referencias: el campo 'reference' debe ser String
     if (tableName === 'references' && (fieldName === 'reference' || fieldName === 'referencia')) {
-      return value.toString();
-    }
-    
-    // Movements: el campo 'movementId' debe ser String
-    if (tableName === 'movements' && (fieldName === 'movement_id' || fieldName === 'movementId')) {
-      return value.toString();
-    }
-    
-    // Movement_methods: si tiene campo movement_id
-    if (tableName === 'movement_methods' && (fieldName === 'movement_id' || fieldName === 'movementId')) {
       return value.toString();
     }
     
@@ -345,10 +297,8 @@ class DirectSyncService {
       
       case 'agents':
         // Mapeos para agents
-        // TEMPORAL: Convertir canReservate de Boolean a String si el schema lo requiere
         if (record.can_reservate !== undefined) {
-          // Si Prisma espera String, convertir Boolean a "true"/"false"
-          mapped.canReservate = String(record.can_reservate === 1 || record.can_reservate === true);
+          mapped.canReservate = record.can_reservate === 1 || record.can_reservate === true;
         }
         if (record.last_session !== undefined) {
           mapped.lastSession = toSafeDate(record.last_session);
@@ -356,20 +306,6 @@ class DirectSyncService {
         // Corregir campos booleanos específicos
         if (record.is_active !== undefined) {
           mapped.isActive = record.is_active === 1 || record.is_active === true;
-        }
-        // IMPORTANTE: Asegurar que isBroker sea Boolean
-        if (mapped.isBroker !== undefined && mapped.isBroker !== null) {
-          mapped.isBroker = mapped.isBroker === 1 || mapped.isBroker === '1' || mapped.isBroker === true;
-        }
-        if (record.is_broker !== undefined && record.is_broker !== null) {
-          mapped.isBroker = record.is_broker === 1 || record.is_broker === '1' || record.is_broker === true;
-        }
-        // Asegurar campos de Google
-        if (mapped.isGoogleCalendarSynced !== undefined) {
-          mapped.isGoogleCalendarSynced = mapped.isGoogleCalendarSynced === 1 || mapped.isGoogleCalendarSynced === true;
-        }
-        if (mapped.isGoogleMailSynced !== undefined) {
-          mapped.isGoogleMailSynced = mapped.isGoogleMailSynced === 1 || mapped.isGoogleMailSynced === true;
         }
         break;
       
@@ -441,31 +377,6 @@ class DirectSyncService {
         if (record.is_credit !== undefined) {
           mapped.isCredit = record.is_credit === 1 || record.is_credit === true;
         }
-        // IMPORTANTE: Convertir movementId de BigInt a String
-        if (mapped.movementId && typeof mapped.movementId === 'bigint') {
-          mapped.movementId = mapped.movementId.toString();
-        }
-        if (record.movement_id && (typeof record.movement_id === 'bigint' || typeof record.movement_id === 'number')) {
-          mapped.movementId = String(record.movement_id);
-        }
-        break;
-        
-      case 'transactions':
-        // Asegurar conversión booleana de isDocumentComplete
-        if (record.is_document_complete !== undefined && record.is_document_complete !== null) {
-          mapped.isDocumentComplete = record.is_document_complete === 1 || record.is_document_complete === '1' || record.is_document_complete === true;
-        }
-        if (mapped.isDocumentComplete !== undefined && typeof mapped.isDocumentComplete !== 'boolean') {
-          mapped.isDocumentComplete = mapped.isDocumentComplete === 1 || mapped.isDocumentComplete === '1' || mapped.isDocumentComplete === true;
-        }
-        // Asegurar phoneVerification también es Boolean
-        if (record.phone_verification !== undefined && record.phone_verification !== null) {
-          mapped.phoneVerification = record.phone_verification === 1 || record.phone_verification === '1' || record.phone_verification === true;
-        }
-        // Asegurar fisicalPerson es Boolean
-        if (record.fisical_person !== undefined && record.fisical_person !== null) {
-          mapped.fisicalPerson = record.fisical_person === 1 || record.fisical_person === '1' || record.fisical_person === true;
-        }
         break;
       
       case 'developers':
@@ -519,16 +430,13 @@ class DirectSyncService {
       throw new Error(`Configuración no encontrada para tabla: ${tableName}`);
     }
 
-    // CORRECCIÓN: Obtener config de sync-tables.config.ts
-    const tableConfig = getTableConfig(tableName);
-    
     const metadata = webhookConfig.metadata as any || {};
     
     return {
       tableName,
-      primaryKey: metadata.primaryKey || tableConfig?.primaryKey || 'id',
-      timestampField: metadata.timestampField || tableConfig?.timestampField || 'updated_at',
-      batchSize: metadata.batchSize || tableConfig?.batchSize || 1000000
+      primaryKey: metadata.primaryKey || 'id',
+      timestampField: metadata.timestampField || 'updated_at',
+      batchSize: metadata.batchSize || 1000
     };
   }
 

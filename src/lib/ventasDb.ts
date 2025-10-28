@@ -60,11 +60,11 @@ class VentasDBClient {
     }
   }
 
-  async getRecordCount(tableName: string): Promise<number> {
-    const sql = `SELECT COUNT(*) as count FROM ${tableName}`;
-    const result = await this.queryOne<{ count: number }>(sql);
-    return result?.count || 0;
-  }
+ async getRecordCount(tableName: string): Promise<number> {
+  const sql = `SELECT COUNT(*) as count FROM \`${tableName}\``;
+  const result = await this.queryOne<{ count: number }>(sql);
+  return result?.count || 0;
+}
 
   async getTables(): Promise<string[]> {
     const sql = `

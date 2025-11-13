@@ -1,4 +1,5 @@
 # Use official Node.js 18 image
+# Force rebuild: 2024-11-13-v1
 FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app

@@ -60,15 +60,15 @@ export async function POST(request: NextRequest) {
       batchSize
     };
 
-    let result;
-
+    // Ajustar batchSize según el tipo de sincronización
     if (syncType === 'full') {
       console.log('[API] Ejecutando sincronización COMPLETA...');
-      result = await directSyncService.syncTableFull(config);
+      config.batchSize = 0; // 0 significa sin límite
     } else {
       console.log('[API] Ejecutando sincronización INCREMENTAL...');
-      result = await directSyncService.syncTableIncremental(config);
     }
+    
+    const result = await directSyncService.syncTable(config);
 
     console.log('[API] Sincronización completada:', result);
 

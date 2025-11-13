@@ -42,8 +42,10 @@ export async function GET(request: NextRequest, { params }: Params) {
     // Obtener conteo de registros locales
     let localCount = 0;
     try {
-      const model = directSyncService['getLocalModel'](table);
-      if (model && model.count) {
+      const { TABLE_TO_MODEL_MAP } = await import('@/config/sync-tables.config');
+      const modelName = TABLE_TO_MODEL_MAP[table];
+      if (modelName && (prisma as any)[modelName]) {
+        const model = (prisma as any)[modelName];
         localCount = await model.count();
       }
     } catch (error) {
@@ -163,23 +165,16 @@ export async function POST(request: NextRequest, { params }: Params) {
       }
     }
 
-    // Obtener configuración de sincronización desde webhook metadata
-    const config = await directSyncService.getSyncConfigFromWebhook(table);
+    // Configurar parámetros de sincronización
+    const batchSize = syncType === 'full' ? 0 : (tableConfig.batchSize || 1000);
     
-    // Sobrescribir con valores específicos si los hay
-    if (tableConfig.batchSize) {
-      config.batchSize = tableConfig.batchSize;
-    }
-
-    let result;
-
-    if (syncType === 'full') {
-      console.log(`[API] Ejecutando sincronización COMPLETA de ${table}...`);
-      result = await directSyncService.syncTableFull(config);
-    } else {
-      console.log(`[API] Ejecutando sincronización INCREMENTAL de ${table}...`);
-      result = await directSyncService.syncTableIncremental(config);
-    }
+    console.log(`[API] Ejecutando sincronización ${syncType.toUpperCase()} de ${table}...`);
+    
+    // Ejecutar sincronización
+    const result = await directSyncService.syncTable({
+      tableName: table,
+      batchSize: batchSize
+    });
 
     console.log(`[API] Sincronización de ${table} completada:`, result);
 
@@ -252,7 +247,23 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     }
 
     // Obtener el modelo y eliminar todos los registros
-    const model = directSyncService['getLocalModel'](table);
+    const { TABLE_TO_MODEL_MAP } = await import('@/config/sync-tables.config');
+    const modelName = TABLE_TO_MODEL_MAP[table];
+    if (!modelName) {
+      return NextResponse.json({
+        success: false,
+        error: `No se encontró mapeo para tabla '${table}'`
+      }, { status: 404 });
+    }
+    
+    const model = (prisma as any)[modelName];
+    if (!model) {
+      return NextResponse.json({
+        success: false,
+        error: `Modelo no encontrado para tabla '${table}'`
+      }, { status: 404 });
+    }
+    
     const deleteResult = await model.deleteMany({});
 
     // Resetear configuración de sincronización

@@ -102,7 +102,10 @@ async function resyncTable(table: TableToSync, type: 'incremental' | 'full' = 'i
     const lastSync = type === 'incremental' ? config?.lastSyncAt : undefined;
     
     // Ejecutar sincronización
-    const result = await directSyncService.syncTable(table.name, type, lastSync || undefined);
+    const result = await directSyncService.syncTable({ 
+      tableName: table.name,
+      batchSize: type === 'full' ? 0 : 1000
+    });
     
     if (result.success) {
       console.log(colors.success(`✅ ${table.displayName}: Sincronización exitosa`));

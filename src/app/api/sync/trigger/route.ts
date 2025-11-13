@@ -27,10 +27,10 @@ export async function POST(request: Request) {
     console.log(`🔄 Iniciando sincronización: ${tableName} (${type})`);
 
     // 🔧 SIMPLIFICADO: Solo usar syncTable sin syncTableComplete
-    const result = await directSyncService.syncTable(
-      tableName, 
-      type === 'complete' ? 'full' : type  // Convertir 'complete' a 'full'
-    );
+    const result = await directSyncService.syncTable({
+      tableName,
+      batchSize: type === 'complete' || type === 'full' ? 0 : 1000
+    });
 
     return NextResponse.json({
       success: true,

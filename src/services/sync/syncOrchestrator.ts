@@ -216,11 +216,10 @@ export class SyncOrchestrator {
       }
 
       // CORRECCIÓN: Usar el método syncTable que sí existe
-      const syncResult = await directSyncService.syncTable(
-        tableName,
-        type,
-        lastSync
-      );
+      const syncResult = await directSyncService.syncTable({
+        tableName: tableName,
+        batchSize: type === 'full' ? 0 : 1000
+      });
 
       tableResult.success = syncResult.success;
       tableResult.recordsProcessed = syncResult.recordsProcessed;

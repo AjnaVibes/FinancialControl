@@ -8,10 +8,10 @@ async function showSyncErrors() {
   
   try {
     // Sincronizar promissories con el servicio directo
-    const result = await directSyncService.syncTable(
-      'promissories',
-      'full'
-    );
+    const result = await directSyncService.syncTable({
+      tableName: 'promissories',
+      batchSize: 0 // 0 para sincronización completa
+    });
     
     console.log('\n📊 Resultado:');
     console.log(`Procesados: ${result.recordsProcessed}`);

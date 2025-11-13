@@ -16,15 +16,13 @@ async function addClientsTable() {
           tabla: 'clients',
           nombre: 'Clientes',
           categoria: 'Clientes',
-          url: '/api/sync/clients',
-          method: 'POST',
+          color: '#4A90E2',
+          webhookUrl: '/api/sync/clients',
           isEnabled: true,
           intervalMinutes: 60,
           successSyncs: 0,
           errorSyncs: 0,
-          totalSyncs: 0,
-          createdBy: 'system',
-          updatedBy: 'system'
+          totalSyncs: 0
         }
       });
       console.log('✅ Tabla "clients" agregada a webhook_configs');

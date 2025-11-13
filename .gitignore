@@ -2,6 +2,8 @@
 .env
 .env.*
 !.env.example
+.env.local
+.env.production
 
 # Dependencias
 node_modules/
@@ -11,7 +13,26 @@ node_modules/
 dist/
 out/
 *.log
+logs/
 
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+
+# Archivos de base de datos (NUNCA subir)
+*.sql
+*.sql.gz
+backups/
+*.db
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Temporal
+tmp/
+temp/

@@ -2,14 +2,17 @@
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/atoms/Button';
 import { Card } from '@/components/ui/card';
+import { Clock } from 'lucide-react';
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const message = searchParams.get('message');
 
   // ✅ Si ya está autenticado, redirigir al dashboard
   useEffect(() => {
@@ -54,6 +57,21 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
       <Card className="w-full max-w-md p-8">
         <div className="text-center space-y-6">
+          {/* Mostrar mensaje de sesión expirada si viene del middleware */}
+          {message === 'session-expired' && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-center gap-2 text-amber-800">
+                <Clock className="w-5 h-5" />
+                <p className="text-sm font-medium">
+                  Tu sesión ha expirado. Por favor, inicia sesión nuevamente.
+                </p>
+              </div>
+              <p className="text-xs text-amber-600 mt-2">
+                Las sesiones expiran automáticamente a las 9:00 PM todos los días.
+              </p>
+            </div>
+          )}
+          
           <div className="flex justify-center">
             <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-3xl text-white font-bold">$</span>

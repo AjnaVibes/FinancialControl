@@ -385,7 +385,7 @@ export const RAMP_TABLES_CONFIG: TableConfig[] = [
     prismaModel: 'movementMethod'
   },
 
-  // ========== NIVEL 5: PROTOTIPOS Y CLIENTES (ya existe) ==========
+  // ========== NIVEL 5: PROTOTIPOS Y CLIENTES ==========
   {
     tableName: 'prototipes', // Nota: mantiene el typo de la BD
     displayName: 'Prototipos',
@@ -400,7 +400,20 @@ export const RAMP_TABLES_CONFIG: TableConfig[] = [
     enabled: true,
     prismaModel: 'prototype'
   },
-  // clients ya existe en tu webhook_configs, no lo incluimos aquí
+  {
+    tableName: 'clients',
+    displayName: 'Clientes',
+    categoria: 'Clientes',
+    icono: '👥',
+    color: '#8B5CF6',
+    primaryKey: 'id',
+    timestampField: 'updated_at',
+    dependencies: ['client_statuses', 'marital_statuses', 'marital_registries', 'marital_regimen', 'agents', 'agencies'],
+    priority: 5,
+    batchSize: 100000,
+    enabled: true,
+    prismaModel: 'client'
+  },
   {
     tableName: 'payment_entities',
     displayName: 'Entidades de Pago',
@@ -594,6 +607,156 @@ export function getSyncOrder(): string[] {
   
   priorities.forEach(priority => {
     const tables = tablesByPriority.get(priority) || [];
+    tables.forEach(table => {
+      order.push(table.tableName);
+    });
+  });
+  
+  return order;
+}
+
+// ========== CONFIGURACIÓN DE TABLAS DE VS CONTROL ==========
+export const VSCONTROL_TABLES_CONFIG: TableConfig[] = [
+  {
+    tableName: 'vsc_empresas',
+    displayName: 'Empresas',
+    categoria: 'VS Control',
+    icono: '🏢',
+    color: '#059669',
+    primaryKey: 'id_empresa',
+    timestampField: 'updated_at',
+    dependencies: [],
+    priority: 1,
+    batchSize: 1000,
+    enabled: true,
+    prismaModel: 'vSC_Empresas'
+  },
+  {
+    tableName: 'vsc_proyectos',
+    displayName: 'Proyectos',
+    categoria: 'VS Control',
+    icono: '🏗️',
+    color: '#059669',
+    primaryKey: 'id_proyecto',
+    timestampField: 'updated_at',
+    dependencies: [],
+    priority: 2,
+    batchSize: 500,
+    enabled: true,
+    prismaModel: 'vSC_Proyectos'
+  },
+  {
+    tableName: 'vsc_clientes',
+    displayName: 'Clientes VS',
+    categoria: 'VS Control',
+    icono: '👥',
+    color: '#059669',
+    primaryKey: 'id_cliente',
+    timestampField: 'updated_at',
+    dependencies: [],
+    priority: 3,
+    batchSize: 5000,
+    enabled: true,
+    prismaModel: 'vSC_Clientes'
+  },
+  {
+    tableName: 'vsc_viviendas',
+    displayName: 'Viviendas',
+    categoria: 'VS Control',
+    icono: '🏠',
+    color: '#059669',
+    primaryKey: 'id_vivienda',
+    timestampField: 'updated_at',
+    dependencies: ['vsc_proyectos'],
+    priority: 4,
+    batchSize: 10000,
+    enabled: true,
+    prismaModel: 'vSC_Viviendas'
+  },
+  {
+    tableName: 'vsc_cliente_vivienda',
+    displayName: 'Cliente-Vivienda',
+    categoria: 'VS Control',
+    icono: '🔗',
+    color: '#059669',
+    primaryKey: 'id',
+    timestampField: 'updated_at',
+    dependencies: ['vsc_clientes', 'vsc_viviendas'],
+    priority: 5,
+    batchSize: 10000,
+    enabled: true,
+    prismaModel: 'vSC_ClienteVivienda'
+  },
+  {
+    tableName: 'vsc_avances_fisicos',
+    displayName: 'Avances Físicos',
+    categoria: 'VS Control',
+    icono: '📈',
+    color: '#059669',
+    primaryKey: 'id_avance',
+    timestampField: 'updated_at',
+    dependencies: ['vsc_viviendas'],
+    priority: 5,
+    batchSize: 20000,
+    enabled: true,
+    prismaModel: 'vSC_AvancesFisicos'
+  },
+  {
+    tableName: 'vsc_ordenes_compra',
+    displayName: 'Órdenes de Compra',
+    categoria: 'VS Control',
+    icono: '📋',
+    color: '#059669',
+    primaryKey: 'id_orden',
+    timestampField: 'updated_at',
+    dependencies: [],
+    priority: 3,
+    batchSize: 10000,
+    enabled: true,
+    prismaModel: 'vSC_OrdenesCompra'
+  },
+  {
+    tableName: 'vsc_control_documentos',
+    displayName: 'Control de Documentos',
+    categoria: 'VS Control',
+    icono: '📁',
+    color: '#059669',
+    primaryKey: 'id_documento',
+    timestampField: 'updated_at',
+    dependencies: ['vsc_viviendas', 'vsc_clientes'],
+    priority: 5,
+    batchSize: 20000,
+    enabled: true,
+    prismaModel: 'vSC_ControlDocumentos'
+  }
+];
+
+// Función helper para obtener configuración de una tabla de VS Control
+export function getVSControlTableConfig(tableName: string): TableConfig | undefined {
+  return VSCONTROL_TABLES_CONFIG.find(t => t.tableName === tableName);
+}
+
+// Función para obtener todas las tablas (RAMP + VS Control)
+export function getAllTablesConfig(): TableConfig[] {
+  return [...RAMP_TABLES_CONFIG, ...VSCONTROL_TABLES_CONFIG];
+}
+
+// Función para obtener el orden de sincronización de VS Control
+export function getVSControlSyncOrder(): string[] {
+  const order: string[] = [];
+  const grouped = new Map<number, TableConfig[]>();
+  
+  VSCONTROL_TABLES_CONFIG.forEach(table => {
+    if (!grouped.has(table.priority)) {
+      grouped.set(table.priority, []);
+    }
+    grouped.get(table.priority)!.push(table);
+  });
+  
+  const priorities = Array.from(grouped.keys()).sort((a, b) => a - b);
+  
+  priorities.forEach(priority => {
+    const tables = grouped.get(priority) || [];
     tables.forEach(table => {
       order.push(table.tableName);
     });

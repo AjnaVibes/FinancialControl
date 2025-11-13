@@ -42,24 +42,55 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     
-    // Extraer filtros de los query params
-    const filters = {
-      proyecto: searchParams.get('proyecto') || undefined,
-      idTransaction: searchParams.get('idTransaction') || undefined,
-      cliente: searchParams.get('cliente') || undefined,
-      numeroVivienda: searchParams.get('numeroVivienda') || undefined,
-    };
-
-    // Remover filtros vacíos
-    Object.keys(filters).forEach(key => {
-      if (!filters[key as keyof typeof filters]) {
-        delete filters[key as keyof typeof filters];
+    // Verificar si se están solicitando múltiples proyectos
+    const proyectos = searchParams.get('proyectos');
+    const limit = searchParams.get('limit');
+    
+    let rawData;
+    let appliedFilters = {};
+    
+    if (proyectos) {
+      // Si se envían múltiples proyectos (separados por coma), procesarlos todos
+      const projectList = proyectos.split(',').filter(p => p.trim());
+      console.log('📋 Buscando múltiples proyectos:', projectList);
+      
+      // Obtener datos para cada proyecto
+      const allData = [];
+      for (const proyecto of projectList) {
+        const projectData = await getPromissoryReport({ proyecto });
+        allData.push(...projectData);
       }
-    });
+      rawData = allData;
+      appliedFilters = { proyectos: projectList };
+    } else {
+      // Extraer filtros de los query params para búsqueda simple
+      const filters = {
+        proyecto: searchParams.get('proyecto') || undefined,
+        idTransaction: searchParams.get('idTransaction') || undefined,
+        cliente: searchParams.get('cliente') || undefined,
+        numeroVivienda: searchParams.get('numeroVivienda') || undefined,
+      };
 
-    console.log('🔍 Filtros aplicados:', filters);
+      // Remover filtros vacíos
+      Object.keys(filters).forEach(key => {
+        if (!filters[key as keyof typeof filters]) {
+          delete filters[key as keyof typeof filters];
+        }
+      });
 
-    const rawData = await getPromissoryReport(filters);
+      console.log('🔍 Filtros aplicados:', filters);
+      rawData = await getPromissoryReport(filters);
+      appliedFilters = filters;
+    }
+    
+    // Aplicar límite si se especifica
+    if (limit) {
+      const limitNumber = parseInt(limit);
+      if (!isNaN(limitNumber) && limitNumber > 0) {
+        rawData = rawData.slice(0, limitNumber);
+        console.log(`🔢 Limitando resultados a ${limitNumber} registros`);
+      }
+    }
     
     // Convertir BigInt a Number y Dates a ISO string para serialización
     const data = convertBigIntToNumber(rawData);
@@ -68,7 +99,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data,
       total: data.length,
-      filters
+      filters: appliedFilters
     });
   } catch (error) {
     console.error('❌ Error en API de pagarés:', error);

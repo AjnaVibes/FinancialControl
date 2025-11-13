@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Los ajustes del sidebar ahora se manejan con el contexto y clases Tailwind dinámicas */
+
 /* ============================================
    VARIABLES CSS PARA LIGHT/DARK MODE
    ============================================ */
@@ -19,10 +21,12 @@
     --color-background: 255 255 255;           /* Blanco */
     --color-background-secondary: 249 250 251; /* Gris muy claro */
     --color-background-tertiary: 243 244 246;  /* Gris claro */
+    --color-background-elevated: 255 255 255;  /* Para cards elevadas */
     
     /* Foreground (texto) */
     --color-foreground: 17 24 39;      /* Casi negro */
     --color-foreground-muted: 107 114 128; /* Gris medio */
+    --color-foreground-subtle: 156 163 175; /* Gris claro */
     
     /* Bordes */
     --color-border: 229 231 235;       /* Gris claro */
@@ -37,9 +41,11 @@
     /* Sombras */
     --shadow-color: 0 0 0;
     
-    /* Sidebar */
+    /* Layout */
     --sidebar-width: 256px;
     --sidebar-collapsed-width: 72px;
+    --header-height: 64px;
+    --spacing-base: 1rem;
   }
 
   /* Dark Mode */
@@ -48,10 +54,12 @@
     --color-background: 3 7 18;                /* Casi negro */
     --color-background-secondary: 17 24 39;    /* Gris oscuro */
     --color-background-tertiary: 31 41 55;     /* Gris medio oscuro */
+    --color-background-elevated: 31 41 55;     /* Para cards en dark */
     
-    /* Foreground (texto) claro */
+    /* Foreground (texto) claro - IMPORTANTE: Todos deben ser claros */
     --color-foreground: 249 250 251;           /* Casi blanco */
-    --color-foreground-muted: 156 163 175;     /* Gris claro */
+    --color-foreground-muted: 209 213 219;     /* Gris claro */
+    --color-foreground-subtle: 156 163 175;    /* Gris medio claro */
     
     /* Bordes oscuros */
     --color-border: 55 65 81;                  /* Gris oscuro */
@@ -72,9 +80,38 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-200;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    min-height: 100vh;
+  }
+
+  /* Asegurar texto visible en dark mode */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground dark:text-white;
+  }
+
+  p, span, div, label, td, th, li {
+    @apply text-foreground dark:text-gray-100;
+  }
+
+  /* Links y botones */
+  a {
+    @apply text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300;
+  }
+
+  button {
+    @apply text-foreground dark:text-white;
+  }
+
+  /* Inputs y selects */
+  input, textarea, select {
+    @apply text-foreground dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600;
+  }
+
+  /* Placeholder text */
+  ::placeholder {
+    @apply text-gray-400 dark:text-gray-500;
   }
 
   /* Scrollbar personalizado */
@@ -140,7 +177,34 @@
            rounded-lg shadow-md 
            border border-gray-200 dark:border-gray-700
            transition-all duration-300
-           hover:shadow-lg;
+           hover:shadow-lg
+           p-4 sm:p-6;
+  }
+
+  /* Card compacta para móviles */
+  .card-compact {
+    @apply p-3 sm:p-4 md:p-6;
+  }
+
+  /* Tabla responsiva */
+  .table-responsive {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+  }
+
+  .table-responsive table {
+    @apply min-w-full;
+  }
+
+  /* Estilo de tabla mejorado para móviles */
+  @media (max-width: 640px) {
+    .table-responsive table {
+      @apply text-sm;
+    }
+    
+    .table-responsive th,
+    .table-responsive td {
+      @apply px-2 py-3;
+    }
   }
 
   /* Input */
@@ -251,8 +315,119 @@
     overflow: hidden;
   }
 
-  /* Responsive container */
+  /* Container responsive con márgenes uniformes */
   .container-responsive {
     @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  /* Padding uniforme para páginas */
+  .page-padding {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+
+  /* Grid responsive */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  /* Flex responsive */
+  .flex-responsive {
+    @apply flex flex-col sm:flex-row gap-4;
+  }
+
+  /* Stack para móviles */
+  .stack-on-mobile {
+    @apply flex flex-col md:flex-row gap-4;
+  }
+
+  /* Ocultar en móviles */
+  .hide-on-mobile {
+    @apply hidden sm:block;
+  }
+
+  .show-on-mobile {
+    @apply block sm:hidden;
+  }
+
+  /* Scroll horizontal en móviles para tablas */
+  .scroll-x-mobile {
+    @apply overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0;
+  }
+
+  /* Gráficas responsivas */
+  .chart-container {
+    @apply w-full h-64 sm:h-80 md:h-96;
+    position: relative;
+  }
+
+  /* Sidebar responsiva */
+  @media (max-width: 768px) {
+    .sidebar {
+      @apply transform -translate-x-full;
+      z-index: 50;
+    }
+    
+    .sidebar.mobile-open {
+      @apply translate-x-0;
+    }
+
+    .main-content-expanded,
+    .main-content-collapsed {
+      margin-left: 0 !important;
+    }
+  }
+
+  /* Overlay para sidebar móvil */
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden;
+  }
+
+  /* Menu hamburguesa */
+  .menu-toggle {
+    @apply md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg;
+  }
+
+  /* Navegación inferior para móviles */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 md:hidden z-40;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Safe areas para dispositivos con notch */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Texto responsive */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+
+  .heading-responsive {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  /* Botones responsivos */
+  .btn-responsive {
+    @apply px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-base;
+  }
+
+  /* Modal responsive */
+  .modal-responsive {
+    @apply w-full max-w-md mx-4 sm:mx-auto;
+  }
+
+  /* Dashboard grid responsive */
+  .dashboard-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6;
+  }
+
+  /* Stat card responsive */
+  .stat-grid {
+    @apply grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4;
   }
 }

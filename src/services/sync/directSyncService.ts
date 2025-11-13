@@ -1,10 +1,9 @@
 // src/services/sync/directSyncService.ts
-// VERSIÓN MEJORADA CON MANEJO ROBUSTO DE FECHAS Y UNIQUE CONSTRAINTS
+// VERSIÓN CON DEBUG para campos TIME
 
 import { ventasDb } from '@/lib/ventasDb';
 import { prisma } from '@/lib/prisma';
-import crypto from 'crypto';
-import { TABLE_TO_MODEL_MAP, getTableConfig } from '@/config/sync-tables.config';
+import { TABLE_TO_MODEL_MAP } from '@/config/sync-tables.config';
 
 interface SyncConfig {
   tableName: string;
@@ -26,255 +25,682 @@ interface SyncResult {
   message?: string;
 }
 
-// Helper mejorado para convertir fechas de manera segura
+// Helper para convertir fechas de manera segura
 function toSafeDate(value: any): Date | null {
   if (!value) return null;
   
-  // Si ya es un Date válido, devolverlo directamente
   if (value instanceof Date) {
     return isNaN(value.getTime()) ? null : value;
   }
   
-  try {
-    const date = new Date(value);
-    return isNaN(date.getTime()) ? null : date;
-  } catch {
+  if (typeof value === 'string' || typeof value === 'number') {
+    const dateValue = new Date(value);
+    return isNaN(dateValue.getTime()) ? null : dateValue;
+  }
+  
+  return null;
+}
+
+// Helper para convertir snake_case a camelCase
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+}
+
+export class DirectSyncService {
+  /**
+   * Extrae solo la parte de tiempo (HH:MM:SS) de un valor DateTime de MySQL
+   */
+  private extractTimeString(value: any): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    // Si ya es un string simple de tiempo "HH:MM:SS"
+    if (typeof value === 'string' && /^\d{2}:\d{2}:\d{2}$/.test(value)) {
+      return value;
+    }
+
+    // Si es un string, buscar el patrón
+    if (typeof value === 'string') {
+      const timeMatch = value.match(/(\d{1,2}):(\d{2}):(\d{2})/);
+      if (timeMatch) {
+        const hours = timeMatch[1].padStart(2, '0');
+        return `${hours}:${timeMatch[2]}:${timeMatch[3]}`;
+      }
+    }
+
+    // Si es un objeto Date
+    if (value instanceof Date) {
+      const hours = value.getHours().toString().padStart(2, '0');
+      const minutes = value.getMinutes().toString().padStart(2, '0');
+      const seconds = value.getSeconds().toString().padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Si no pudimos convertirlo, retornar null
+    console.warn(`No se pudo convertir valor TIME: ${value}`);
     return null;
+  }
+
+  /**
+   * Convierte valores numéricos a String de forma segura
+   */
+  private convertToString(value: any, treatZeroAsNull: boolean = false): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    if (treatZeroAsNull && (value === 0 || value === '0')) {
+      return null;
+    }
+
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (typeof value === 'bigint') {
+      return value.toString();
+    }
+
+    return null;
+  }
+
+
+  /**
+   * Limpieza final de datos antes de enviar a Prisma
+   * Maneja conversiones para TODAS las tablas problemáticas
+   */
+  private cleanDataBeforePrisma(tableName: string, data: any): any {
+    const cleaned = { ...data };
+    
+    // 🔥 ELIMINAR campos TIME que ya no existen en el schema
+    delete cleaned.workingTimeStart;
+    delete cleaned.workingTimeEnd;
+  
+  // 🔥 CONVERSIÓN UNIVERSAL DE BOOLEANOS (0/1 a boolean)
+  const convertIntToBoolean = (value: any): boolean | null => {
+    if (value === null || value === undefined) return null;
+    if (value === 0 || value === '0' || value === false) return false;
+    if (value === 1 || value === '1' || value === true) return true;
+    return null;
+  };
+  
+  // 🔥 CONVERSIÓN UNIVERSAL: Campos que SIEMPRE deben ser String en cualquier tabla
+  const universalStringFields = [
+    'name', 'email', 'phone', 'mobile', 'address', 'street',
+    'interiorNumber', 'externalNumber', 'postalCode',
+    'rfc', 'curp', 'passport', 'ineNumber', 
+    'externalId', 'idmex', 'instagramId',
+    'whatsappNumberId', 'whatsappRecipientNumber',
+    'messengerConversationId', 'messengerRecipientId'
+  ];
+  
+  // Aplicar conversiones universales
+  for (const field of universalStringFields) {
+    if (field in cleaned && cleaned[field] !== null && cleaned[field] !== undefined) {
+      if (typeof cleaned[field] === 'number' || typeof cleaned[field] === 'bigint') {
+        cleaned[field] = String(cleaned[field]);
+      }
+    }
+  }
+  
+  // 🔥 CONVERSIONES ESPECÍFICAS POR TABLA
+  switch(tableName) {
+    case 'promise_types':
+      // Convertir hidden de Int a Boolean
+      if ('hidden' in cleaned) {
+        cleaned.hidden = convertIntToBoolean(cleaned.hidden);
+      }
+      break;
+      
+    case 'developers':
+      // cellphone debe ser String
+      if ('cellphone' in cleaned && cleaned.cellphone !== null) {
+        cleaned.cellphone = String(cleaned.cellphone);
+      }
+      break;
+      
+    case 'projects':
+      // depositAccount debe ser String
+      if ('depositAccount' in cleaned && cleaned.depositAccount !== null) {
+        // Si es 0, convertir a null, sino a string
+        if (cleaned.depositAccount === 0 || cleaned.depositAccount === '0') {
+          cleaned.depositAccount = null;
+        } else {
+          cleaned.depositAccount = String(cleaned.depositAccount);
+        }
+      }
+      break;
+      
+    case 'agents':
+      // canReservate está definido como String en Prisma pero puede llegar como Boolean
+      if ('canReservate' in cleaned && cleaned.canReservate !== null) {
+        if (typeof cleaned.canReservate === 'boolean') {
+          cleaned.canReservate = cleaned.canReservate ? 'true' : 'false';
+        } else {
+          cleaned.canReservate = String(cleaned.canReservate);
+        }
+      }
+      
+      // isGoogleCalendarSynced e isGoogleMailSynced deben ser Boolean
+      if ('isGoogleCalendarSynced' in cleaned) {
+        cleaned.isGoogleCalendarSynced = convertIntToBoolean(cleaned.isGoogleCalendarSynced);
+      }
+      if ('isGoogleMailSynced' in cleaned) {
+        cleaned.isGoogleMailSynced = convertIntToBoolean(cleaned.isGoogleMailSynced);
+      }
+      break;
+      
+    case 'beneficiaries':
+      // identification debe ser String
+      if ('identification' in cleaned && cleaned.identification !== null) {
+        cleaned.identification = String(cleaned.identification);
+      }
+      
+      // 🔥 FIX: relation debe ser String
+      if ('relation' in cleaned && cleaned.relation !== null) {
+        if (typeof cleaned.relation === 'number' || typeof cleaned.relation === 'bigint') {
+          cleaned.relation = String(cleaned.relation);
+        }
+      }
+      
+      // 🔥 FIX: mLastname y fLastname deben ser String
+      const beneficiaryStringFields = ['mLastname', 'fLastname', 'name'];
+      for (const field of beneficiaryStringFields) {
+        if (field in cleaned && cleaned[field] !== null && cleaned[field] !== undefined) {
+          // Si es 0, convertir a null
+          if (cleaned[field] === 0 || cleaned[field] === '0') {
+            cleaned[field] = null;
+          } else if (typeof cleaned[field] === 'number') {
+            cleaned[field] = String(cleaned[field]);
+          }
+        }
+      }
+      break;
+      
+    case 'client_references':
+      // Convertir mLastname y fLastname a String
+      const refStringFields = ['mLastname', 'fLastname', 'name', 'phone'];
+      for (const field of refStringFields) {
+        if (field in cleaned && cleaned[field] !== null && cleaned[field] !== undefined) {
+          // Si es 0, convertir a null
+          if (cleaned[field] === 0 || cleaned[field] === '0') {
+            cleaned[field] = null;
+          } else {
+            cleaned[field] = String(cleaned[field]);
+          }
+        }
+      }
+      break;
+      
+    case 'quotations':
+      // isCoacredited debe ser Boolean
+      if ('isCoacredited' in cleaned) {
+        cleaned.isCoacredited = convertIntToBoolean(cleaned.isCoacredited);
+      }
+      
+      // isDeedInformative debe ser Boolean  
+      if ('isDeedInformative' in cleaned) {
+        cleaned.isDeedInformative = convertIntToBoolean(cleaned.isDeedInformative);
+      }
+      
+      // 🔥 FIX: commissionable debe ser Boolean
+      if ('commissionable' in cleaned) {
+        cleaned.commissionable = convertIntToBoolean(cleaned.commissionable);
+      }
+      
+      // 🔥 FIX: complete y send deben ser Boolean
+      if ('complete' in cleaned) {
+        cleaned.complete = convertIntToBoolean(cleaned.complete);
+      }
+      if ('send' in cleaned) {
+        cleaned.send = convertIntToBoolean(cleaned.send);
+      }
+      break;
+      
+    case 'transactions':
+      // phoneVerification debe ser Boolean
+      if ('phoneVerification' in cleaned) {
+        cleaned.phoneVerification = convertIntToBoolean(cleaned.phoneVerification);
+      }
+      
+      // fisicalPerson debe ser Boolean
+      if ('fisicalPerson' in cleaned) {
+        cleaned.fisicalPerson = convertIntToBoolean(cleaned.fisicalPerson);
+      }
+      
+      // 🔥 FIX: isDocumentComplete debe ser Boolean
+      if ('isDocumentComplete' in cleaned) {
+        cleaned.isDocumentComplete = convertIntToBoolean(cleaned.isDocumentComplete);
+      }
+      
+      // calculatedCommisions: si es "null" string, convertir a null
+      if (cleaned.calculatedCommisions === 'null' || cleaned.calculatedCommisions === 'NULL') {
+        cleaned.calculatedCommisions = null;
+      }
+      break;
+      
+    case 'movements':
+      // Convertir campos booleanos
+      const movementBooleanFields = ['canceled', 'countable', 'isCredit', 'sent'];
+      for (const field of movementBooleanFields) {
+        if (field in cleaned) {
+          cleaned[field] = convertIntToBoolean(cleaned[field]);
+        }
+      }
+      
+      // 🔥 FIX: accountHolder e issuingAccount deben ser String
+      if ('accountHolder' in cleaned && cleaned.accountHolder !== null) {
+        if (typeof cleaned.accountHolder === 'number' || typeof cleaned.accountHolder === 'bigint') {
+          cleaned.accountHolder = String(cleaned.accountHolder);
+        }
+      }
+      
+      if ('issuingAccount' in cleaned && cleaned.issuingAccount !== null) {
+        if (typeof cleaned.issuingAccount === 'number' || typeof cleaned.issuingAccount === 'bigint') {
+          cleaned.issuingAccount = String(cleaned.issuingAccount);
+        }
+      }
+      
+      // 🔥 FIX ADICIONAL: receivingAccount también debe ser String
+      if ('receivingAccount' in cleaned && cleaned.receivingAccount !== null) {
+        if (typeof cleaned.receivingAccount === 'number' || typeof cleaned.receivingAccount === 'bigint') {
+          cleaned.receivingAccount = String(cleaned.receivingAccount);
+        }
+      }
+      break;
+      
+    case 'clients':
+      // Tu código existente para clients...
+      const clientStringFields = [
+        'companyName', 'companyStreet', 'companyExternalNumber',
+        'companyInteriorNumber', 'companySuburb', 'companyPostalCode',
+        'companyPhone', 'companyMunicipality', 'companyState',
+        'companyNear', 'companyMobile', 'job', 'antiquity',
+        'bank', 'gender', 'affiliationNumber', 'isRented',
+        'timeRented', 'birthState', 'companyRfc', 'businessName',
+        'adquisition', 'companyBussiness', 'location', 'credit',
+        'creditType', 'companyBusiness', 'electorKey',
+        'suburb', 'municipality', 'near', 'fLastname', 'mLastname',
+        'birthplace', 'state', 'lastPhipipelinePhase', 'nationality'
+      ];
+      
+      for (const field of clientStringFields) {
+        if (field in cleaned && cleaned[field] !== null && cleaned[field] !== undefined) {
+          const value = cleaned[field];
+          if (value === 0 || value === '0') {
+            const zeroToNullFields = ['companyStreet', 'companySuburb', 'companyMunicipality', 
+                                     'companyState', 'companyBusiness', 'companyName'];
+            cleaned[field] = zeroToNullFields.includes(field) ? null : '0';
+          } else {
+            cleaned[field] = String(value);
+          }
+        }
+      }
+      
+      // Limpiar valores especiales
+      const fieldsToClean = ['rfc', 'companyRfc', 'businessName', 'passport'];
+      for (const field of fieldsToClean) {
+        if (cleaned[field] && (
+          cleaned[field] === '0' || 
+          cleaned[field] === '00000000000' ||
+          cleaned[field] === '0000000000' ||
+          cleaned[field] === 'NA' ||
+          cleaned[field] === 'N/A'
+        )) {
+          cleaned[field] = null;
+        }
+      }
+      
+      // Manejar campos numéricos con límites
+      if (cleaned.monthlyIncome > 2147483647) cleaned.monthlyIncome = null;
+      if (cleaned.additionalIncome > 2147483647) cleaned.additionalIncome = null;
+      if (cleaned.fixedCosts > 2147483647) cleaned.fixedCosts = null;
+      if (cleaned.monthlyRent > 2147483647) cleaned.monthlyRent = null;
+      break;
+      
+    case 'references':
+      // 🔥 FIX: identifier debe ser String
+      if ('identifier' in cleaned && cleaned.identifier !== null) {
+        if (typeof cleaned.identifier === 'number' || typeof cleaned.identifier === 'bigint') {
+          cleaned.identifier = String(cleaned.identifier);
+        }
+      }
+      break;
+  }
+  
+  return cleaned;
+}
+  /**
+   * Sincroniza una tabla específica desde RAMP
+   */
+  async syncTable(config: SyncConfig): Promise<SyncResult> {
+    const startTime = Date.now();
+    const {
+      tableName,
+      primaryKey = 'id',
+      timestampField = 'updated_at',
+      batchSize = 0
+    } = config;
+
+    console.log(`\n🔄 Iniciando sincronización de ${tableName}...`);
+    if (batchSize === 0) {
+      console.log('📊 Modo: SINCRONIZACIÓN COMPLETA (sin límite)');
+    } else {
+      console.log(`📊 Modo: Sincronización por lotes (${batchSize} registros)`);
+    }
+
+    try {
+      const modelName = TABLE_TO_MODEL_MAP[tableName];
+      if (!modelName) {
+        throw new Error(`No se encontró mapeo para tabla: ${tableName}`);
+      }
+
+      const prismaModel = (prisma as any)[modelName];
+      if (!prismaModel) {
+        throw new Error(`Modelo Prisma no encontrado: ${modelName}`);
+      }
+
+      // Convertir el timestampField a camelCase para Prisma
+      const timestampFieldCamel = snakeToCamel(timestampField);
+
+      // Obtener el último timestamp sincronizado
+      const lastRecord = await prismaModel.findFirst({
+        orderBy: { [timestampFieldCamel]: 'desc' },
+        select: { [timestampFieldCamel]: true }
+      });
+
+      const lastTimestamp = lastRecord?.[timestampFieldCamel];
+      console.log(`📅 Último registro sincronizado:`, lastTimestamp || 'Ninguno');
+
+      // Obtener total de registros a sincronizar
+      let countQuery: string;
+      let totalRecords: number;
+
+      // 🔥 MANEJO ESPECIAL PARA TABLA 'references'
+      if (tableName === 'references') {
+        if (lastTimestamp) {
+          countQuery = `SELECT COUNT(*) as total FROM \`references\` WHERE ${timestampField} > ?`;
+          const countResult = await ventasDb.query(countQuery, [lastTimestamp]);
+          totalRecords = countResult[0].total;
+        } else {
+          countQuery = `SELECT COUNT(*) as total FROM \`references\``;
+          const countResult = await ventasDb.query(countQuery);
+          totalRecords = countResult[0].total;
+        }
+      } else {
+        if (lastTimestamp) {
+          countQuery = `SELECT COUNT(*) as total FROM ${tableName} WHERE ${timestampField} > ?`;
+          const countResult = await ventasDb.query(countQuery, [lastTimestamp]);
+          totalRecords = countResult[0].total;
+        } else {
+          countQuery = `SELECT COUNT(*) as total FROM ${tableName}`;
+          const countResult = await ventasDb.query(countQuery);
+          totalRecords = countResult[0].total;
+        }
+      }
+
+     // Consultar registros de RAMP
+let records: any[];
+let query: string;
+
+// 🔥 MANEJO ESPECIAL PARA TABLA 'references' (palabra reservada en MySQL)
+if (tableName === 'references') {
+  if (batchSize === 0) {
+    // SIN LÍMITE
+    if (lastTimestamp) {
+      query = `SELECT * FROM \`references\` WHERE ${timestampField} > ? ORDER BY ${timestampField} ASC`;
+      records = await ventasDb.query(query, [lastTimestamp]);
+    } else {
+      query = `SELECT * FROM \`references\` ORDER BY ${timestampField} ASC`;
+      records = await ventasDb.query(query);
+    }
+  } else {
+    // CON LÍMITE
+    if (lastTimestamp) {
+      query = `SELECT * FROM \`references\` WHERE ${timestampField} > ? ORDER BY ${timestampField} ASC LIMIT ${batchSize}`;
+      records = await ventasDb.query(query, [lastTimestamp]);
+    } else {
+      query = `SELECT * FROM \`references\` ORDER BY ${timestampField} ASC LIMIT ${batchSize}`;
+      records = await ventasDb.query(query);
+    }
+  }
+} else {
+  // QUERIES NORMALES PARA OTRAS TABLAS
+  if (batchSize === 0) {
+    // SIN LÍMITE - Obtener todos los registros
+    if (lastTimestamp) {
+      query = `SELECT * FROM ${tableName} WHERE ${timestampField} > ? ORDER BY ${timestampField} ASC`;
+      records = await ventasDb.query(query, [lastTimestamp]);
+    } else {
+      query = `SELECT * FROM ${tableName} ORDER BY ${timestampField} ASC`;
+      records = await ventasDb.query(query);
+    }
+  } else {
+    // CON LÍMITE - Usar batchSize
+    if (lastTimestamp) {
+      query = `SELECT * FROM ${tableName} WHERE ${timestampField} > ? ORDER BY ${timestampField} ASC LIMIT ${batchSize}`;
+      records = await ventasDb.query(query, [lastTimestamp]);
+    } else {
+      query = `SELECT * FROM ${tableName} ORDER BY ${timestampField} ASC LIMIT ${batchSize}`;
+      records = await ventasDb.query(query);
+    }
   }
 }
 
-class DirectSyncService {
-  /**
-   * Sincronizar datos directamente desde VentasDB
-   */
-  async syncTable(
-    tableName: string, 
-    type: 'incremental' | 'full' = 'incremental',
-    lastSync?: Date
-  ): Promise<SyncResult> {
-    const startTime = Date.now();
-    const result: SyncResult = {
-      success: false,
-      recordsProcessed: 0,
-      recordsInserted: 0,
-      recordsUpdated: 0,
-      recordsSkipped: 0,
-      errors: 0,
-      errorDetails: [],
-      duration: 0
-    };
-
-    try {
-      console.log(`📊 Iniciando sincronización ${type} de ${tableName}...`);
-
-      // Obtener configuración
-      const config = await this.getSyncConfigFromWebhook(tableName);
+console.log(`📥 Registros obtenidos de RAMP: ${records.length.toLocaleString()}`);
       
-      // Construir query según el tipo
-      let query = `SELECT * FROM \`${tableName}\``;
-      const params: any[] = [];
-      
-      if (type === 'incremental' && lastSync && config.timestampField) {
-        query += ` WHERE \`${config.timestampField}\` > ?`;
-        params.push(lastSync);
-      }
-      
-      query += ` ORDER BY \`${config.primaryKey || 'id'}\``;
-      query += ` LIMIT ${config.batchSize || 1000000}`;
-
-      // Ejecutar consulta
-      const records = await ventasDb.query(query, params);
-      
-      console.log(`📥 Obtenidos ${records.length} registros de ${tableName}`);
-      
-      if (records.length === 0) {
-        result.success = true;
-        result.message = 'No hay registros para sincronizar';
-        return result;
+      // 🔍 DEBUG - Ver cómo llegan los primeros registros problemáticos
+      if (tableName === 'clients') {
+        const debugRecords = records.filter(r => [19, 72, 83].includes(r.id));
+        if (debugRecords.length > 0) {
+          console.log('🔍 DEBUG - Registros RAW desde MySQL:');
+          debugRecords.forEach(r => {
+            console.log({
+              id: r.id,
+              working_time_start: r.working_time_start,
+              type: typeof r.working_time_start
+            });
+          });
+        }
       }
 
       // Procesar registros
-      let lastTimestamp: Date | undefined;
-      const prismaModel = this.getPrismaModel(tableName);
+      let inserted = 0;
+      let updated = 0;
+      let skipped = 0;
+      let errors = 0;
+      const errorDetails: any[] = [];
+
+      // Convertir primaryKey a camelCase para Prisma
+      const primaryKeyCamel = snakeToCamel(primaryKey);
+
+      // Mostrar progreso cada 100 registros
+      const showProgress = records.length > 100;
+      let processed = 0;
 
       for (const record of records) {
         try {
-          result.recordsProcessed++;
-          
-          // Mapear registro a formato Prisma
-          const mappedData = await this.mapRecordToPrisma(tableName, record);
-          
-          // Crear hash para detectar cambios
-          const recordHash = this.createHash(mappedData);
-          
-          // Actualizar timestamp
-          if (config.timestampField && record[config.timestampField]) {
-            const timestamp = toSafeDate(record[config.timestampField]);
-            if (timestamp && (!lastTimestamp || timestamp > lastTimestamp)) {
-              lastTimestamp = timestamp;
-            }
-          }
+          const mappedData = this.mapRecordToModel(tableName, record);
+          const recordId = record[primaryKey];
 
-          // Usar upsert para quotations que tiene unique constraint en transaction
-          const primaryKeyField = config.primaryKey || 'id';
-          const primaryKeyValue = mappedData[primaryKeyField];
-
-          if (tableName === 'quotations' && mappedData.transaction != null) {
-            // Para quotations con transaction único, usar upsert
-            const { id, ...dataWithoutId } = mappedData;
-            
-            const upsertResult = await (prismaModel as any).upsert({
-              where: { transaction: mappedData.transaction },
-              create: dataWithoutId,
-              update: dataWithoutId
-            });
-            
-            // Determinar si fue insert o update comparando con el registro anterior
-            const wasExisting = await (prismaModel as any).count({
-              where: { 
-                transaction: mappedData.transaction,
-                updatedAt: { lt: new Date() }
-              }
-            });
-            
-            if (upsertResult.id === primaryKeyValue) {
-              result.recordsUpdated++;
-            } else {
-              result.recordsInserted++;
-            }
-          } else {
-            // Para otras tablas, usar el flujo normal
-            const existing = await (prismaModel as any).findUnique({
-              where: { [primaryKeyField]: primaryKeyValue }
-            });
-
-            if (existing) {
-              // Actualizar si cambió
-              const existingHash = this.createHash(existing);
-              if (existingHash !== recordHash) {
-                const { [primaryKeyField]: _, ...updateData } = mappedData;
-                await (prismaModel as any).update({
-                  where: { [primaryKeyField]: primaryKeyValue },
-                  data: updateData
-                });
-                result.recordsUpdated++;
-              } else {
-                result.recordsSkipped++;
-              }
-            } else {
-              // Insertar nuevo
-              const { [primaryKeyField]: _, ...createData } = mappedData;
-              await (prismaModel as any).create({
-                data: createData
-              });
-              result.recordsInserted++;
-            }
-          }
-
-        } catch (error: any) {
-          result.errors++;
-          result.errorDetails?.push({
-            record: record.id || record,
-            error: error.message
+          // Verificar si existe
+          const existing = await prismaModel.findUnique({
+            where: { [primaryKeyCamel]: recordId }
           });
+
+          if (existing) {
+            // Actualizar
+            const { [primaryKeyCamel]: _, ...updateData } = mappedData;
+            const cleanData = this.cleanDataBeforePrisma(tableName, updateData);
+            await prismaModel.update({
+              where: { [primaryKeyCamel]: recordId },
+              data: cleanData
+            });
+            updated++;
+          } else {
+            // Insertar nuevo - incluir el ID
+            const cleanData = this.cleanDataBeforePrisma(tableName, mappedData);
+            await prismaModel.create({
+              data: cleanData
+            });
+            inserted++;
+          }
+
+          processed++;
           
-          // Log solo los primeros 5 errores para no saturar
-          if (result.errors <= 5) {
-            console.error(`❌ Error procesando registro:`, error.message);
+          // Mostrar progreso
+          if (showProgress && processed % 100 === 0) {
+            const percentage = ((processed / records.length) * 100).toFixed(1);
+            console.log(`   ⏳ Progreso: ${processed.toLocaleString()}/${records.length.toLocaleString()} (${percentage}%) - Insertados: ${inserted}, Actualizados: ${updated}, Errores: ${errors}`);
+          }
+          
+        } catch (error: any) {
+          errors++;
+          if (errorDetails.length < 10) {
+            errorDetails.push({
+              record: record[primaryKey],
+              error: error.message,
+              stack: error.stack?.split('\n')[0]
+            });
           }
         }
       }
 
-      result.success = result.errors === 0;
-      result.lastTimestamp = lastTimestamp;
-      result.duration = Date.now() - startTime;
+      const duration = Date.now() - startTime;
+      console.log(`✅ Sincronización completada:`);
+      console.log(`   - Insertados: ${inserted.toLocaleString()}`);
+      console.log(`   - Actualizados: ${updated.toLocaleString()}`);
+      console.log(`   - Errores: ${errors.toLocaleString()}`);
+      console.log(`   - Duración: ${(duration / 1000).toFixed(2)}s`);
 
-      // Actualizar webhook_config
-      const webhookConfig = await prisma.webhookConfig.findUnique({
-        where: { tabla: tableName }
-      });
-
-      if (webhookConfig) {
-        await prisma.webhookConfig.update({
-          where: { id: webhookConfig.id },
-          data: {
-            lastSyncAt: lastTimestamp || new Date(),
-            totalSyncs: { increment: 1 },
-            successSyncs: result.errors === 0 ? { increment: 1 } : undefined,
-            errorSyncs: result.errors > 0 ? { increment: 1 } : undefined,
-            lastError: result.errors > 0 
-              ? `${result.errors} errores durante sincronización`
-              : null
-          }
-        });
-      }
-
-      console.log(`✅ Sincronización completada: ${result.recordsInserted} insertados, ${result.recordsUpdated} actualizados, ${result.errors} errores`);
-
-      return result;
+      return {
+        success: errors < records.length,
+        recordsProcessed: records.length,
+        recordsInserted: inserted,
+        recordsUpdated: updated,
+        recordsSkipped: skipped,
+        errors,
+        errorDetails: errorDetails.length > 0 ? errorDetails : undefined,
+        lastTimestamp: records[records.length - 1]?.[timestampField],
+        duration
+      };
 
     } catch (error: any) {
       console.error(`❌ Error en sincronización:`, error);
-      result.message = error.message;
-      result.duration = Date.now() - startTime;
-      
-      throw error;
+      return {
+        success: false,
+        recordsProcessed: 0,
+        recordsInserted: 0,
+        recordsUpdated: 0,
+        recordsSkipped: 0,
+        errors: 1,
+        errorDetails: [{ error: error.message }],
+        duration: Date.now() - startTime,
+        message: error.message
+      };
     }
   }
 
   /**
-   * Mapear registro de MySQL a formato Prisma - MEJORADO CON MANEJO ROBUSTO DE FECHAS
+   * Mapea un registro de RAMP al modelo de Prisma
    */
-  private async mapRecordToPrisma(tableName: string, record: any): Promise<any> {
-    // Lista expandida de campos booleanos en todas las tablas
+  private mapRecordToModel(tableName: string, record: any): any {
+    const mapped: any = {};
+    
+    // 🔍 DEBUG - Ver qué llega desde MySQL
+    if (tableName === 'clients' && (record.id === 19 || record.id === 72)) {
+      console.log('🔍 DEBUG mapRecordToModel ENTRADA:', {
+        id: record.id,
+        working_time_start: record.working_time_start,
+        type_start: typeof record.working_time_start,
+        working_time_end: record.working_time_end,
+        type_end: typeof record.working_time_end
+      });
+    }
+
+    // Lista de campos TIME de MySQL - YA NO SE USAN
+    const timeFields: string[] = []; // Vacío porque fueron removidos del schema
+    
+    // Lista de campos numéricos que deben convertirse a String
+    const numericToStringFields = [
+      'mobile', 'phone', 'company_phone', 'companyPhone',
+      'company_mobile', 'companyMobile', 'affiliation_number', 'affiliationNumber',
+      'elector_key', 'electorKey', 'postal_code', 'postalCode',
+      'company_postal_code', 'companyPostalCode', 'ine_number', 'ineNumber',
+      'passport', 'company_rfc', 'companyRfc', 'business_name', 'businessName',
+      'external_id', 'externalId', 'idmex', 'instagram_id', 'instagramId'
+    ];
+    
+    // Lista de campos booleanos
     const booleanFields = [
-      // Campos generales
-      'is_foreign', 'work_foreign', 'is_broker', 'is_google_calendar_synced', 
-      'is_google_mail_synced', 'hidden', 'complete', 'send', 'is_coacredited',
-      'commissionable', 'is_deed_informative', 'phone_verification', 
-      'is_document_complete', 'fisical_person', 'canceled', 'countable',
-      'is_credit', 'sent', 'used',
-      // Campos específicos de promissories
-      'isPaid', 'is_paid', 'isCreditPromisse', 'is_credit_promisse',
-      // Campos de agents
-      'can_reservate', 'is_active', 'has_access', 'is_broker', 'isBroker',
-      // Campos de otras tablas
-      'is_complete', 'is_verified', 'is_approved'
+      'is_paid', 'isPaid',
+      'is_broker', 'isBroker', 
+      'can_reservate', 'canReservate',
+      'is_foreign', 'isForeign',
+      'work_foreign', 'workForeign',
+      'used', 'active', 'enabled',
+      'is_credit_promisse', 'isCreditPromisse'
     ];
 
-    // Función helper para convertir snake_case a camelCase
-    const snakeToCamel = (str: string) => {
-      return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    };
+    // Lista de campos que NO deben convertirse a Date
+    const nonDateFields = ['completion_date', 'completionDate'];
 
-    const mapped: any = {};
-
-    // Procesar cada campo del registro
     for (const [key, value] of Object.entries(record)) {
-      // Convertir el nombre del campo a camelCase
-      const camelKey = snakeToCamel(key);
+      // Corrección de typo
+      let camelKey = snakeToCamel(key);
+      if (key === 'last_phipeline_phase' || camelKey === 'lastPhipelinePhase') {
+        camelKey = 'lastPhipipelinePhase';
+      }
       
-      // Si el valor es null, mantenerlo como null
+      // Si el valor es null, mantenerlo
       if (value === null) {
         mapped[camelKey] = null;
         continue;
       }
 
+      // IGNORAR CAMPOS TIME - Ya no existen en el schema
+      if (key === 'working_time_start' || key === 'working_time_end') {
+        continue; // Simplemente omitir estos campos
+      }
+
+      // MANEJAR CAMPOS NUMÉRICOS QUE DEBEN SER STRING
+      if (numericToStringFields.includes(key) || numericToStringFields.includes(camelKey)) {
+        const treatZeroAsNull = ['company_rfc', 'business_name'].includes(key);
+        mapped[camelKey] = this.convertToString(value, treatZeroAsNull);
+        continue;
+      }
+
+      // Verificar que NO sea un campo que debe preservarse
+      const isNonDateField = nonDateFields.some(field => 
+        key === field || camelKey === field
+      );
+
       // Manejar fechas
-      if (key.includes('date') || key.includes('at') || key === 'birthday') {
+      if (!isNonDateField && (key.includes('date') || key.includes('_at') || key === 'birthday')) {
         mapped[camelKey] = toSafeDate(value);
         continue;
       }
 
-      // Manejar campos booleanos (tinyint(1) en MySQL)
+      // Manejar campos booleanos
       if (booleanFields.includes(key) || booleanFields.includes(camelKey)) {
         mapped[camelKey] = value === 1 || value === '1' || value === true;
         continue;
       }
 
-      // Manejar BigInt para IDs y referencias
+      // Manejar BigInt
       if (typeof value === 'bigint') {
         mapped[camelKey] = this.handleBigInt(tableName, key, value);
+        continue;
+      }
+
+      // Manejar strings numéricos grandes
+      if (typeof value === 'string' && /^\d{10,}$/.test(value)) {
+        mapped[camelKey] = this.handleBigInt(tableName, key, BigInt(value));
         continue;
       }
 
@@ -284,6 +710,17 @@ class DirectSyncService {
 
     // Aplicar transformaciones específicas por tabla
     this.applyTableSpecificTransformations(tableName, record, mapped);
+    
+    // 🔍 DEBUG - Ver resultado del mapeo
+    if (tableName === 'clients' && (mapped.id === 19 || mapped.id === 72)) {
+      console.log('🔍 DEBUG mapRecordToModel SALIDA:', {
+        id: mapped.id,
+        workingTimeStart: mapped.workingTimeStart,
+        type_start: typeof mapped.workingTimeStart,
+        workingTimeEnd: mapped.workingTimeEnd,
+        type_end: typeof mapped.workingTimeEnd
+      });
+    }
 
     return mapped;
   }
@@ -292,253 +729,157 @@ class DirectSyncService {
    * Manejar conversión de BigInt según contexto
    */
   private handleBigInt(tableName: string, fieldName: string, value: bigint): any {
-    // Promissories: el campo 'promissories' puede ser BigInt pero debe ser String
     if (tableName === 'promissories' && fieldName === 'promissories') {
       return value.toString();
     }
     
-    // Referencias: el campo 'reference' debe ser String
     if (tableName === 'references' && (fieldName === 'reference' || fieldName === 'referencia')) {
       return value.toString();
     }
     
-    // Movements: el campo 'movementId' debe ser String
     if (tableName === 'movements' && (fieldName === 'movement_id' || fieldName === 'movementId')) {
       return value.toString();
     }
     
-    // Movement_methods: si tiene campo movement_id
-    if (tableName === 'movement_methods' && (fieldName === 'movement_id' || fieldName === 'movementId')) {
+    if (tableName === 'client_references' && fieldName === 'reference') {
       return value.toString();
     }
     
-    // client_references: si hay campos de referencia numérica grande
-    if (tableName === 'client_references' && fieldName.includes('phone')) {
-      return value.toString();
+    const numValue = Number(value);
+    if (numValue <= Number.MAX_SAFE_INTEGER) {
+      return numValue;
     }
-    
-    // Por defecto para IDs, mantener como número si cabe, sino como string
-    if (fieldName === 'id' || fieldName.endsWith('_id')) {
-      // Si el valor cabe en un Number seguro, usar Number
-      if (value <= Number.MAX_SAFE_INTEGER) {
-        return Number(value);
-      }
-      // Si no, mantener como BigInt o convertir a String según el esquema
-      return value;
-    }
-    
-    // Para otros campos numéricos grandes, convertir a string
     return value.toString();
   }
 
   /**
    * Aplicar transformaciones específicas por tabla
    */
-  private applyTableSpecificTransformations(tableName: string, record: any, mapped: any): void {
+  private applyTableSpecificTransformations(tableName: string, original: any, mapped: any): void {
     switch (tableName) {
-      case 'clients':
-        // Mapeos especiales para clients
-        if (record.elector_key !== undefined) mapped.electorKey = record.elector_key;
-        if (record.f_lastname !== undefined) mapped.fLastname = record.f_lastname;
-        if (record.m_lastname !== undefined) mapped.mLastname = record.m_lastname;
-        break;
-      
-      case 'agents':
-        // Mapeos para agents
-        // TEMPORAL: Convertir canReservate de Boolean a String si el schema lo requiere
-        if (record.can_reservate !== undefined) {
-          // Si Prisma espera String, convertir Boolean a "true"/"false"
-          mapped.canReservate = String(record.can_reservate === 1 || record.can_reservate === true);
-        }
-        if (record.last_session !== undefined) {
-          mapped.lastSession = toSafeDate(record.last_session);
-        }
-        // Corregir campos booleanos específicos
-        if (record.is_active !== undefined) {
-          mapped.isActive = record.is_active === 1 || record.is_active === true;
-        }
-        // IMPORTANTE: Asegurar que isBroker sea Boolean
-        if (mapped.isBroker !== undefined && mapped.isBroker !== null) {
-          mapped.isBroker = mapped.isBroker === 1 || mapped.isBroker === '1' || mapped.isBroker === true;
-        }
-        if (record.is_broker !== undefined && record.is_broker !== null) {
-          mapped.isBroker = record.is_broker === 1 || record.is_broker === '1' || record.is_broker === true;
-        }
-        // Asegurar campos de Google
-        if (mapped.isGoogleCalendarSynced !== undefined) {
-          mapped.isGoogleCalendarSynced = mapped.isGoogleCalendarSynced === 1 || mapped.isGoogleCalendarSynced === true;
-        }
-        if (mapped.isGoogleMailSynced !== undefined) {
-          mapped.isGoogleMailSynced = mapped.isGoogleMailSynced === 1 || mapped.isGoogleMailSynced === true;
-        }
-        break;
-      
-      case 'coordinators':
-        if (record.f_lastname !== undefined) mapped.fLastname = record.f_lastname;
-        if (record.m_lastname !== undefined) mapped.mLastname = record.m_lastname;
-        break;
-      
-      case 'units':
-        if (record.surplus_mt2 !== undefined) mapped.surplusMt2 = record.surplus_mt2;
-        break;
-      
       case 'references':
-        // Asegurar que reference sea String
-        if (mapped.reference && typeof mapped.reference !== 'string') {
-          mapped.reference = String(mapped.reference);
+        if (original.quotation !== null && original.quotation !== undefined) {
+          const quotationValue = Number(original.quotation);
+          mapped.quotation = isNaN(quotationValue) ? null : quotationValue;
         }
         break;
-      
-      case 'promissories':
-        // Asegurar conversiones booleanas
-        if (record.isPaid !== undefined && record.isPaid !== null) {
-          mapped.isPaid = record.isPaid === 1 || record.isPaid === '1' || record.isPaid === true;
+
+      case 'clients':
+        // 🔍 DEBUG - Ver antes de transformación
+        if (original.id === 19 || original.id === 72) {
+          console.log('🔍 DEBUG applyTableSpecific ANTES:', {
+            id: original.id,
+            workingTimeStart: mapped.workingTimeStart,
+            original_start: original.working_time_start
+          });
         }
-        if (record.is_paid !== undefined && record.is_paid !== null) {
-          mapped.isPaid = record.is_paid === 1 || record.is_paid === '1' || record.is_paid === true;
-        }
-        if (record.isCreditPromisse !== undefined && record.isCreditPromisse !== null) {
-          mapped.isCreditPromisse = record.isCreditPromisse === 1 || record.isCreditPromisse === true;
-        }
-        if (record.is_credit_promisse !== undefined && record.is_credit_promisse !== null) {
-          mapped.isCreditPromisse = record.is_credit_promisse === 1 || record.is_credit_promisse === true;
-        }
-        break;
-      
-      case 'beneficiaries':
-        // Manejar campos booleanos de beneficiaries
-        if (record.is_complete !== undefined) {
-          mapped.isComplete = record.is_complete === 1 || record.is_complete === true;
-        }
-        break;
-      
-      case 'client_references':
-        // Manejar teléfonos y otros campos
-        if (record.phone && typeof record.phone === 'bigint') {
-          mapped.phone = record.phone.toString();
-        }
-        break;
-      
-      case 'agencies':
-        // Campos específicos de agencies
-        if (record.is_active !== undefined) {
-          mapped.isActive = record.is_active === 1 || record.is_active === true;
-        }
-        break;
-      
-      case 'movement_methods':
-        // Campos booleanos de movement_methods
-        if (record.is_active !== undefined) {
-          mapped.isActive = record.is_active === 1 || record.is_active === true;
-        }
-        break;
-      
-      case 'movements':
-        // Manejar campos de movements
-        if (record.is_paid !== undefined) {
-          mapped.isPaid = record.is_paid === 1 || record.is_paid === true;
-        }
-        if (record.is_credit !== undefined) {
-          mapped.isCredit = record.is_credit === 1 || record.is_credit === true;
-        }
-        // IMPORTANTE: Convertir movementId de BigInt a String
-        if (mapped.movementId && typeof mapped.movementId === 'bigint') {
-          mapped.movementId = mapped.movementId.toString();
-        }
-        if (record.movement_id && (typeof record.movement_id === 'bigint' || typeof record.movement_id === 'number')) {
-          mapped.movementId = String(record.movement_id);
-        }
-        break;
         
-      case 'transactions':
-        // Asegurar conversión booleana de isDocumentComplete
-        if (record.is_document_complete !== undefined && record.is_document_complete !== null) {
-          mapped.isDocumentComplete = record.is_document_complete === 1 || record.is_document_complete === '1' || record.is_document_complete === true;
+        // 🔥 IGNORAR CAMPOS TIME - Ya no existen en el schema
+        // Los campos working_time_start y working_time_end fueron removidos
+        delete mapped.workingTimeStart;
+        delete mapped.workingTimeEnd;
+        
+        // 🔍 DEBUG - Ver después de transformación
+        if (original.id === 19 || original.id === 72) {
+          console.log('🔍 DEBUG applyTableSpecific DESPUÉS:', {
+            id: original.id,
+            workingTimeStart: mapped.workingTimeStart
+          });
         }
-        if (mapped.isDocumentComplete !== undefined && typeof mapped.isDocumentComplete !== 'boolean') {
-          mapped.isDocumentComplete = mapped.isDocumentComplete === 1 || mapped.isDocumentComplete === '1' || mapped.isDocumentComplete === true;
+        
+        // Asegurar conversiones de string
+        if (original.passport !== undefined && original.passport !== null) {
+          mapped.passport = this.convertToString(original.passport);
         }
-        // Asegurar phoneVerification también es Boolean
-        if (record.phone_verification !== undefined && record.phone_verification !== null) {
-          mapped.phoneVerification = record.phone_verification === 1 || record.phone_verification === '1' || record.phone_verification === true;
+        
+        if (original.company_rfc !== undefined) {
+          mapped.companyRfc = this.convertToString(original.company_rfc, true);
         }
-        // Asegurar fisicalPerson es Boolean
-        if (record.fisical_person !== undefined && record.fisical_person !== null) {
-          mapped.fisicalPerson = record.fisical_person === 1 || record.fisical_person === '1' || record.fisical_person === true;
+        
+        if (original.business_name !== undefined) {
+          mapped.businessName = this.convertToString(original.business_name, true);
+        }
+        
+        if (original.ine_number !== undefined && original.ine_number !== null) {
+          mapped.ineNumber = this.convertToString(original.ine_number);
+        }
+        
+        if (original.external_id !== undefined && original.external_id !== null) {
+          mapped.externalId = this.convertToString(original.external_id);
+        }
+        
+        if (original.idmex !== undefined && original.idmex !== null) {
+          mapped.idmex = this.convertToString(original.idmex);
+        }
+        
+        if (original.instagram_id !== undefined && original.instagram_id !== null) {
+          mapped.instagramId = this.convertToString(original.instagram_id);
         }
         break;
-      
-      case 'developers':
-      case 'projects':
-        // Campos booleanos generales
-        if (record.is_active !== undefined) {
-          mapped.isActive = record.is_active === 1 || record.is_active === true;
+
+      case 'movements':
+        if (original.movement_id) {
+          mapped.movementId = original.movement_id.toString();
+        }
+        break;
+
+      case 'promissories':
+        if (original.promissories) {
+          mapped.promissories = original.promissories.toString();
         }
         break;
     }
-
-    // Limpieza final: eliminar campos undefined
-    Object.keys(mapped).forEach(key => {
-      if (mapped[key] === undefined) {
-        delete mapped[key];
-      }
-    });
   }
 
   /**
-   * Obtener modelo Prisma correspondiente
+   * Sincronizar todas las tablas configuradas
    */
-  private getPrismaModel(tableName: string): any {
-    const modelName = TABLE_TO_MODEL_MAP[tableName];
-    if (!modelName) {
-      throw new Error(`No se encontró modelo para la tabla: ${tableName}`);
-    }
+  async syncAllTables(): Promise<Record<string, SyncResult>> {
+    console.log('🔄 Iniciando sincronización de todas las tablas...\n');
     
-    return (prisma as any)[modelName];
-  }
+    const results: Record<string, SyncResult> = {};
+    const tables = Object.keys(TABLE_TO_MODEL_MAP);
 
-  /**
-   * Crear hash de un objeto para detectar cambios
-   */
-  private createHash(obj: any): string {
-    const str = JSON.stringify(obj, (_, value) =>
-      typeof value === 'bigint' ? value.toString() : value
-    );
-    return crypto.createHash('md5').update(str).digest('hex');
-  }
+    for (const tableName of tables) {
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`📊 Tabla: ${tableName}`);
+      console.log('='.repeat(60));
 
-  /**
-   * Obtener configuración desde webhook_configs
-   */
-  async getSyncConfigFromWebhook(tableName: string): Promise<SyncConfig> {
-    const webhookConfig = await prisma.webhookConfig.findUnique({
-      where: { tabla: tableName }
-    });
+      const result = await this.syncTable({ tableName });
+      results[tableName] = result;
 
-    if (!webhookConfig) {
-      throw new Error(`Configuración no encontrada para tabla: ${tableName}`);
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    // CORRECCIÓN: Obtener config de sync-tables.config.ts
-    const tableConfig = getTableConfig(tableName);
-    
-    const metadata = webhookConfig.metadata as any || {};
-    
-    return {
-      tableName,
-      primaryKey: metadata.primaryKey || tableConfig?.primaryKey || 'id',
-      timestampField: metadata.timestampField || tableConfig?.timestampField || 'updated_at',
-      batchSize: metadata.batchSize || tableConfig?.batchSize || 1000000
-    };
-  }
+    // Resumen final
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 RESUMEN FINAL DE SINCRONIZACIÓN');
+    console.log('='.repeat(60));
 
-  async testConnection(): Promise<boolean> {
-    return ventasDb.testConnection();
-  }
+    let totalInserted = 0;
+    let totalUpdated = 0;
+    let totalErrors = 0;
 
-  async getAvailableTables(): Promise<string[]> {
-    return ventasDb.getTables();
+    for (const [table, result] of Object.entries(results)) {
+      const status = result.success ? '✅' : '❌';
+      console.log(`${status} ${table}: ${result.recordsInserted} insertados, ${result.recordsUpdated} actualizados, ${result.errors} errores`);
+      totalInserted += result.recordsInserted;
+      totalUpdated += result.recordsUpdated;
+      totalErrors += result.errors;
+    }
+
+    console.log('\n' + '='.repeat(60));
+    console.log(`📊 TOTALES:`);
+    console.log(`   - Insertados: ${totalInserted}`);
+    console.log(`   - Actualizados: ${totalUpdated}`);
+    console.log(`   - Errores: ${totalErrors}`);
+    console.log('='.repeat(60) + '\n');
+
+    return results;
   }
 }
 
-export const directSyncService = new DirectSyncService();
+// Exportar instancia singleton
+const syncServiceInstance = new DirectSyncService();
+export const directSyncService = syncServiceInstance;
+export const syncService = syncServiceInstance;

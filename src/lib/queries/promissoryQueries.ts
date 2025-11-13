@@ -247,21 +247,48 @@ export async function getPromissoryStats() {
 }
 
 /**
- * Obtiene lista de proyectos únicos para filtro
+ * Obtiene lista de proyectos únicos para filtro con información de empresa
  */
-export async function getProjectsForFilter(): Promise<string[]> {
+export async function getProjectsForFilter(): Promise<Array<{name: string; company: string}>> {
   try {
     const projects = await prisma.project.findMany({
       select: {
-        name: true
+        id: true,
+        name: true,
+        businessName: true // Obtener el businessName para clasificar por empresa
+      },
+      where: {
+        name: {
+          not: null
+        }
       },
       orderBy: {
         name: 'asc'
-      },
-      distinct: ['name']
+      }
     });
 
-    return projects.map(p => p.name || '').filter(Boolean);
+    // Clasificar proyectos por empresa basándose en businessName
+    // Si el businessName contiene "govacasa" (case insensitive) es de Govacasa
+    // De lo contrario, es de MABU
+    const projectsWithCompany = projects.map(p => {
+      const businessName = (p.businessName || '').toLowerCase();
+      
+      // Determinar empresa basándose en businessName
+      const isGovacasa = businessName.includes('govacasa') || 
+                        businessName.includes('gova casa') ||
+                        businessName.includes('gova');
+      
+      return {
+        name: p.name || '',
+        company: isGovacasa ? 'govacasa' : 'mabu'
+      };
+    }).filter(p => p.name !== '');
+
+    console.log(`📋 Total proyectos: ${projectsWithCompany.length}`);
+    console.log(`🏢 Govacasa: ${projectsWithCompany.filter(p => p.company === 'govacasa').length}`);
+    console.log(`🏢 MABU: ${projectsWithCompany.filter(p => p.company === 'mabu').length}`);
+
+    return projectsWithCompany;
   } catch (error) {
     console.error('Error obteniendo proyectos:', error);
     return [];

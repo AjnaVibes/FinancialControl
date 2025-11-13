@@ -1,0 +1,345 @@
+{
+  "discovered": {},
+  "expected": {
+    "VSC_Empresas": {
+      "id_empresa": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "nombre": {
+        "type": "String",
+        "nullable": false
+      },
+      "rfc": {
+        "type": "String",
+        "nullable": true
+      },
+      "direccion": {
+        "type": "String",
+        "nullable": true
+      },
+      "telefono": {
+        "type": "String",
+        "nullable": true
+      },
+      "activo": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": true
+      }
+    },
+    "VSC_Viviendas": {
+      "id_vivienda": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "id_proyecto": {
+        "type": "Int",
+        "nullable": false
+      },
+      "numero_vivienda": {
+        "type": "String",
+        "nullable": false
+      },
+      "manzana": {
+        "type": "String",
+        "nullable": true
+      },
+      "lote": {
+        "type": "String",
+        "nullable": true
+      },
+      "prototipo": {
+        "type": "String",
+        "nullable": true
+      },
+      "estatus": {
+        "type": "String",
+        "nullable": true
+      },
+      "superficie_terreno": {
+        "type": "Float",
+        "nullable": true
+      },
+      "superficie_construccion": {
+        "type": "Float",
+        "nullable": true
+      },
+      "precio_venta": {
+        "type": "Float",
+        "nullable": true
+      },
+      "fecha_inicio": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "fecha_terminacion": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "observaciones": {
+        "type": "String",
+        "nullable": true
+      }
+    },
+    "VSC_Clientes": {
+      "id_cliente": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "nombre": {
+        "type": "String",
+        "nullable": false
+      },
+      "apellido_paterno": {
+        "type": "String",
+        "nullable": true
+      },
+      "apellido_materno": {
+        "type": "String",
+        "nullable": true
+      },
+      "rfc": {
+        "type": "String",
+        "nullable": true
+      },
+      "curp": {
+        "type": "String",
+        "nullable": true
+      },
+      "telefono": {
+        "type": "String",
+        "nullable": true
+      },
+      "celular": {
+        "type": "String",
+        "nullable": true
+      },
+      "email": {
+        "type": "String",
+        "nullable": true
+      },
+      "direccion": {
+        "type": "String",
+        "nullable": true
+      },
+      "fecha_registro": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "VSC_ClienteVivienda": {
+      "id": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "id_cliente": {
+        "type": "Int",
+        "nullable": false
+      },
+      "id_vivienda": {
+        "type": "Int",
+        "nullable": false
+      },
+      "fecha_asignacion": {
+        "type": "DateTime",
+        "nullable": false
+      },
+      "tipo_operacion": {
+        "type": "String",
+        "nullable": true
+      },
+      "monto_operacion": {
+        "type": "Float",
+        "nullable": true
+      },
+      "estatus": {
+        "type": "String",
+        "nullable": true
+      }
+    },
+    "VSC_AvancesFisicos": {
+      "id_avance": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "id_vivienda": {
+        "type": "Int",
+        "nullable": false
+      },
+      "fecha_avance": {
+        "type": "DateTime",
+        "nullable": false
+      },
+      "porcentaje_avance": {
+        "type": "Float",
+        "nullable": false
+      },
+      "descripcion": {
+        "type": "String",
+        "nullable": true
+      },
+      "observaciones": {
+        "type": "String",
+        "nullable": true
+      },
+      "usuario_registro": {
+        "type": "String",
+        "nullable": true
+      }
+    },
+    "VSC_OrdenesCompra": {
+      "id_orden": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "numero_orden": {
+        "type": "String",
+        "nullable": false
+      },
+      "fecha_orden": {
+        "type": "DateTime",
+        "nullable": false
+      },
+      "proveedor": {
+        "type": "String",
+        "nullable": true
+      },
+      "monto_total": {
+        "type": "Float",
+        "nullable": true
+      },
+      "estatus": {
+        "type": "String",
+        "nullable": true
+      },
+      "observaciones": {
+        "type": "String",
+        "nullable": true
+      }
+    },
+    "VSC_ControlDocumentos": {
+      "id_documento": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "id_vivienda": {
+        "type": "Int",
+        "nullable": true
+      },
+      "id_cliente": {
+        "type": "Int",
+        "nullable": true
+      },
+      "tipo_documento": {
+        "type": "String",
+        "nullable": false
+      },
+      "numero_documento": {
+        "type": "String",
+        "nullable": true
+      },
+      "fecha_documento": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "fecha_vencimiento": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "estatus": {
+        "type": "String",
+        "nullable": true
+      },
+      "ruta_archivo": {
+        "type": "String",
+        "nullable": true
+      },
+      "observaciones": {
+        "type": "String",
+        "nullable": true
+      }
+    },
+    "VSC_Proyectos": {
+      "id_proyecto": {
+        "type": "Int",
+        "nullable": false,
+        "isPrimary": true
+      },
+      "nombre": {
+        "type": "String",
+        "nullable": false
+      },
+      "descripcion": {
+        "type": "String",
+        "nullable": true
+      },
+      "ubicacion": {
+        "type": "String",
+        "nullable": true
+      },
+      "fecha_inicio": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "fecha_fin_estimada": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "total_viviendas": {
+        "type": "Int",
+        "nullable": true
+      },
+      "estatus": {
+        "type": "String",
+        "nullable": true
+      }
+    }
+  },
+  "apiMethods": [
+    {
+      "method": "API_GetListaViviendasyEstatus",
+      "description": "Lista de viviendas y estatus"
+    },
+    {
+      "method": "API_GetViviendasDetalles",
+      "description": "Detalles completos de viviendas"
+    },
+    {
+      "method": "API_GetOrdenesDeCompra",
+      "description": "Órdenes de compra"
+    },
+    {
+      "method": "API_GetControlDocumentos",
+      "description": "Control de documentos"
+    },
+    {
+      "method": "APP_Get_ClienteVivienda",
+      "description": "Información de clientes y viviendas"
+    },
+    {
+      "method": "APP_GetAvancesFisicos",
+      "description": "Avances físicos de obra"
+    },
+    {
+      "method": "APP_GetPresupuestosObra",
+      "description": "Presupuestos de obra"
+    },
+    {
+      "method": "APP_GetPromociones",
+      "description": "Promociones"
+    },
+    {
+      "method": "APP_GetPromotor",
+      "description": "Información de promotores"
+    }
+  ]
+}

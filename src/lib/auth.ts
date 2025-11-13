@@ -24,7 +24,21 @@ export const authOptions: NextAuthOptions = {
   
   session: { 
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    // Sesión expira a las 9 PM del día actual
+    maxAge: (() => {
+      const now = new Date();
+      const tonight = new Date(now);
+      tonight.setHours(21, 0, 0, 0); // 9 PM
+      
+      // Si ya pasaron las 9 PM, configurar para mañana a las 9 PM
+      if (now >= tonight) {
+        tonight.setDate(tonight.getDate() + 1);
+      }
+      
+      // Calcular segundos hasta las 9 PM
+      const secondsUntil9PM = Math.floor((tonight.getTime() - now.getTime()) / 1000);
+      return secondsUntil9PM;
+    })(),
   },
   
   pages: {
@@ -59,11 +73,12 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user, trigger, session }) {
-      if (user) {
-        console.log('🎫 Creando JWT para:', user.email);
-        
+      // Siempre verificar el estado actual del usuario en la BD
+      const userEmail = user?.email || token?.email;
+      
+      if (userEmail) {
         const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
+          where: { email: userEmail as string },
           include: {
             role: {
               include: {
@@ -73,28 +88,34 @@ export const authOptions: NextAuthOptions = {
                   }
                 }
               }
+            },
+            companies: {
+              include: {
+                company: true
+              }
             }
           }
         });
 
         if (dbUser) {
           token.id = dbUser.id;
-          token.role = dbUser.role?.name || 'viewer';
+          token.email = dbUser.email;
+          token.name = dbUser.name;
+          token.role = dbUser.role?.name || null;
+          token.roleId = dbUser.roleId;
+          token.isActive = dbUser.isActive;
+          token.hasCompanies = dbUser.companies.length > 0;
           token.permissions = dbUser.role?.permissions.map(rp => ({
             resource: rp.permission.resource,
             action: rp.permission.action
           })) || [];
           
-          console.log('✅ JWT configurado:', {
-            id: token.id,
+          console.log('✅ JWT actualizado:', {
+            email: token.email,
             role: token.role,
-            permissions: token.permissions.length
+            isActive: token.isActive,
+            hasCompanies: token.hasCompanies
           });
-        } else {
-          console.log('⚠️ Usuario no encontrado en BD, asignando viewer');
-          token.id = user.id;
-          token.role = 'viewer';
-          token.permissions = [];
         }
       }
 
@@ -106,14 +127,22 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      console.log('📝 Creando sesión para:', session.user?.email);
-      
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = token.role as string | null;
+        session.user.roleId = token.roleId as string | null;
+        session.user.isActive = token.isActive as boolean;
+        session.user.hasCompanies = token.hasCompanies as boolean;
         session.user.permissions = token.permissions as any[];
         
-        console.log('✅ Sesión creada con rol:', token.role);
+        // Determinar si el usuario está pendiente de aprobación
+        session.user.isPending = !token.role || !token.hasCompanies;
+        
+        console.log('✅ Sesión actualizada:', {
+          email: session.user.email,
+          role: session.user.role,
+          isPending: session.user.isPending
+        });
       }
 
       return session;

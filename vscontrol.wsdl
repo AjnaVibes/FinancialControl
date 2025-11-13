@@ -1,0 +1,4228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://localhost/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://localhost/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Servicio Web del sistema VSControlTotal</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://localhost/">
+      <s:element name="APP_UpdateAvancesFisico">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateAvancesFisicoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateAvancesFisicoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteAvancesFisico">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteAvancesFisicoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteAvancesFisicoResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPresupuestosObra">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoPresupuesto" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClaveConceptoObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="NivelIdentacion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConceptoPadre" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="EsAgrupador" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Orden" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="NeodataPadre" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NeodataConcepto" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConcepto" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="banGetOnlyExtraOrdinarios" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoPresupuestoCV" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPresupuestosObraResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetPresupuestosObraResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateAvanceFisicoDetalles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloDetalles" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateAvanceFisicoDetallesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateAvanceFisicoDetallesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAccesoriosDeEquipos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAccesorio" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="Marca" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Modelo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NumeroDeParte" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Nombre" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Serie" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatusDeRenta" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAccesoriosDeEquiposResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetAccesoriosDeEquiposResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesDeCompraD">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenCompra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAreaCosteo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAlmacen" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDepartamento" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdInsumo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoCosto" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUnidad" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenTrabajo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesDeCompraDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetOrdenesDeCompraDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesDeCompraDWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenCompra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAreaCosteo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAlmacen" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDepartamento" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdInsumo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoCosto" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUnidad" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdMoneda" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenTrabajo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdRequisicion" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdProveedor" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdProveedorTransportista" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="EstatusDeLoFacturado" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="EstatusDeLoExcedido" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioReviso" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioAutorizo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCreo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSolicito" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="Modulo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="TipoOrdenCompra" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaEntregaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaEntregaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatusObra" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesDeCompraDWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetOrdenesDeCompraDWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosFotosWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConceptoObra" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosFotosWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetAvancesFisicosFotosWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteAvancesInternosFotos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteAvancesInternosFotosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteAvancesInternosFotosResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertAvancesInternosFotos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloFoto" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Archivo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertAvancesInternosFotosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertAvancesInternosFotosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateAvancesInternosFoto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloFoto" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Archivo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateAvancesInternosFotoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateAvancesInternosFotoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLotesD">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDesarrollo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLote" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLotesDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLotesDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLotesXEstatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDesarrollo" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLotesXEstatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLotesXEstatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InitSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GrupoEmpresas" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InitSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_InitSessionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetViviendasDetalles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDesarrollo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLote" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetViviendasDetallesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetViviendasDetallesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetListaViviendasyEstatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDesarrollo" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetListaViviendasyEstatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetListaViviendasyEstatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_CloseSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_CloseSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_CloseSessionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetControlDocumentos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="Entidad" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEntidad" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Restringido" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoArchivo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdTipoDeDocumento" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuario" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="NombreArchivo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Descripcion" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCreacionInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCreacionFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDelDocumentoInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDelDocumentoFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeVencimientoInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeVencimientoFinal" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetControlDocumentosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetControlDocumentosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdMoneda" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="FolioUsuario" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCreo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioRealizo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCapturo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInternoSkip" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="OmitirCanceladas" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="AplicanPermisosDeUsuario" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdObraEstatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetAvancesFisicosWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosDWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConceptoObra" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCorteInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCorteFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInternoSkip" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="OmitirCanceladas" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosDWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetAvancesFisicosDWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosDWLAcumulados">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosDWLAcumuladosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetAvancesFisicosDWLAcumuladosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosFotosWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConceptoObra" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetAvancesFisicosFotosWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetAvancesFisicosFotosWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertarAvancesFisicos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternos" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="odtAvancesInternosDWL" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertarAvancesFisicosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_InsertarAvancesFisicosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertarAvancesFisicosDetalles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternosD" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertarAvancesFisicosDetallesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_InsertarAvancesFisicosDetallesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertAvancesInternosFotos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternosFotos" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Archivo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_InsertAvancesInternosFotosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_InsertAvancesInternosFotosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvanceFisicoDetalles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternosD" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvanceFisicoDetallesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_UpdateAvanceFisicoDetallesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvancesFisico">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternos" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvancesFisicoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_UpdateAvancesFisicoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvancesInternosFoto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="odrAvancesInternosFotos" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Archivo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_UpdateAvancesInternosFotoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_UpdateAvancesInternosFotoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_DeleteAvancesFisico">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_DeleteAvancesFisicoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="API_DeleteAvancesFisicoResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_DeleteAvancesInternosFotos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_DeleteAvancesInternosFotosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="API_DeleteAvancesInternosFotosResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetOrdenesDeCompra">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenCompra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAlmacen" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdDepartamento" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdMoneda" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdOrdenTrabajo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdRequisicion" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdProveedor" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdProveedorTransportista" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="EstatusDeLoFacturado" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="EstatusDeLoExcedido" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioReviso" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioAutorizo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCreo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSolicito" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="Modulo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="TipoOrdenCompra" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaEntregaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaEntregaFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="RequisicionesVinculadas" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetOrdenesDeCompraResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetOrdenesDeCompraResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetInsumosPendientesDeEntregar">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="TipoEntrada" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdMovsAlmacen" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAlmacen" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="InsumosEntregados" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="API_GetInsumosPendientesDeEntregarResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="API_GetInsumosPendientesDeEntregarResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarClienteVivienda">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarClienteViviendaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarClienteViviendaResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateClienteVivienda">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateClienteViviendaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateClienteViviendaResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_Get_ClienteVivienda">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdCliente" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_Get_ClienteViviendaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_Get_ClienteViviendaResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InitSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InitSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InitSessionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_CloseSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="nIdUsuario" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_CloseSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_CloseSessionResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_LoadEmpresas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_LoadEmpresasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_LoadEmpresasResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetConfiguracionSistema">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConfiguracion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="Clave" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Modulo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="SoloPersonalVSM" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ObtenerConfsGeneralesConObra" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetConfiguracionSistemaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetConfiguracionSistemaResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsuarioSesion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuario" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsuarioSesionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetUsuarioSesionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetClientesFlashlist">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Busqueda" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEmpresa" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdMedio" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdNicho" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdPromotor" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdPromocion" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeProspectacion1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeProspectacion2" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeRevision1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaDeRevision2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="NumeroImss" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClabeInterbancaria" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CuentaBancaria" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="InstitucionBancaria" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="TipoDeProspecto" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="TipoPersonaFiscal" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetClientesFlashlistResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetClientesFlashlistResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetNichosDeMercado">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetNichosDeMercadoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetNichosDeMercadoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetFraccionamientos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetFraccionamientosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetFraccionamientosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetExpedientesMovilVentasCC">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdCliente" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetExpedientesMovilVentasCCResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetExpedientesMovilVentasCCResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEvaluacionesXClienteWLCC">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdCliente" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEvaluacionesXClienteWLCCResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetEvaluacionesXClienteWLCCResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEvaluacionesXCliente">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdCliente" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEvaluacionesXClienteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetEvaluacionesXClienteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarEvaluacionesXCliente">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarEvaluacionesXClienteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarEvaluacionesXClienteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateEvaluacionesXCliente">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateEvaluacionesXClienteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateEvaluacionesXClienteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteEvaluacionesXClienteMovil">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEvaluacion" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteEvaluacionesXClienteMovilResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteEvaluacionesXClienteMovilResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetMediosPublicitarios">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetMediosPublicitariosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetMediosPublicitariosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEmpresasClientes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEmpresasClientesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetEmpresasClientesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPromociones">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPromocionesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetPromocionesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPromotor">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdPromotor" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPromotorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetPromotorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEquiposWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetEquiposWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetEquiposWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetInsumoWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdInsumo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetInsumoWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetInsumoWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPolizasDeSeguroMovil">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPolizasDeSeguroMovilResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetPolizasDeSeguroMovilResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesTrabajoWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetOrdenesTrabajoWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetOrdenesTrabajoWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetNextMantenimientosPreventivos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetNextMantenimientosPreventivosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetNextMantenimientosPreventivosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteClientesMovil">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdCliente" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteClientesMovilResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteClientesMovilResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEmpresasClientes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEmpresasClientesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillEmpresasClientesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillTiposDeCredito">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillTiposDeCreditoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillTiposDeCreditoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEntidadesFederativas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEntidadesFederativasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillEntidadesFederativasResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillPaisesSAT">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillPaisesSATResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillPaisesSATResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillConductores">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillConductoresResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillConductoresResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_ValidarEmpresaPorRFC">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RFC" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_ValidarEmpresaPorRFCResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_ValidarEmpresaPorRFCResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetHistorialHerramientasEnPrestamo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdInsumo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NumeroSerie" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetHistorialHerramientasEnPrestamoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetHistorialHerramientasEnPrestamoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPermisosxProceso">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdPerfilUsuario" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdProceso" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetPermisosxProcesoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetPermisosxProcesoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsosEquipoFlashList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Busqueda" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdUsoEquipo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdContratoArrendamiento" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEmpleadoOperador" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="TipoCosto" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="Turno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Trabajo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdFamiliaEquipo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdTipoEquipo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsosEquipoFlashListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetUsosEquipoFlashListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsosEquipo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdUsoEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUsosEquipoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetUsosEquipoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarUsoEquipo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarUsoEquipoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarUsoEquipoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateUsoEquipo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Arreglo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateUsoEquipoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateUsoEquipoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteUsoEquipo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdUsoEquipo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteUsoEquipoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteUsoEquipoResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillUnidades">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillUnidadesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillUnidadesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillSucursales">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillSucursalesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillSucursalesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillObras">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Estatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillObrasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillObrasResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillTurnos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Estatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillTurnosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillTurnosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEquipos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_FillEquiposResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_FillEquiposResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUltimoContadorEquipo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdEquipo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="tTipoContador" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCorte" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetUltimoContadorEquipoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetUltimoContadorEquipoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventarios">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLectura" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="Referencia" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCapturo" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdMovAlmacen" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLecturaInventariosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLectura" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="Referencia" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCapturo" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdMovAlmacen" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLecturaInventariosWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosD">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLectura" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLecturaInventariosDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosDWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLectura" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetLecturaInventariosDWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetLecturaInventariosDWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteLecturaInventarios">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdLectura" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteLecturaInventariosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteLecturaInventariosResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteLecturaInventariosD">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_DeleteLecturaInventariosDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="APP_DeleteLecturaInventariosDResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarLecturaInventario">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloEncabezado" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloDetalles" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarLecturaInventarioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarLecturaInventarioResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarSalidaAlmacen">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSesion" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="SalidaAlmacen" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DetalleInsumos" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarSalidaAlmacenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarSalidaAlmacenResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateLecturaInventarios">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloEncabezado" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloDetalles" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_UpdateLecturaInventariosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_UpdateLecturaInventariosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdMoneda" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="FolioUsuario" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdSucursal" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCreo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioRealizo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdUsuarioCapturo" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInternoSkip" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaAutorizacionFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="OmitirCanceladas" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="AplicanPermisosDeUsuario" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdObraEstatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetAvancesFisicosWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosDWL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdConceptoObra" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCorteInicial" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="FechaCorteFinal" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInternoSkip" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="OmitirCanceladas" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdEstatus" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosDWLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetAvancesFisicosDWLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosDWLAcumulados">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdAvanceInterno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IdObra" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_GetAvancesFisicosDWLAcumuladosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_GetAvancesFisicosDWLAcumuladosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarAvancesFisicos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloEncabezado" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloDetalles" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarAvancesFisicosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarAvancesFisicosResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarAvancesFisicosDetalles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Empresa" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ArregloDetalles" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="APP_InsertarAvancesFisicosDetallesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="APP_InsertarAvancesFisicosDetallesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="APP_UpdateAvancesFisicoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvancesFisico" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateAvancesFisicoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvancesFisicoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteAvancesFisicoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteAvancesFisico" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteAvancesFisicoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteAvancesFisicoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPresupuestosObraSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetPresupuestosObra" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPresupuestosObraSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetPresupuestosObraResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateAvanceFisicoDetallesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvanceFisicoDetalles" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateAvanceFisicoDetallesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvanceFisicoDetallesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAccesoriosDeEquiposSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetAccesoriosDeEquipos" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAccesoriosDeEquiposSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetAccesoriosDeEquiposResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesDeCompraDSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesDeCompraD" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesDeCompraDSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesDeCompraDResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesDeCompraDWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesDeCompraDWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesDeCompraDWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesDeCompraDWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosFotosWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosFotosWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosFotosWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosFotosWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteAvancesInternosFotosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteAvancesInternosFotos" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteAvancesInternosFotosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteAvancesInternosFotosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertAvancesInternosFotosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertAvancesInternosFotos" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertAvancesInternosFotosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertAvancesInternosFotosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateAvancesInternosFotoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvancesInternosFoto" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateAvancesInternosFotoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateAvancesInternosFotoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLotesDSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLotesD" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLotesDSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLotesDResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLotesXEstatusSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLotesXEstatus" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLotesXEstatusSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLotesXEstatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_InitSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:API_InitSession" />
+  </wsdl:message>
+  <wsdl:message name="API_InitSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:API_InitSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetViviendasDetallesSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetViviendasDetalles" />
+  </wsdl:message>
+  <wsdl:message name="API_GetViviendasDetallesSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetViviendasDetallesResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetListaViviendasyEstatusSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetListaViviendasyEstatus" />
+  </wsdl:message>
+  <wsdl:message name="API_GetListaViviendasyEstatusSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetListaViviendasyEstatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_CloseSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:API_CloseSession" />
+  </wsdl:message>
+  <wsdl:message name="API_CloseSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:API_CloseSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetControlDocumentosSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetControlDocumentos" />
+  </wsdl:message>
+  <wsdl:message name="API_GetControlDocumentosSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetControlDocumentosResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosWLSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosWL" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosWLSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosDWLSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosDWL" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosDWLSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosDWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosDWLAcumuladosSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosDWLAcumulados" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosDWLAcumuladosSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosDWLAcumuladosResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosFotosWLSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosFotosWL" />
+  </wsdl:message>
+  <wsdl:message name="API_GetAvancesFisicosFotosWLSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetAvancesFisicosFotosWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertarAvancesFisicosSoapIn">
+    <wsdl:part name="parameters" element="tns:API_InsertarAvancesFisicos" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertarAvancesFisicosSoapOut">
+    <wsdl:part name="parameters" element="tns:API_InsertarAvancesFisicosResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertarAvancesFisicosDetallesSoapIn">
+    <wsdl:part name="parameters" element="tns:API_InsertarAvancesFisicosDetalles" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertarAvancesFisicosDetallesSoapOut">
+    <wsdl:part name="parameters" element="tns:API_InsertarAvancesFisicosDetallesResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertAvancesInternosFotosSoapIn">
+    <wsdl:part name="parameters" element="tns:API_InsertAvancesInternosFotos" />
+  </wsdl:message>
+  <wsdl:message name="API_InsertAvancesInternosFotosSoapOut">
+    <wsdl:part name="parameters" element="tns:API_InsertAvancesInternosFotosResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvanceFisicoDetallesSoapIn">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvanceFisicoDetalles" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvanceFisicoDetallesSoapOut">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvanceFisicoDetallesResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvancesFisicoSoapIn">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvancesFisico" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvancesFisicoSoapOut">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvancesFisicoResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvancesInternosFotoSoapIn">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvancesInternosFoto" />
+  </wsdl:message>
+  <wsdl:message name="API_UpdateAvancesInternosFotoSoapOut">
+    <wsdl:part name="parameters" element="tns:API_UpdateAvancesInternosFotoResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_DeleteAvancesFisicoSoapIn">
+    <wsdl:part name="parameters" element="tns:API_DeleteAvancesFisico" />
+  </wsdl:message>
+  <wsdl:message name="API_DeleteAvancesFisicoSoapOut">
+    <wsdl:part name="parameters" element="tns:API_DeleteAvancesFisicoResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_DeleteAvancesInternosFotosSoapIn">
+    <wsdl:part name="parameters" element="tns:API_DeleteAvancesInternosFotos" />
+  </wsdl:message>
+  <wsdl:message name="API_DeleteAvancesInternosFotosSoapOut">
+    <wsdl:part name="parameters" element="tns:API_DeleteAvancesInternosFotosResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetOrdenesDeCompraSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetOrdenesDeCompra" />
+  </wsdl:message>
+  <wsdl:message name="API_GetOrdenesDeCompraSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetOrdenesDeCompraResponse" />
+  </wsdl:message>
+  <wsdl:message name="API_GetInsumosPendientesDeEntregarSoapIn">
+    <wsdl:part name="parameters" element="tns:API_GetInsumosPendientesDeEntregar" />
+  </wsdl:message>
+  <wsdl:message name="API_GetInsumosPendientesDeEntregarSoapOut">
+    <wsdl:part name="parameters" element="tns:API_GetInsumosPendientesDeEntregarResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarClienteViviendaSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarClienteVivienda" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarClienteViviendaSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarClienteViviendaResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateClienteViviendaSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateClienteVivienda" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateClienteViviendaSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateClienteViviendaResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_Get_ClienteViviendaSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_Get_ClienteVivienda" />
+  </wsdl:message>
+  <wsdl:message name="APP_Get_ClienteViviendaSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_Get_ClienteViviendaResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InitSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InitSession" />
+  </wsdl:message>
+  <wsdl:message name="APP_InitSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InitSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_CloseSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_CloseSession" />
+  </wsdl:message>
+  <wsdl:message name="APP_CloseSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_CloseSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_LoadEmpresasSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_LoadEmpresas" />
+  </wsdl:message>
+  <wsdl:message name="APP_LoadEmpresasSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_LoadEmpresasResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetConfiguracionSistemaSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetConfiguracionSistema" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetConfiguracionSistemaSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetConfiguracionSistemaResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsuarioSesionSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetUsuarioSesion" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsuarioSesionSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetUsuarioSesionResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetClientesFlashlistSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetClientesFlashlist" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetClientesFlashlistSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetClientesFlashlistResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetNichosDeMercadoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetNichosDeMercado" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetNichosDeMercadoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetNichosDeMercadoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetFraccionamientosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetFraccionamientos" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetFraccionamientosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetFraccionamientosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetExpedientesMovilVentasCCSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetExpedientesMovilVentasCC" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetExpedientesMovilVentasCCSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetExpedientesMovilVentasCCResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEvaluacionesXClienteWLCCSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetEvaluacionesXClienteWLCC" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEvaluacionesXClienteWLCCSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetEvaluacionesXClienteWLCCResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEvaluacionesXClienteSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetEvaluacionesXCliente" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEvaluacionesXClienteSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetEvaluacionesXClienteResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarEvaluacionesXClienteSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarEvaluacionesXCliente" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarEvaluacionesXClienteSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarEvaluacionesXClienteResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateEvaluacionesXClienteSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateEvaluacionesXCliente" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateEvaluacionesXClienteSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateEvaluacionesXClienteResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteEvaluacionesXClienteMovilSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteEvaluacionesXClienteMovil" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteEvaluacionesXClienteMovilSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteEvaluacionesXClienteMovilResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetMediosPublicitariosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetMediosPublicitarios" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetMediosPublicitariosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetMediosPublicitariosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEmpresasClientesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetEmpresasClientes" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEmpresasClientesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetEmpresasClientesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPromocionesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetPromociones" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPromocionesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetPromocionesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPromotorSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetPromotor" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPromotorSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetPromotorResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEquiposWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetEquiposWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetEquiposWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetEquiposWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetInsumoWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetInsumoWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetInsumoWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetInsumoWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPolizasDeSeguroMovilSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetPolizasDeSeguroMovil" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPolizasDeSeguroMovilSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetPolizasDeSeguroMovilResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesTrabajoWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesTrabajoWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetOrdenesTrabajoWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetOrdenesTrabajoWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetNextMantenimientosPreventivosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetNextMantenimientosPreventivos" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetNextMantenimientosPreventivosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetNextMantenimientosPreventivosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteClientesMovilSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteClientesMovil" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteClientesMovilSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteClientesMovilResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEmpresasClientesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillEmpresasClientes" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEmpresasClientesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillEmpresasClientesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillTiposDeCreditoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillTiposDeCredito" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillTiposDeCreditoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillTiposDeCreditoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEntidadesFederativasSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillEntidadesFederativas" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEntidadesFederativasSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillEntidadesFederativasResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillPaisesSATSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillPaisesSAT" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillPaisesSATSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillPaisesSATResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillConductoresSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillConductores" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillConductoresSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillConductoresResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_ValidarEmpresaPorRFCSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_ValidarEmpresaPorRFC" />
+  </wsdl:message>
+  <wsdl:message name="APP_ValidarEmpresaPorRFCSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_ValidarEmpresaPorRFCResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetHistorialHerramientasEnPrestamoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetHistorialHerramientasEnPrestamo" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetHistorialHerramientasEnPrestamoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetHistorialHerramientasEnPrestamoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPermisosxProcesoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetPermisosxProceso" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetPermisosxProcesoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetPermisosxProcesoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsosEquipoFlashListSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetUsosEquipoFlashList" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsosEquipoFlashListSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetUsosEquipoFlashListResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsosEquipoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetUsosEquipo" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUsosEquipoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetUsosEquipoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarUsoEquipoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarUsoEquipo" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarUsoEquipoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarUsoEquipoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateUsoEquipoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateUsoEquipo" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateUsoEquipoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateUsoEquipoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteUsoEquipoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteUsoEquipo" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteUsoEquipoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteUsoEquipoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillUnidadesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillUnidades" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillUnidadesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillUnidadesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillSucursalesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillSucursales" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillSucursalesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillSucursalesResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillObrasSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillObras" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillObrasSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillObrasResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillTurnosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillTurnos" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillTurnosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillTurnosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEquiposSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_FillEquipos" />
+  </wsdl:message>
+  <wsdl:message name="APP_FillEquiposSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_FillEquiposResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUltimoContadorEquipoSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetUltimoContadorEquipo" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetUltimoContadorEquipoSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetUltimoContadorEquipoResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventarios" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosDSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosD" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosDSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosDResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosDWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosDWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetLecturaInventariosDWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetLecturaInventariosDWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteLecturaInventariosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteLecturaInventarios" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteLecturaInventariosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteLecturaInventariosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteLecturaInventariosDSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_DeleteLecturaInventariosD" />
+  </wsdl:message>
+  <wsdl:message name="APP_DeleteLecturaInventariosDSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_DeleteLecturaInventariosDResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarLecturaInventarioSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarLecturaInventario" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarLecturaInventarioSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarLecturaInventarioResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarSalidaAlmacenSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarSalidaAlmacen" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarSalidaAlmacenSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarSalidaAlmacenResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateLecturaInventariosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_UpdateLecturaInventarios" />
+  </wsdl:message>
+  <wsdl:message name="APP_UpdateLecturaInventariosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_UpdateLecturaInventariosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosDWLSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosDWL" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosDWLSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosDWLResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosDWLAcumuladosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosDWLAcumulados" />
+  </wsdl:message>
+  <wsdl:message name="APP_GetAvancesFisicosDWLAcumuladosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_GetAvancesFisicosDWLAcumuladosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarAvancesFisicosSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarAvancesFisicos" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarAvancesFisicosSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarAvancesFisicosResponse" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarAvancesFisicosDetallesSoapIn">
+    <wsdl:part name="parameters" element="tns:APP_InsertarAvancesFisicosDetalles" />
+  </wsdl:message>
+  <wsdl:message name="APP_InsertarAvancesFisicosDetallesSoapOut">
+    <wsdl:part name="parameters" element="tns:APP_InsertarAvancesFisicosDetallesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="VSControlTotalWSSoap">
+    <wsdl:operation name="APP_UpdateAvancesFisico">
+      <wsdl:input message="tns:APP_UpdateAvancesFisicoSoapIn" />
+      <wsdl:output message="tns:APP_UpdateAvancesFisicoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesFisico">
+      <wsdl:input message="tns:APP_DeleteAvancesFisicoSoapIn" />
+      <wsdl:output message="tns:APP_DeleteAvancesFisicoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPresupuestosObra">
+      <wsdl:input message="tns:APP_GetPresupuestosObraSoapIn" />
+      <wsdl:output message="tns:APP_GetPresupuestosObraSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvanceFisicoDetalles">
+      <wsdl:input message="tns:APP_UpdateAvanceFisicoDetallesSoapIn" />
+      <wsdl:output message="tns:APP_UpdateAvanceFisicoDetallesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAccesoriosDeEquipos">
+      <wsdl:input message="tns:APP_GetAccesoriosDeEquiposSoapIn" />
+      <wsdl:output message="tns:APP_GetAccesoriosDeEquiposSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraD">
+      <wsdl:input message="tns:APP_GetOrdenesDeCompraDSoapIn" />
+      <wsdl:output message="tns:APP_GetOrdenesDeCompraDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraDWL">
+      <wsdl:input message="tns:APP_GetOrdenesDeCompraDWLSoapIn" />
+      <wsdl:output message="tns:APP_GetOrdenesDeCompraDWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosFotosWL">
+      <wsdl:input message="tns:APP_GetAvancesFisicosFotosWLSoapIn" />
+      <wsdl:output message="tns:APP_GetAvancesFisicosFotosWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesInternosFotos">
+      <wsdl:input message="tns:APP_DeleteAvancesInternosFotosSoapIn" />
+      <wsdl:output message="tns:APP_DeleteAvancesInternosFotosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertAvancesInternosFotos">
+      <wsdl:input message="tns:APP_InsertAvancesInternosFotosSoapIn" />
+      <wsdl:output message="tns:APP_InsertAvancesInternosFotosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvancesInternosFoto">
+      <wsdl:input message="tns:APP_UpdateAvancesInternosFotoSoapIn" />
+      <wsdl:output message="tns:APP_UpdateAvancesInternosFotoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesD">
+      <wsdl:input message="tns:APP_GetLotesDSoapIn" />
+      <wsdl:output message="tns:APP_GetLotesDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesXEstatus">
+      <wsdl:input message="tns:APP_GetLotesXEstatusSoapIn" />
+      <wsdl:output message="tns:APP_GetLotesXEstatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_InitSession">
+      <wsdl:input message="tns:API_InitSessionSoapIn" />
+      <wsdl:output message="tns:API_InitSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetViviendasDetalles">
+      <wsdl:input message="tns:API_GetViviendasDetallesSoapIn" />
+      <wsdl:output message="tns:API_GetViviendasDetallesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetListaViviendasyEstatus">
+      <wsdl:input message="tns:API_GetListaViviendasyEstatusSoapIn" />
+      <wsdl:output message="tns:API_GetListaViviendasyEstatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_CloseSession">
+      <wsdl:input message="tns:API_CloseSessionSoapIn" />
+      <wsdl:output message="tns:API_CloseSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetControlDocumentos">
+      <wsdl:input message="tns:API_GetControlDocumentosSoapIn" />
+      <wsdl:output message="tns:API_GetControlDocumentosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosWL">
+      <wsdl:input message="tns:API_GetAvancesFisicosWLSoapIn" />
+      <wsdl:output message="tns:API_GetAvancesFisicosWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWL">
+      <wsdl:input message="tns:API_GetAvancesFisicosDWLSoapIn" />
+      <wsdl:output message="tns:API_GetAvancesFisicosDWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWLAcumulados">
+      <wsdl:input message="tns:API_GetAvancesFisicosDWLAcumuladosSoapIn" />
+      <wsdl:output message="tns:API_GetAvancesFisicosDWLAcumuladosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosFotosWL">
+      <wsdl:input message="tns:API_GetAvancesFisicosFotosWLSoapIn" />
+      <wsdl:output message="tns:API_GetAvancesFisicosFotosWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicos">
+      <wsdl:input message="tns:API_InsertarAvancesFisicosSoapIn" />
+      <wsdl:output message="tns:API_InsertarAvancesFisicosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicosDetalles">
+      <wsdl:input message="tns:API_InsertarAvancesFisicosDetallesSoapIn" />
+      <wsdl:output message="tns:API_InsertarAvancesFisicosDetallesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertAvancesInternosFotos">
+      <wsdl:input message="tns:API_InsertAvancesInternosFotosSoapIn" />
+      <wsdl:output message="tns:API_InsertAvancesInternosFotosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvanceFisicoDetalles">
+      <wsdl:input message="tns:API_UpdateAvanceFisicoDetallesSoapIn" />
+      <wsdl:output message="tns:API_UpdateAvanceFisicoDetallesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesFisico">
+      <wsdl:input message="tns:API_UpdateAvancesFisicoSoapIn" />
+      <wsdl:output message="tns:API_UpdateAvancesFisicoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesInternosFoto">
+      <wsdl:input message="tns:API_UpdateAvancesInternosFotoSoapIn" />
+      <wsdl:output message="tns:API_UpdateAvancesInternosFotoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesFisico">
+      <wsdl:input message="tns:API_DeleteAvancesFisicoSoapIn" />
+      <wsdl:output message="tns:API_DeleteAvancesFisicoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesInternosFotos">
+      <wsdl:input message="tns:API_DeleteAvancesInternosFotosSoapIn" />
+      <wsdl:output message="tns:API_DeleteAvancesInternosFotosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetOrdenesDeCompra">
+      <wsdl:input message="tns:API_GetOrdenesDeCompraSoapIn" />
+      <wsdl:output message="tns:API_GetOrdenesDeCompraSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="API_GetInsumosPendientesDeEntregar">
+      <wsdl:input message="tns:API_GetInsumosPendientesDeEntregarSoapIn" />
+      <wsdl:output message="tns:API_GetInsumosPendientesDeEntregarSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarClienteVivienda">
+      <wsdl:input message="tns:APP_InsertarClienteViviendaSoapIn" />
+      <wsdl:output message="tns:APP_InsertarClienteViviendaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateClienteVivienda">
+      <wsdl:input message="tns:APP_UpdateClienteViviendaSoapIn" />
+      <wsdl:output message="tns:APP_UpdateClienteViviendaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_Get_ClienteVivienda">
+      <wsdl:input message="tns:APP_Get_ClienteViviendaSoapIn" />
+      <wsdl:output message="tns:APP_Get_ClienteViviendaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InitSession">
+      <wsdl:input message="tns:APP_InitSessionSoapIn" />
+      <wsdl:output message="tns:APP_InitSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_CloseSession">
+      <wsdl:input message="tns:APP_CloseSessionSoapIn" />
+      <wsdl:output message="tns:APP_CloseSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_LoadEmpresas">
+      <wsdl:input message="tns:APP_LoadEmpresasSoapIn" />
+      <wsdl:output message="tns:APP_LoadEmpresasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetConfiguracionSistema">
+      <wsdl:input message="tns:APP_GetConfiguracionSistemaSoapIn" />
+      <wsdl:output message="tns:APP_GetConfiguracionSistemaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsuarioSesion">
+      <wsdl:input message="tns:APP_GetUsuarioSesionSoapIn" />
+      <wsdl:output message="tns:APP_GetUsuarioSesionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetClientesFlashlist">
+      <wsdl:input message="tns:APP_GetClientesFlashlistSoapIn" />
+      <wsdl:output message="tns:APP_GetClientesFlashlistSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNichosDeMercado">
+      <wsdl:input message="tns:APP_GetNichosDeMercadoSoapIn" />
+      <wsdl:output message="tns:APP_GetNichosDeMercadoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetFraccionamientos">
+      <wsdl:input message="tns:APP_GetFraccionamientosSoapIn" />
+      <wsdl:output message="tns:APP_GetFraccionamientosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetExpedientesMovilVentasCC">
+      <wsdl:input message="tns:APP_GetExpedientesMovilVentasCCSoapIn" />
+      <wsdl:output message="tns:APP_GetExpedientesMovilVentasCCSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXClienteWLCC">
+      <wsdl:input message="tns:APP_GetEvaluacionesXClienteWLCCSoapIn" />
+      <wsdl:output message="tns:APP_GetEvaluacionesXClienteWLCCSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXCliente">
+      <wsdl:input message="tns:APP_GetEvaluacionesXClienteSoapIn" />
+      <wsdl:output message="tns:APP_GetEvaluacionesXClienteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarEvaluacionesXCliente">
+      <wsdl:input message="tns:APP_InsertarEvaluacionesXClienteSoapIn" />
+      <wsdl:output message="tns:APP_InsertarEvaluacionesXClienteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateEvaluacionesXCliente">
+      <wsdl:input message="tns:APP_UpdateEvaluacionesXClienteSoapIn" />
+      <wsdl:output message="tns:APP_UpdateEvaluacionesXClienteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteEvaluacionesXClienteMovil">
+      <wsdl:input message="tns:APP_DeleteEvaluacionesXClienteMovilSoapIn" />
+      <wsdl:output message="tns:APP_DeleteEvaluacionesXClienteMovilSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetMediosPublicitarios">
+      <wsdl:input message="tns:APP_GetMediosPublicitariosSoapIn" />
+      <wsdl:output message="tns:APP_GetMediosPublicitariosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEmpresasClientes">
+      <wsdl:input message="tns:APP_GetEmpresasClientesSoapIn" />
+      <wsdl:output message="tns:APP_GetEmpresasClientesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromociones">
+      <wsdl:input message="tns:APP_GetPromocionesSoapIn" />
+      <wsdl:output message="tns:APP_GetPromocionesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromotor">
+      <wsdl:input message="tns:APP_GetPromotorSoapIn" />
+      <wsdl:output message="tns:APP_GetPromotorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEquiposWL">
+      <wsdl:input message="tns:APP_GetEquiposWLSoapIn" />
+      <wsdl:output message="tns:APP_GetEquiposWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetInsumoWL">
+      <wsdl:input message="tns:APP_GetInsumoWLSoapIn" />
+      <wsdl:output message="tns:APP_GetInsumoWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPolizasDeSeguroMovil">
+      <wsdl:input message="tns:APP_GetPolizasDeSeguroMovilSoapIn" />
+      <wsdl:output message="tns:APP_GetPolizasDeSeguroMovilSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesTrabajoWL">
+      <wsdl:input message="tns:APP_GetOrdenesTrabajoWLSoapIn" />
+      <wsdl:output message="tns:APP_GetOrdenesTrabajoWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNextMantenimientosPreventivos">
+      <wsdl:input message="tns:APP_GetNextMantenimientosPreventivosSoapIn" />
+      <wsdl:output message="tns:APP_GetNextMantenimientosPreventivosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteClientesMovil">
+      <wsdl:input message="tns:APP_DeleteClientesMovilSoapIn" />
+      <wsdl:output message="tns:APP_DeleteClientesMovilSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEmpresasClientes">
+      <wsdl:input message="tns:APP_FillEmpresasClientesSoapIn" />
+      <wsdl:output message="tns:APP_FillEmpresasClientesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTiposDeCredito">
+      <wsdl:input message="tns:APP_FillTiposDeCreditoSoapIn" />
+      <wsdl:output message="tns:APP_FillTiposDeCreditoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEntidadesFederativas">
+      <wsdl:input message="tns:APP_FillEntidadesFederativasSoapIn" />
+      <wsdl:output message="tns:APP_FillEntidadesFederativasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillPaisesSAT">
+      <wsdl:input message="tns:APP_FillPaisesSATSoapIn" />
+      <wsdl:output message="tns:APP_FillPaisesSATSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillConductores">
+      <wsdl:input message="tns:APP_FillConductoresSoapIn" />
+      <wsdl:output message="tns:APP_FillConductoresSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_ValidarEmpresaPorRFC">
+      <wsdl:input message="tns:APP_ValidarEmpresaPorRFCSoapIn" />
+      <wsdl:output message="tns:APP_ValidarEmpresaPorRFCSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetHistorialHerramientasEnPrestamo">
+      <wsdl:input message="tns:APP_GetHistorialHerramientasEnPrestamoSoapIn" />
+      <wsdl:output message="tns:APP_GetHistorialHerramientasEnPrestamoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPermisosxProceso">
+      <wsdl:input message="tns:APP_GetPermisosxProcesoSoapIn" />
+      <wsdl:output message="tns:APP_GetPermisosxProcesoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipoFlashList">
+      <wsdl:input message="tns:APP_GetUsosEquipoFlashListSoapIn" />
+      <wsdl:output message="tns:APP_GetUsosEquipoFlashListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipo">
+      <wsdl:input message="tns:APP_GetUsosEquipoSoapIn" />
+      <wsdl:output message="tns:APP_GetUsosEquipoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarUsoEquipo">
+      <wsdl:input message="tns:APP_InsertarUsoEquipoSoapIn" />
+      <wsdl:output message="tns:APP_InsertarUsoEquipoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateUsoEquipo">
+      <wsdl:input message="tns:APP_UpdateUsoEquipoSoapIn" />
+      <wsdl:output message="tns:APP_UpdateUsoEquipoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteUsoEquipo">
+      <wsdl:input message="tns:APP_DeleteUsoEquipoSoapIn" />
+      <wsdl:output message="tns:APP_DeleteUsoEquipoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillUnidades">
+      <wsdl:input message="tns:APP_FillUnidadesSoapIn" />
+      <wsdl:output message="tns:APP_FillUnidadesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillSucursales">
+      <wsdl:input message="tns:APP_FillSucursalesSoapIn" />
+      <wsdl:output message="tns:APP_FillSucursalesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillObras">
+      <wsdl:input message="tns:APP_FillObrasSoapIn" />
+      <wsdl:output message="tns:APP_FillObrasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTurnos">
+      <wsdl:input message="tns:APP_FillTurnosSoapIn" />
+      <wsdl:output message="tns:APP_FillTurnosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEquipos">
+      <wsdl:input message="tns:APP_FillEquiposSoapIn" />
+      <wsdl:output message="tns:APP_FillEquiposSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUltimoContadorEquipo">
+      <wsdl:input message="tns:APP_GetUltimoContadorEquipoSoapIn" />
+      <wsdl:output message="tns:APP_GetUltimoContadorEquipoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventarios">
+      <wsdl:input message="tns:APP_GetLecturaInventariosSoapIn" />
+      <wsdl:output message="tns:APP_GetLecturaInventariosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosWL">
+      <wsdl:input message="tns:APP_GetLecturaInventariosWLSoapIn" />
+      <wsdl:output message="tns:APP_GetLecturaInventariosWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosD">
+      <wsdl:input message="tns:APP_GetLecturaInventariosDSoapIn" />
+      <wsdl:output message="tns:APP_GetLecturaInventariosDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosDWL">
+      <wsdl:input message="tns:APP_GetLecturaInventariosDWLSoapIn" />
+      <wsdl:output message="tns:APP_GetLecturaInventariosDWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventarios">
+      <wsdl:input message="tns:APP_DeleteLecturaInventariosSoapIn" />
+      <wsdl:output message="tns:APP_DeleteLecturaInventariosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventariosD">
+      <wsdl:input message="tns:APP_DeleteLecturaInventariosDSoapIn" />
+      <wsdl:output message="tns:APP_DeleteLecturaInventariosDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarLecturaInventario">
+      <wsdl:input message="tns:APP_InsertarLecturaInventarioSoapIn" />
+      <wsdl:output message="tns:APP_InsertarLecturaInventarioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarSalidaAlmacen">
+      <wsdl:input message="tns:APP_InsertarSalidaAlmacenSoapIn" />
+      <wsdl:output message="tns:APP_InsertarSalidaAlmacenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateLecturaInventarios">
+      <wsdl:input message="tns:APP_UpdateLecturaInventariosSoapIn" />
+      <wsdl:output message="tns:APP_UpdateLecturaInventariosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosWL">
+      <wsdl:input message="tns:APP_GetAvancesFisicosWLSoapIn" />
+      <wsdl:output message="tns:APP_GetAvancesFisicosWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWL">
+      <wsdl:input message="tns:APP_GetAvancesFisicosDWLSoapIn" />
+      <wsdl:output message="tns:APP_GetAvancesFisicosDWLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWLAcumulados">
+      <wsdl:input message="tns:APP_GetAvancesFisicosDWLAcumuladosSoapIn" />
+      <wsdl:output message="tns:APP_GetAvancesFisicosDWLAcumuladosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicos">
+      <wsdl:input message="tns:APP_InsertarAvancesFisicosSoapIn" />
+      <wsdl:output message="tns:APP_InsertarAvancesFisicosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicosDetalles">
+      <wsdl:input message="tns:APP_InsertarAvancesFisicosDetallesSoapIn" />
+      <wsdl:output message="tns:APP_InsertarAvancesFisicosDetallesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="VSControlTotalWSSoap" type="tns:VSControlTotalWSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="APP_UpdateAvancesFisico">
+      <soap:operation soapAction="http://localhost/APP_UpdateAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesFisico">
+      <soap:operation soapAction="http://localhost/APP_DeleteAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPresupuestosObra">
+      <soap:operation soapAction="http://localhost/APP_GetPresupuestosObra" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvanceFisicoDetalles">
+      <soap:operation soapAction="http://localhost/APP_UpdateAvanceFisicoDetalles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAccesoriosDeEquipos">
+      <soap:operation soapAction="http://localhost/APP_GetAccesoriosDeEquipos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraD">
+      <soap:operation soapAction="http://localhost/APP_GetOrdenesDeCompraD" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraDWL">
+      <soap:operation soapAction="http://localhost/APP_GetOrdenesDeCompraDWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosFotosWL">
+      <soap:operation soapAction="http://localhost/APP_GetAvancesFisicosFotosWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesInternosFotos">
+      <soap:operation soapAction="http://localhost/APP_DeleteAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertAvancesInternosFotos">
+      <soap:operation soapAction="http://localhost/APP_InsertAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvancesInternosFoto">
+      <soap:operation soapAction="http://localhost/APP_UpdateAvancesInternosFoto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesD">
+      <soap:operation soapAction="http://localhost/APP_GetLotesD" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesXEstatus">
+      <soap:operation soapAction="http://localhost/APP_GetLotesXEstatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InitSession">
+      <soap:operation soapAction="http://localhost/API_InitSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetViviendasDetalles">
+      <soap:operation soapAction="http://localhost/API_GetViviendasDetalles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetListaViviendasyEstatus">
+      <soap:operation soapAction="http://localhost/API_GetListaViviendasyEstatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_CloseSession">
+      <soap:operation soapAction="http://localhost/API_CloseSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetControlDocumentos">
+      <soap:operation soapAction="http://localhost/API_GetControlDocumentos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosWL">
+      <soap:operation soapAction="http://localhost/API_GetAvancesFisicosWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWL">
+      <soap:operation soapAction="http://localhost/API_GetAvancesFisicosDWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWLAcumulados">
+      <soap:operation soapAction="http://localhost/API_GetAvancesFisicosDWLAcumulados" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosFotosWL">
+      <soap:operation soapAction="http://localhost/API_GetAvancesFisicosFotosWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicos">
+      <soap:operation soapAction="http://localhost/API_InsertarAvancesFisicos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicosDetalles">
+      <soap:operation soapAction="http://localhost/API_InsertarAvancesFisicosDetalles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertAvancesInternosFotos">
+      <soap:operation soapAction="http://localhost/API_InsertAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvanceFisicoDetalles">
+      <soap:operation soapAction="http://localhost/API_UpdateAvanceFisicoDetalles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesFisico">
+      <soap:operation soapAction="http://localhost/API_UpdateAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesInternosFoto">
+      <soap:operation soapAction="http://localhost/API_UpdateAvancesInternosFoto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesFisico">
+      <soap:operation soapAction="http://localhost/API_DeleteAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesInternosFotos">
+      <soap:operation soapAction="http://localhost/API_DeleteAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetOrdenesDeCompra">
+      <soap:operation soapAction="http://localhost/API_GetOrdenesDeCompra" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetInsumosPendientesDeEntregar">
+      <soap:operation soapAction="http://localhost/API_GetInsumosPendientesDeEntregar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarClienteVivienda">
+      <soap:operation soapAction="http://localhost/APP_InsertarClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateClienteVivienda">
+      <soap:operation soapAction="http://localhost/APP_UpdateClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_Get_ClienteVivienda">
+      <soap:operation soapAction="http://localhost/APP_Get_ClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InitSession">
+      <soap:operation soapAction="http://localhost/APP_InitSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_CloseSession">
+      <soap:operation soapAction="http://localhost/APP_CloseSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_LoadEmpresas">
+      <soap:operation soapAction="http://localhost/APP_LoadEmpresas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetConfiguracionSistema">
+      <soap:operation soapAction="http://localhost/APP_GetConfiguracionSistema" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsuarioSesion">
+      <soap:operation soapAction="http://localhost/APP_GetUsuarioSesion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetClientesFlashlist">
+      <soap:operation soapAction="http://localhost/APP_GetClientesFlashlist" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNichosDeMercado">
+      <soap:operation soapAction="http://localhost/APP_GetNichosDeMercado" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetFraccionamientos">
+      <soap:operation soapAction="http://localhost/APP_GetFraccionamientos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetExpedientesMovilVentasCC">
+      <soap:operation soapAction="http://localhost/APP_GetExpedientesMovilVentasCC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXClienteWLCC">
+      <soap:operation soapAction="http://localhost/APP_GetEvaluacionesXClienteWLCC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXCliente">
+      <soap:operation soapAction="http://localhost/APP_GetEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarEvaluacionesXCliente">
+      <soap:operation soapAction="http://localhost/APP_InsertarEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateEvaluacionesXCliente">
+      <soap:operation soapAction="http://localhost/APP_UpdateEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteEvaluacionesXClienteMovil">
+      <soap:operation soapAction="http://localhost/APP_DeleteEvaluacionesXClienteMovil" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetMediosPublicitarios">
+      <soap:operation soapAction="http://localhost/APP_GetMediosPublicitarios" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEmpresasClientes">
+      <soap:operation soapAction="http://localhost/APP_GetEmpresasClientes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromociones">
+      <soap:operation soapAction="http://localhost/APP_GetPromociones" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromotor">
+      <soap:operation soapAction="http://localhost/APP_GetPromotor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEquiposWL">
+      <soap:operation soapAction="http://localhost/APP_GetEquiposWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetInsumoWL">
+      <soap:operation soapAction="http://localhost/APP_GetInsumoWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPolizasDeSeguroMovil">
+      <soap:operation soapAction="http://localhost/APP_GetPolizasDeSeguroMovil" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesTrabajoWL">
+      <soap:operation soapAction="http://localhost/APP_GetOrdenesTrabajoWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNextMantenimientosPreventivos">
+      <soap:operation soapAction="http://localhost/APP_GetNextMantenimientosPreventivos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteClientesMovil">
+      <soap:operation soapAction="http://localhost/APP_DeleteClientesMovil" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEmpresasClientes">
+      <soap:operation soapAction="http://localhost/APP_FillEmpresasClientes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTiposDeCredito">
+      <soap:operation soapAction="http://localhost/APP_FillTiposDeCredito" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEntidadesFederativas">
+      <soap:operation soapAction="http://localhost/APP_FillEntidadesFederativas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillPaisesSAT">
+      <soap:operation soapAction="http://localhost/APP_FillPaisesSAT" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillConductores">
+      <soap:operation soapAction="http://localhost/APP_FillConductores" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_ValidarEmpresaPorRFC">
+      <soap:operation soapAction="http://localhost/APP_ValidarEmpresaPorRFC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetHistorialHerramientasEnPrestamo">
+      <soap:operation soapAction="http://localhost/APP_GetHistorialHerramientasEnPrestamo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPermisosxProceso">
+      <soap:operation soapAction="http://localhost/APP_GetPermisosxProceso" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipoFlashList">
+      <soap:operation soapAction="http://localhost/APP_GetUsosEquipoFlashList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipo">
+      <soap:operation soapAction="http://localhost/APP_GetUsosEquipo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarUsoEquipo">
+      <soap:operation soapAction="http://localhost/APP_InsertarUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateUsoEquipo">
+      <soap:operation soapAction="http://localhost/APP_UpdateUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteUsoEquipo">
+      <soap:operation soapAction="http://localhost/APP_DeleteUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillUnidades">
+      <soap:operation soapAction="http://localhost/APP_FillUnidades" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillSucursales">
+      <soap:operation soapAction="http://localhost/APP_FillSucursales" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillObras">
+      <soap:operation soapAction="http://localhost/APP_FillObras" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTurnos">
+      <soap:operation soapAction="http://localhost/APP_FillTurnos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEquipos">
+      <soap:operation soapAction="http://localhost/APP_FillEquipos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUltimoContadorEquipo">
+      <soap:operation soapAction="http://localhost/APP_GetUltimoContadorEquipo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventarios">
+      <soap:operation soapAction="http://localhost/APP_GetLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosWL">
+      <soap:operation soapAction="http://localhost/APP_GetLecturaInventariosWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosD">
+      <soap:operation soapAction="http://localhost/APP_GetLecturaInventariosD" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosDWL">
+      <soap:operation soapAction="http://localhost/APP_GetLecturaInventariosDWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventarios">
+      <soap:operation soapAction="http://localhost/APP_DeleteLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventariosD">
+      <soap:operation soapAction="http://localhost/APP_DeleteLecturaInventariosD" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarLecturaInventario">
+      <soap:operation soapAction="http://localhost/APP_InsertarLecturaInventario" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarSalidaAlmacen">
+      <soap:operation soapAction="http://localhost/APP_InsertarSalidaAlmacen" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateLecturaInventarios">
+      <soap:operation soapAction="http://localhost/APP_UpdateLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosWL">
+      <soap:operation soapAction="http://localhost/APP_GetAvancesFisicosWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWL">
+      <soap:operation soapAction="http://localhost/APP_GetAvancesFisicosDWL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWLAcumulados">
+      <soap:operation soapAction="http://localhost/APP_GetAvancesFisicosDWLAcumulados" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicos">
+      <soap:operation soapAction="http://localhost/APP_InsertarAvancesFisicos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicosDetalles">
+      <soap:operation soapAction="http://localhost/APP_InsertarAvancesFisicosDetalles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="VSControlTotalWSSoap12" type="tns:VSControlTotalWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="APP_UpdateAvancesFisico">
+      <soap12:operation soapAction="http://localhost/APP_UpdateAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesFisico">
+      <soap12:operation soapAction="http://localhost/APP_DeleteAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPresupuestosObra">
+      <soap12:operation soapAction="http://localhost/APP_GetPresupuestosObra" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvanceFisicoDetalles">
+      <soap12:operation soapAction="http://localhost/APP_UpdateAvanceFisicoDetalles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAccesoriosDeEquipos">
+      <soap12:operation soapAction="http://localhost/APP_GetAccesoriosDeEquipos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraD">
+      <soap12:operation soapAction="http://localhost/APP_GetOrdenesDeCompraD" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesDeCompraDWL">
+      <soap12:operation soapAction="http://localhost/APP_GetOrdenesDeCompraDWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosFotosWL">
+      <soap12:operation soapAction="http://localhost/APP_GetAvancesFisicosFotosWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteAvancesInternosFotos">
+      <soap12:operation soapAction="http://localhost/APP_DeleteAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertAvancesInternosFotos">
+      <soap12:operation soapAction="http://localhost/APP_InsertAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateAvancesInternosFoto">
+      <soap12:operation soapAction="http://localhost/APP_UpdateAvancesInternosFoto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesD">
+      <soap12:operation soapAction="http://localhost/APP_GetLotesD" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLotesXEstatus">
+      <soap12:operation soapAction="http://localhost/APP_GetLotesXEstatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InitSession">
+      <soap12:operation soapAction="http://localhost/API_InitSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetViviendasDetalles">
+      <soap12:operation soapAction="http://localhost/API_GetViviendasDetalles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetListaViviendasyEstatus">
+      <soap12:operation soapAction="http://localhost/API_GetListaViviendasyEstatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_CloseSession">
+      <soap12:operation soapAction="http://localhost/API_CloseSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetControlDocumentos">
+      <soap12:operation soapAction="http://localhost/API_GetControlDocumentos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosWL">
+      <soap12:operation soapAction="http://localhost/API_GetAvancesFisicosWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWL">
+      <soap12:operation soapAction="http://localhost/API_GetAvancesFisicosDWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosDWLAcumulados">
+      <soap12:operation soapAction="http://localhost/API_GetAvancesFisicosDWLAcumulados" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetAvancesFisicosFotosWL">
+      <soap12:operation soapAction="http://localhost/API_GetAvancesFisicosFotosWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicos">
+      <soap12:operation soapAction="http://localhost/API_InsertarAvancesFisicos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertarAvancesFisicosDetalles">
+      <soap12:operation soapAction="http://localhost/API_InsertarAvancesFisicosDetalles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_InsertAvancesInternosFotos">
+      <soap12:operation soapAction="http://localhost/API_InsertAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvanceFisicoDetalles">
+      <soap12:operation soapAction="http://localhost/API_UpdateAvanceFisicoDetalles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesFisico">
+      <soap12:operation soapAction="http://localhost/API_UpdateAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_UpdateAvancesInternosFoto">
+      <soap12:operation soapAction="http://localhost/API_UpdateAvancesInternosFoto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesFisico">
+      <soap12:operation soapAction="http://localhost/API_DeleteAvancesFisico" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_DeleteAvancesInternosFotos">
+      <soap12:operation soapAction="http://localhost/API_DeleteAvancesInternosFotos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetOrdenesDeCompra">
+      <soap12:operation soapAction="http://localhost/API_GetOrdenesDeCompra" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="API_GetInsumosPendientesDeEntregar">
+      <soap12:operation soapAction="http://localhost/API_GetInsumosPendientesDeEntregar" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarClienteVivienda">
+      <soap12:operation soapAction="http://localhost/APP_InsertarClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateClienteVivienda">
+      <soap12:operation soapAction="http://localhost/APP_UpdateClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_Get_ClienteVivienda">
+      <soap12:operation soapAction="http://localhost/APP_Get_ClienteVivienda" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InitSession">
+      <soap12:operation soapAction="http://localhost/APP_InitSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_CloseSession">
+      <soap12:operation soapAction="http://localhost/APP_CloseSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_LoadEmpresas">
+      <soap12:operation soapAction="http://localhost/APP_LoadEmpresas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetConfiguracionSistema">
+      <soap12:operation soapAction="http://localhost/APP_GetConfiguracionSistema" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsuarioSesion">
+      <soap12:operation soapAction="http://localhost/APP_GetUsuarioSesion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetClientesFlashlist">
+      <soap12:operation soapAction="http://localhost/APP_GetClientesFlashlist" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNichosDeMercado">
+      <soap12:operation soapAction="http://localhost/APP_GetNichosDeMercado" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetFraccionamientos">
+      <soap12:operation soapAction="http://localhost/APP_GetFraccionamientos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetExpedientesMovilVentasCC">
+      <soap12:operation soapAction="http://localhost/APP_GetExpedientesMovilVentasCC" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXClienteWLCC">
+      <soap12:operation soapAction="http://localhost/APP_GetEvaluacionesXClienteWLCC" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEvaluacionesXCliente">
+      <soap12:operation soapAction="http://localhost/APP_GetEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarEvaluacionesXCliente">
+      <soap12:operation soapAction="http://localhost/APP_InsertarEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateEvaluacionesXCliente">
+      <soap12:operation soapAction="http://localhost/APP_UpdateEvaluacionesXCliente" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteEvaluacionesXClienteMovil">
+      <soap12:operation soapAction="http://localhost/APP_DeleteEvaluacionesXClienteMovil" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetMediosPublicitarios">
+      <soap12:operation soapAction="http://localhost/APP_GetMediosPublicitarios" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEmpresasClientes">
+      <soap12:operation soapAction="http://localhost/APP_GetEmpresasClientes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromociones">
+      <soap12:operation soapAction="http://localhost/APP_GetPromociones" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPromotor">
+      <soap12:operation soapAction="http://localhost/APP_GetPromotor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetEquiposWL">
+      <soap12:operation soapAction="http://localhost/APP_GetEquiposWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetInsumoWL">
+      <soap12:operation soapAction="http://localhost/APP_GetInsumoWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPolizasDeSeguroMovil">
+      <soap12:operation soapAction="http://localhost/APP_GetPolizasDeSeguroMovil" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetOrdenesTrabajoWL">
+      <soap12:operation soapAction="http://localhost/APP_GetOrdenesTrabajoWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetNextMantenimientosPreventivos">
+      <soap12:operation soapAction="http://localhost/APP_GetNextMantenimientosPreventivos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteClientesMovil">
+      <soap12:operation soapAction="http://localhost/APP_DeleteClientesMovil" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEmpresasClientes">
+      <soap12:operation soapAction="http://localhost/APP_FillEmpresasClientes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTiposDeCredito">
+      <soap12:operation soapAction="http://localhost/APP_FillTiposDeCredito" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEntidadesFederativas">
+      <soap12:operation soapAction="http://localhost/APP_FillEntidadesFederativas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillPaisesSAT">
+      <soap12:operation soapAction="http://localhost/APP_FillPaisesSAT" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillConductores">
+      <soap12:operation soapAction="http://localhost/APP_FillConductores" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_ValidarEmpresaPorRFC">
+      <soap12:operation soapAction="http://localhost/APP_ValidarEmpresaPorRFC" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetHistorialHerramientasEnPrestamo">
+      <soap12:operation soapAction="http://localhost/APP_GetHistorialHerramientasEnPrestamo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetPermisosxProceso">
+      <soap12:operation soapAction="http://localhost/APP_GetPermisosxProceso" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipoFlashList">
+      <soap12:operation soapAction="http://localhost/APP_GetUsosEquipoFlashList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUsosEquipo">
+      <soap12:operation soapAction="http://localhost/APP_GetUsosEquipo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarUsoEquipo">
+      <soap12:operation soapAction="http://localhost/APP_InsertarUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateUsoEquipo">
+      <soap12:operation soapAction="http://localhost/APP_UpdateUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteUsoEquipo">
+      <soap12:operation soapAction="http://localhost/APP_DeleteUsoEquipo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillUnidades">
+      <soap12:operation soapAction="http://localhost/APP_FillUnidades" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillSucursales">
+      <soap12:operation soapAction="http://localhost/APP_FillSucursales" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillObras">
+      <soap12:operation soapAction="http://localhost/APP_FillObras" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillTurnos">
+      <soap12:operation soapAction="http://localhost/APP_FillTurnos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_FillEquipos">
+      <soap12:operation soapAction="http://localhost/APP_FillEquipos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetUltimoContadorEquipo">
+      <soap12:operation soapAction="http://localhost/APP_GetUltimoContadorEquipo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventarios">
+      <soap12:operation soapAction="http://localhost/APP_GetLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosWL">
+      <soap12:operation soapAction="http://localhost/APP_GetLecturaInventariosWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosD">
+      <soap12:operation soapAction="http://localhost/APP_GetLecturaInventariosD" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetLecturaInventariosDWL">
+      <soap12:operation soapAction="http://localhost/APP_GetLecturaInventariosDWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventarios">
+      <soap12:operation soapAction="http://localhost/APP_DeleteLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_DeleteLecturaInventariosD">
+      <soap12:operation soapAction="http://localhost/APP_DeleteLecturaInventariosD" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarLecturaInventario">
+      <soap12:operation soapAction="http://localhost/APP_InsertarLecturaInventario" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarSalidaAlmacen">
+      <soap12:operation soapAction="http://localhost/APP_InsertarSalidaAlmacen" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_UpdateLecturaInventarios">
+      <soap12:operation soapAction="http://localhost/APP_UpdateLecturaInventarios" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosWL">
+      <soap12:operation soapAction="http://localhost/APP_GetAvancesFisicosWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWL">
+      <soap12:operation soapAction="http://localhost/APP_GetAvancesFisicosDWL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_GetAvancesFisicosDWLAcumulados">
+      <soap12:operation soapAction="http://localhost/APP_GetAvancesFisicosDWLAcumulados" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicos">
+      <soap12:operation soapAction="http://localhost/APP_InsertarAvancesFisicos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="APP_InsertarAvancesFisicosDetalles">
+      <soap12:operation soapAction="http://localhost/APP_InsertarAvancesFisicosDetalles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="VSControlTotalWS">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Servicio Web del sistema VSControlTotal</wsdl:documentation>
+    <wsdl:port name="VSControlTotalWSSoap" binding="tns:VSControlTotalWSSoap">
+      <soap:address location="http://186.96.19.135/VSControlTotalWS/VSControlTotalWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="VSControlTotalWSSoap12" binding="tns:VSControlTotalWSSoap12">
+      <soap12:address location="http://186.96.19.135/VSControlTotalWS/VSControlTotalWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

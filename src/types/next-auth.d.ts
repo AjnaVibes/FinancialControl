@@ -9,7 +9,11 @@ declare module "next-auth" {
       email: string;
       name?: string | null;
       image?: string | null;
-      role: string;
+      role: string | null;
+      roleId?: string | null;
+      isActive?: boolean;
+      hasCompanies?: boolean;
+      isPending?: boolean;
       permissions: Array<{
         resource: string;
         action: string;
@@ -19,14 +23,22 @@ declare module "next-auth" {
 
   interface User {
     id: string;
-    role?: string;
+    role?: string | null;
+    roleId?: string | null;
+    isActive?: boolean;
+    hasCompanies?: boolean;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
-    role: string;
+    email?: string;
+    name?: string | null;
+    role: string | null;
+    roleId?: string | null;
+    isActive?: boolean;
+    hasCompanies?: boolean;
     permissions: Array<{
       resource: string;
       action: string;

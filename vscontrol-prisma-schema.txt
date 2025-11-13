@@ -1,0 +1,112 @@
+// Esquema de Prisma para VS Control
+// Generado automáticamente desde la API de VS Control
+
+model VSC_Empresas {
+  id_empresa Int @id @default(autoincrement()) @map("id_empresa")
+  nombre String
+  rfc String?
+  direccion String?
+  telefono String?
+  activo Boolean @default(true)
+
+  @@map("VSC_Empresas")
+}
+
+model VSC_Viviendas {
+  id_vivienda Int @id @default(autoincrement()) @map("id_vivienda")
+  id_proyecto Int @map("id_proyecto")
+  numero_vivienda String @map("numero_vivienda")
+  manzana String?
+  lote String?
+  prototipo String?
+  estatus String?
+  superficie_terreno Float? @map("superficie_terreno")
+  superficie_construccion Float? @map("superficie_construccion")
+  precio_venta Float? @map("precio_venta")
+  fecha_inicio DateTime? @map("fecha_inicio")
+  fecha_terminacion DateTime? @map("fecha_terminacion")
+  observaciones String?
+
+  @@map("VSC_Viviendas")
+}
+
+model VSC_Clientes {
+  id_cliente Int @id @default(autoincrement()) @map("id_cliente")
+  nombre String
+  apellido_paterno String? @map("apellido_paterno")
+  apellido_materno String? @map("apellido_materno")
+  rfc String?
+  curp String?
+  telefono String?
+  celular String?
+  email String?
+  direccion String?
+  fecha_registro DateTime @default(now()) @map("fecha_registro")
+
+  @@map("VSC_Clientes")
+}
+
+model VSC_ClienteVivienda {
+  id Int @id @default(autoincrement())
+  id_cliente Int @map("id_cliente")
+  id_vivienda Int @map("id_vivienda")
+  fecha_asignacion DateTime @map("fecha_asignacion")
+  tipo_operacion String? @map("tipo_operacion")
+  monto_operacion Float? @map("monto_operacion")
+  estatus String?
+
+  @@map("VSC_ClienteVivienda")
+}
+
+model VSC_AvancesFisicos {
+  id_avance Int @id @default(autoincrement()) @map("id_avance")
+  id_vivienda Int @map("id_vivienda")
+  fecha_avance DateTime @map("fecha_avance")
+  porcentaje_avance Float @map("porcentaje_avance")
+  descripcion String?
+  observaciones String?
+  usuario_registro String? @map("usuario_registro")
+
+  @@map("VSC_AvancesFisicos")
+}
+
+model VSC_OrdenesCompra {
+  id_orden Int @id @default(autoincrement()) @map("id_orden")
+  numero_orden String @map("numero_orden")
+  fecha_orden DateTime @map("fecha_orden")
+  proveedor String?
+  monto_total Float? @map("monto_total")
+  estatus String?
+  observaciones String?
+
+  @@map("VSC_OrdenesCompra")
+}
+
+model VSC_ControlDocumentos {
+  id_documento Int @id @default(autoincrement()) @map("id_documento")
+  id_vivienda Int? @map("id_vivienda")
+  id_cliente Int? @map("id_cliente")
+  tipo_documento String @map("tipo_documento")
+  numero_documento String? @map("numero_documento")
+  fecha_documento DateTime? @map("fecha_documento")
+  fecha_vencimiento DateTime? @map("fecha_vencimiento")
+  estatus String?
+  ruta_archivo String? @map("ruta_archivo")
+  observaciones String?
+
+  @@map("VSC_ControlDocumentos")
+}
+
+model VSC_Proyectos {
+  id_proyecto Int @id @default(autoincrement()) @map("id_proyecto")
+  nombre String
+  descripcion String?
+  ubicacion String?
+  fecha_inicio DateTime? @map("fecha_inicio")
+  fecha_fin_estimada DateTime? @map("fecha_fin_estimada")
+  total_viviendas Int? @map("total_viviendas")
+  estatus String?
+
+  @@map("VSC_Proyectos")
+}
+

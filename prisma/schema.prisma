@@ -147,99 +147,103 @@ model SyncConfig {
 }
 
 model Client {
-  id                      Int       @id @default(autoincrement())
-  name                    String?   @db.Text
-  birthday                DateTime?
-  email                   String?   @db.VarChar(255)
-  address                 String?   @db.Text
-  birthplace              String?   @db.Text
-  curp                    String?   @db.VarChar(255)
-  electorKey              String?   @map("elector_key") @db.Text
-  mobile                  String?   @db.Text
-  phone                   String?   @db.Text
-  fLastname               String?   @map("f_lastname") @db.Text
-  mLastname               String?   @map("m_lastname") @db.Text
-  state                   String?   @db.Text
-  maritalStatus           Int?      @map("marital_status")
-  maritalRegistry         Int?      @map("marital_registry")
-  street                  String?   @db.Text
-  interiorNumber          String?   @map("interior_number") @db.Text
-  externalNumber          String?   @map("external_number") @db.Text
-  suburb                  String?   @db.Text
-  postalCode              String?   @map("postal_code") @db.Text
-  municipality            String?   @db.Text
-  near                    String?   @db.Text
-  companyName             String?   @map("company_name") @db.Text
-  companyStreet           String?   @map("company_street") @db.Text
-  companyExternalNumber   String?   @map("company_external_number") @db.Text
-  companyInteriorNumber   String?   @map("company_interior_number") @db.Text
-  companySuburb           String?   @map("company_suburb") @db.Text
-  companyPostalCode       String?   @map("company_postal_code") @db.Text
-  companyPhone            String?   @map("company_phone") @db.Text
-  companyMunicipality     String?   @map("company_municipality") @db.Text
-  companyState            String?   @map("company_state") @db.Text
-  companyNear             String?   @map("company_near") @db.Text
-  companyMobile           String?   @map("company_mobile") @db.Text
-  job                     String?   @db.Text
-  antiquity               String?   @db.Text
-  monthlyIncome           BigInt?   @map("monthly_income")
-  additionalIncome        BigInt?   @map("additional_income")
-  fixedCosts              Int?      @map("fixed_costs")
-  bank                    String?   @db.Text
-  gender                  String?   @db.Text
-  affiliationNumber       String?   @map("affiliation_number") @db.Text
-  rfc                     String?   @db.Text
-  isRented                String?   @map("is_rented") @db.Text
-  timeRented              String?   @map("time_rented") @db.Text
-  monthlyRent             Int?      @map("monthly_rent")
-  birthState              String?   @map("birth_state") @db.Text
-  isForeign               Boolean?  @map("is_foreign")
-  createdBy               Int?      @map("created_by")
-  workForeign             Boolean?  @map("work_foreign")
-  companyRfc              String?   @map("company_rfc") @db.Text
-  businessName            String?   @map("business_name") @db.Text
-  adquisition             String?   @db.Text
-  companyBussiness        String?   @map("company_bussiness") @db.Text
-  maritalRegimen          Int?      @map("marital_regimen")
-  workingTimeStart        DateTime? @map("working_time_start") @db.Time(0)
-  workingTimeEnd          DateTime? @map("working_time_end") @db.Time(0)
-  location                String?   @db.Text
-  credit                  String?   @db.Text
-  creditType              String?   @map("credit_type") @db.Text
-  passport                String?   @db.Text
-  ineNumber               String?   @map("ine_number") @db.Text
-  user                    Int?
-  createdAt               DateTime? @map("created_at")
-  updatedAt               DateTime? @map("updated_at")
-  companyBusiness         String?   @map("company_business") @db.VarChar(255)
-  beneficiary             Int?
-  completionDate          DateTime? @map("completion_date")
-  clientStatus            Int?      @map("client_status")
-  idmex                   String?   @db.VarChar(255)
-  whatsappNumberId        String?   @map("whatsapp_number_id") @db.VarChar(255)
-  whatsappRecipientNumber String?   @map("whatsapp_recipient_number") @db.VarChar(255)
-  messengerConversationId String?   @map("messenger_conversation_id") @db.VarChar(255)
-  messengerRecipientId    String?   @map("messenger_recipient_id") @db.VarChar(255)
-  campaing                Int?
-  externalId              String?   @map("external_id") @db.VarChar(255)
-  campaignFormDate        DateTime? @map("campaign_form_date")
-  instagramId             String?   @map("instagram_id") @db.VarChar(255)
-  lastContact             DateTime? @map("last_contact")
-  changePhaseDate         DateTime? @map("change_phase_date")
-  lastPhipipelinePhase    String?   @map("last_phipeline_phase") @db.VarChar(255)
-  assignedAt              DateTime? @map("assigned_at")
-  movePhaseBy             Int?      @map("move_phase_by")
-  nationality             String?   @db.VarChar(255)
+  id                        Int       @id
+  name                      String?   @db.Text
+  birthday                  DateTime? @db.Date
+  email                     String?   @db.Text
+  address                   String?   @db.Text
+  birthplace                String?   @db.Text
+  curp                      String?   @db.Text
+  electorKey                String?   @map("elector_key") @db.Text
+  mobile                    String?   @db.Text
+  phone                     String?   @db.Text
+  fLastname                 String?   @map("f_lastname") @db.Text
+  mLastname                 String?   @map("m_lastname") @db.Text
+  state                     String?   @db.Text
+  maritalStatus             Int?      @map("marital_status")
+  maritalRegistry           Int?      @map("marital_registry")
+  street                    String?   @db.Text
+  interiorNumber            String?   @map("interior_number") @db.Text
+  externalNumber            String?   @map("external_number") @db.Text
+  suburb                    String?   @db.Text
+  postalCode                String?   @map("postal_code") @db.Text
+  municipality              String?   @db.Text
+  near                      String?   @db.Text
+  
+  // Datos de empresa
+  companyName               String?   @map("company_name") @db.Text
+  companyStreet             String?   @map("company_street") @db.Text
+  companyExternalNumber     String?   @map("company_external_number") @db.Text
+  companyInteriorNumber     String?   @map("company_interior_number") @db.Text
+  companySuburb             String?   @map("company_suburb") @db.Text
+  companyPostalCode         String?   @map("company_postal_code") @db.Text
+  companyPhone              String?   @map("company_phone") @db.Text
+  companyMunicipality       String?   @map("company_municipality") @db.Text
+  companyState              String?   @map("company_state") @db.Text
+  companyNear               String?   @map("company_near") @db.Text
+  companyMobile             String?   @map("company_mobile") @db.Text
+  job                       String?   @db.Text
+  antiquity                 String?   @db.Text
+  monthlyIncome             Int?      @map("monthly_income")
+  additionalIncome          Int?      @map("additional_income")
+  fixedCosts                Int?      @map("fixed_costs")
+  bank                      String?   @db.Text
+  gender                    String?   @db.Text
+  affiliationNumber         String?   @map("affiliation_number") @db.Text
+  rfc                       String?   @db.Text
+  isRented                  String?   @map("is_rented") @db.Text
+  timeRented                String?   @map("time_rented") @db.Text
+  monthlyRent               Int?      @map("monthly_rent")
+  birthState                String?   @map("birth_state") @db.Text
+  isForeign                 Boolean?  @map("is_foreign")
+  createdBy                 Int?      @map("created_by")
+  workForeign               Boolean?  @map("work_foreign")
+  
+  // 🔧 CORREGIDO: String en lugar de DateTime
+  companyRfc                String?   @map("company_rfc") @db.Text
+  businessName              String?   @map("business_name") @db.Text
+  
+  adquisition               String?   @db.Text
+  companyBussiness          String?   @map("company_bussiness") @db.Text
+  maritalRegimen            Int?      @map("marital_regimen")
+  
+  
+  
+  location                  String?   @db.Text
+  credit                    String?   @db.Text
+  creditType                String?   @map("credit_type") @db.Text
+  
+  // 🔧 CORREGIDO: String en lugar de Int
+  passport                  String?   @db.Text
+  
+  ineNumber                 String?   @map("ine_number") @db.Text
+  user                      Int?
+  
+  // Timestamps
+  createdAt                 DateTime? @map("created_at")
+  updatedAt                 DateTime? @map("updated_at")
+  
+  // Campos adicionales
+  companyBusiness           String?   @map("company_business") @db.VarChar(255)
+  beneficiary               Int?
+  completionDate            DateTime? @map("completion_date")
+  clientStatus              Int?      @map("client_status")
+  idmex                     String?   @db.VarChar(255)
+  whatsappNumberId          String?   @map("whatsapp_number_id") @db.VarChar(255)
+  whatsappRecipientNumber   String?   @map("whatsapp_recipient_number") @db.VarChar(255)
+  messengerConversationId   String?   @map("messenger_conversation_id") @db.VarChar(255)
+  messengerRecipientId      String?   @map("messenger_recipient_id") @db.VarChar(255)
+  campaing                  Int?
+  externalId                String?   @map("external_id") @db.VarChar(255)
+  campaignFormDate          DateTime? @map("campaign_form_date")
+  instagramId               String?   @map("instagram_id") @db.VarChar(255)
+  lastContact               DateTime? @map("last_contact")
+  changePhaseDate           DateTime? @map("change_phase_date")
+  lastPhipipelinePhase      String?   @map("last_phipeline_phase") @db.VarChar(255)
+  assignedAt                DateTime? @map("assigned_at")
+  movePhaseBy               Int?      @map("move_phase_by")
+  nationality               String?   @db.VarChar(255)
 
-  @@index([email])
-  @@index([curp])
-  @@index([createdAt])
-  @@index([updatedAt])
-  @@index([clientStatus])
-  @@index([maritalStatus])
-  @@index([maritalRegistry])
-  @@index([maritalRegimen])
-  @@index([beneficiary])
   @@map("clients")
 }
 
@@ -994,4 +998,309 @@ model MovementMethod {
 
   @@index([agency])
   @@map("movement_methods")
+}
+
+// NUEVAS TABLAS PARA FINANCIAMIENTOS
+
+model Credit {
+  id                   String    @id @db.VarChar(50)
+  empresa              String    @db.VarChar(255)
+  proyecto             String    @db.VarChar(255)
+  tipoCreditoId        Int       @map("tipo_credito_id")
+  etapa                Int
+  estadoId             Int       @map("estado_id")
+  fechaContrato        DateTime? @map("fecha_contrato") @db.Date
+  tipoFinanciamientoId Int       @map("tipo_financiamiento_id")
+  institucionId        Int       @map("institucion_id")
+  montoTotal           Decimal   @map("monto_total") @db.Decimal(15, 2)
+  divisa               String    @db.VarChar(10)
+  dispuesto            Decimal?  @db.Decimal(15, 2)
+  porcentajeDispuesto  Float?    @map("porcentaje_dispuesto")
+  porDisponer          Decimal?  @map("por_disponer") @db.Decimal(15, 2)
+  porcentajePorDisponer Float?   @map("porcentaje_por_disponer")
+  pagado               Decimal?  @db.Decimal(15, 2)
+  porcentajePagado     Float?    @map("porcentaje_pagado")
+  saldo                Decimal?  @db.Decimal(15, 2)
+  porcentajeSaldo      Float?    @map("porcentaje_saldo")
+  porcentajeAnticipo   Float?    @map("porcentaje_anticipo")
+  tasaInteres          Float?    @map("tasa_interes")
+  porcentajeComisiones Float?    @map("porcentaje_comisiones")
+  plazoMeses           Int?      @map("plazo_meses")
+  ampliacionMeses      Int?      @map("ampliacion_meses")
+  fechaVencimiento     DateTime? @map("fecha_vencimiento") @db.Date
+  aforo                Float?
+  numeroViviendas      Int?      @map("numero_viviendas")
+  numeroLocales        Int?      @map("numero_locales")
+  valorPresentadoBanco Decimal?  @map("valor_presentado_banco") @db.Decimal(15, 2)
+  ltv                  Float?
+  costoPresentadoBanco Decimal?  @map("costo_presentado_banco") @db.Decimal(15, 2)
+  ltc                  Float?
+  obligados            String?   @db.Text
+  garantias            String?   @db.Text
+  notas                String?   @db.Text
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  
+  tipoCredito          CreditType          @relation(fields: [tipoCreditoId], references: [id])
+  estado               CreditStatus        @relation(fields: [estadoId], references: [id])
+  tipoFinanciamiento   FinancingType       @relation(fields: [tipoFinanciamientoId], references: [id])
+  institucion          FinancialInstitution @relation(fields: [institucionId], references: [id])
+
+  @@index([empresa])
+  @@index([proyecto])
+  @@index([tipoCreditoId])
+  @@index([estadoId])
+  @@index([tipoFinanciamientoId])
+  @@index([institucionId])
+  @@map("creditos")
+}
+
+model CreditType {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(50)
+  code      String    @unique @db.VarChar(10)
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  
+  credits   Credit[]
+
+  @@map("credit_types")
+}
+
+model CreditStatus {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(50)
+  color     String?   @db.VarChar(10)
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  
+  credits   Credit[]
+
+  @@map("credit_statuses")
+}
+
+model FinancingType {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(100)
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  
+  credits   Credit[]
+
+  @@map("financing_types")
+}
+
+model FinancialInstitution {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(100)
+  type      String?   @db.VarChar(50)
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  
+  credits   Credit[]
+
+  @@map("financial_institutions")
+}
+
+model CreditStage {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(50)
+  order     Int?
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("credit_stages")
+}
+
+// TABLA PARA SISTEMA DE PAGOS Y FACTURAS
+model Invoice {
+  id                String    @id @default(cuid())
+  uuid              String    @unique @db.VarChar(50) // ID Fiscal (UUID)
+  emisorNombre      String    @db.VarChar(255) // Empresa emisora
+  emisorRfc         String    @db.VarChar(20)  // RFC emisor
+  receptorNombre    String    @db.VarChar(255) // Empresa receptora
+  receptorRfc       String    @db.VarChar(20)  // RFC receptor
+  total             Decimal   @db.Decimal(15, 2)
+  subtotal          Decimal?  @db.Decimal(15, 2)
+  iva               Decimal?  @db.Decimal(15, 2)
+  moneda            String    @db.VarChar(10)
+  tipoCambio        Decimal?  @map("tipo_cambio") @db.Decimal(10, 4)
+  fecha             DateTime  @db.Date
+  fechaTimbrado     DateTime? @map("fecha_timbrado")
+  folio             String?   @db.VarChar(50)
+  serie             String?   @db.VarChar(25)
+  metodoPago        String?   @map("metodo_pago") @db.VarChar(50)
+  formaPago         String?   @map("forma_pago") @db.VarChar(50)
+  usoCfdi           String?   @map("uso_cfdi") @db.VarChar(10)
+  tipoComprobante   String?   @map("tipo_comprobante") @db.VarChar(10)
+  
+  // Estados de pago
+  estado            String    @default("PENDIENTE") @db.VarChar(20) // PENDIENTE, PROGRAMADO, PAGADO
+  fechaProgramada   DateTime? @map("fecha_programada") @db.Date
+  fechaPago         DateTime? @map("fecha_pago") @db.Date
+  referenciaPago    String?   @map("referencia_pago") @db.VarChar(100)
+  observaciones     String?   @db.Text
+  
+  // Metadata
+  xmlContent        String?   @map("xml_content") @db.LongText
+  pdfUrl            String?   @map("pdf_url") @db.VarChar(500)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  uploadedBy        String?   @map("uploaded_by") @db.VarChar(100)
+
+  @@index([uuid])
+  @@index([emisorRfc])
+  @@index([receptorRfc])
+  @@index([estado])
+  @@index([fecha])
+  @@map("invoices")
+}
+
+// ============================================
+// TABLAS DE VS CONTROL
+// ============================================
+
+model VSC_Empresas {
+  id_empresa Int @id @default(autoincrement()) @map("id_empresa")
+  nombre String
+  rfc String?
+  direccion String?
+  telefono String?
+  activo Boolean @default(true)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("vsc_empresas")
+}
+
+model VSC_Viviendas {
+  id_vivienda Int @id @default(autoincrement()) @map("id_vivienda")
+  id_proyecto Int @map("id_proyecto")
+  numero_vivienda String @map("numero_vivienda")
+  manzana String?
+  lote String?
+  prototipo String?
+  estatus String?
+  superficie_terreno Float? @map("superficie_terreno")
+  superficie_construccion Float? @map("superficie_construccion")
+  precio_venta Float? @map("precio_venta")
+  fecha_inicio DateTime? @map("fecha_inicio")
+  fecha_terminacion DateTime? @map("fecha_terminacion")
+  observaciones String? @db.Text
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([id_proyecto])
+  @@map("vsc_viviendas")
+}
+
+model VSC_Clientes {
+  id_cliente Int @id @default(autoincrement()) @map("id_cliente")
+  nombre String
+  apellido_paterno String? @map("apellido_paterno")
+  apellido_materno String? @map("apellido_materno")
+  rfc String?
+  curp String?
+  telefono String?
+  celular String?
+  email String?
+  direccion String? @db.Text
+  fecha_registro DateTime @default(now()) @map("fecha_registro")
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([rfc])
+  @@index([curp])
+  @@index([email])
+  @@map("vsc_clientes")
+}
+
+model VSC_ClienteVivienda {
+  id Int @id @default(autoincrement())
+  id_cliente Int @map("id_cliente")
+  id_vivienda Int @map("id_vivienda")
+  fecha_asignacion DateTime @map("fecha_asignacion")
+  tipo_operacion String? @map("tipo_operacion")
+  monto_operacion Float? @map("monto_operacion")
+  estatus String?
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([id_cliente])
+  @@index([id_vivienda])
+  @@map("vsc_cliente_vivienda")
+}
+
+model VSC_AvancesFisicos {
+  id_avance Int @id @default(autoincrement()) @map("id_avance")
+  id_vivienda Int @map("id_vivienda")
+  fecha_avance DateTime @map("fecha_avance")
+  porcentaje_avance Float @map("porcentaje_avance")
+  descripcion String? @db.Text
+  observaciones String? @db.Text
+  usuario_registro String? @map("usuario_registro")
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([id_vivienda])
+  @@index([fecha_avance])
+  @@map("vsc_avances_fisicos")
+}
+
+model VSC_OrdenesCompra {
+  id_orden Int @id @default(autoincrement()) @map("id_orden")
+  numero_orden String @map("numero_orden")
+  fecha_orden DateTime @map("fecha_orden")
+  proveedor String?
+  monto_total Float? @map("monto_total")
+  estatus String?
+  observaciones String? @db.Text
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([numero_orden])
+  @@index([fecha_orden])
+  @@map("vsc_ordenes_compra")
+}
+
+model VSC_ControlDocumentos {
+  id_documento Int @id @default(autoincrement()) @map("id_documento")
+  id_vivienda Int? @map("id_vivienda")
+  id_cliente Int? @map("id_cliente")
+  tipo_documento String @map("tipo_documento")
+  numero_documento String? @map("numero_documento")
+  fecha_documento DateTime? @map("fecha_documento")
+  fecha_vencimiento DateTime? @map("fecha_vencimiento")
+  estatus String?
+  ruta_archivo String? @map("ruta_archivo") @db.Text
+  observaciones String? @db.Text
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([id_vivienda])
+  @@index([id_cliente])
+  @@index([tipo_documento])
+  @@map("vsc_control_documentos")
+}
+
+model VSC_Proyectos {
+  id_proyecto Int @id @default(autoincrement()) @map("id_proyecto")
+  nombre String
+  descripcion String? @db.Text
+  ubicacion String?
+  fecha_inicio DateTime? @map("fecha_inicio")
+  fecha_fin_estimada DateTime? @map("fecha_fin_estimada")
+  total_viviendas Int? @map("total_viviendas")
+  estatus String?
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@index([nombre])
+  @@index([estatus])
+  @@map("vsc_proyectos")
 }

@@ -5,10 +5,7 @@ nixPkgs = ["nodejs-18_x", "npm-9_x", "openssl"]
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npx prisma generate", "next build"]
 
 [start]
 cmd = "npm run start"
-
-[cacheDirectories]
-paths = [".next/cache", "node_modules/.cache"]

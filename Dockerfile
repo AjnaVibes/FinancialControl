@@ -1,6 +1,6 @@
 # Use official Node.js 18 image
 FROM node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat openssl openssl1.1-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Copy package files
@@ -12,7 +12,7 @@ RUN npm ci
 
 # Builder stage
 FROM node:18-alpine AS builder
-RUN apk add --no-cache openssl openssl1.1-compat
+RUN apk add --no-cache openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -31,7 +31,7 @@ RUN npm run build
 
 # Runner stage
 FROM node:18-alpine AS runner
-RUN apk add --no-cache openssl openssl1.1-compat
+RUN apk add --no-cache openssl
 WORKDIR /app
 
 ENV NODE_ENV production

@@ -36,3 +36,7 @@ prisma/*.db-journal
 # Temporal
 tmp/
 temp/
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+*.tsbuildinfo

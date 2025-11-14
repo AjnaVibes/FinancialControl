@@ -79,5 +79,11 @@
     "@auth/core": {
       "cookie": "^0.7.0"
     }
+  },
+  
+  "scripts": {
+    "db:push": "npx prisma db push",
+    "db:migrate": "npx prisma migrate deploy"
   }
+  
 }

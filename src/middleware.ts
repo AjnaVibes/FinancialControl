@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Rutas públicas que no requieren autenticación
-  const publicPaths = ['/login', '/api/auth'];
+  const publicPaths = ['/', '/login', '/api/auth'];
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
   // Si no hay token y está tratando de acceder a una ruta protegida
